@@ -1,13 +1,9 @@
-import 'dart:convert';
-
 import 'package:fpdart/fpdart.dart';
 import 'package:taxi_app/core/network/network_service.dart';
 import 'package:taxi_app/core/constant/app_url.dart';
 import 'package:taxi_app/core/failures/repo_failure.dart';
-
 import 'package:taxi_app/core/network/api_header.dart';
-import 'package:taxi_app/core/network/network_handler.dart';
-import 'package:taxi_app/features/app/data/models/base_json.dart';
+import 'package:taxi_app/modules/app/data/models/base_json.dart';
 import 'package:taxi_app/modules/onboarding/data/datasource/onboarding_remote_data_source.dart';
 import 'package:taxi_app/modules/onboarding/data/model/response/onboarding_model/onboarding_model.dart';
 import 'package:taxi_app/modules/onboarding/domain/params/onboarding_param.dart';

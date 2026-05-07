@@ -1,7 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'package:bloc/bloc.dart';
-import 'package:taxi_app/features/root/presentation/root_initial_params.dart';
+import 'package:taxi_app/modules/root/presentation/root_initial_params.dart';
 
 part 'root_event.dart';
 part 'root_state.dart';

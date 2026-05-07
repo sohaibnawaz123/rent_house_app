@@ -1,5 +1,5 @@
 
-import 'package:taxi_app/features/app/domain/entitties/pagination_entity.dart';
+import 'package:taxi_app/modules/app/domain/entitties/pagination_entity.dart';
 
 
 class PaginationJson {

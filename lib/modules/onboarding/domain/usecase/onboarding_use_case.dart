@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:taxi_app/features/app/domain/entitties/base_entity.dart';
+import 'package:taxi_app/modules/app/domain/entitties/base_entity.dart';
 import 'package:taxi_app/modules/onboarding/domain/entities/onboarding_entity.dart';
 import 'package:taxi_app/modules/onboarding/domain/failures/onboarding_failure.dart';
 import 'package:taxi_app/modules/onboarding/domain/params/onboarding_param.dart';

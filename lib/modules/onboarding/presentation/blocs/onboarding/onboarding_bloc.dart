@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:taxi_app/core/network/api_response.dart';
 import 'package:taxi_app/core/utils/utils.dart';
-import 'package:taxi_app/features/app/domain/entitties/base_entity.dart';
+import 'package:taxi_app/modules/app/domain/entitties/base_entity.dart';
 import 'package:taxi_app/modules/onboarding/domain/entities/onboarding_entity.dart';
 import 'package:taxi_app/modules/onboarding/domain/params/onboarding_param.dart';
 import 'package:taxi_app/modules/onboarding/domain/usecase/onboarding_use_case.dart';
