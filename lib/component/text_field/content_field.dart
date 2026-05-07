@@ -152,7 +152,7 @@ class _ContentFieldState extends State<ContentField> {
             ? GestureDetector(
                 onTap: _toggleObscure,
                 child: SvgPicture.asset(
-                  _obscureText ? AppAsset.eye : AppAsset.eyeOff,
+                  _obscureText ? AppAsset.eye : AppAsset.eyeoff,
                   theme: SvgTheme(currentColor: AppColor.black),
                 ).paddingAll(14.h),
               )

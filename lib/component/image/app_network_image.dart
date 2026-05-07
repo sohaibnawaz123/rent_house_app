@@ -54,13 +54,9 @@ class AppNetworkImage extends StatelessWidget {
               decoration: ShapeDecoration(color: errorBgColor, shape: shape),
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: SvgPicture.asset(
-                  AppAsset.image,
-                  fit: BoxFit.contain,
-                  colorFilter: ColorFilter.mode(
-                    AppColor.highlight,
-                    BlendMode.srcIn,
-                  ),
+                child: Icon(  
+                  Icons.error,
+                  color: AppColor.white,
                 ),
               ),
             );

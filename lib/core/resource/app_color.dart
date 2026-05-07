@@ -13,21 +13,21 @@ class AppColor {
   static const Color transparent = Color(0x00000000);
   static const Color base = Color(0xFFF5F5F5);
 
-  static const Color primary = Color(0xFFF5F5F5);
+  static const Color primary = Color(0xFF6941C6);
   static const Color grey = Color(0xFFF5F5F5);
-  static const Color highlight = grey;
+  static const Color highlight = Color(0xFFE9D7FE);
   static Color? get highlightdark => null;
 
   // >>>>>>>>>>>>>>>>>>>>>>> Text <<<<<<<<<<<<<<<<<<<<<<<
 
-  static const Color primaryText = Color(0xFFF5F5F5);
+  static const Color primaryText = Color(0xFF1F2A37);
   static const Color secondaryText = Color(0xFFB0BEC5);
   static const Color headingText = Color(0xFF90A4AE);
   static const Color highlightText = Color(0xFFB0BEC5);
-  static const Color baseText = Color(0xFFB0BEC5);
+  static const Color baseText = Color(0xFF9DA4AE);
 
   static const Color disabledText = Color(0xFF90A4AE);
-  static const Color errorText = Color(0xFFD32F2F);
+  static const Color errorText = Color(0xFFF97066);
 
   static const Gradient iconBgGradient = LinearGradient(
     colors: [Color(0xff3BB3E4), Color(0xff268DE3)],

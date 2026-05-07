@@ -5,12 +5,16 @@ class AppAsset {
   factory AppAsset() {
     return _instance;
   }
+  static const String iconPath = 'assets/icons/';
+  static const String imagePath = 'assets/images/';
+  static const String illustrationPath = 'assets/illustration/';
+ static const String lottiePath = 'assets/lottie/';
 
-  static const String applogo = 'assets/images/onboarding.png';
-  static String back = 'asset/icon/back.svg';
+  static const String applogo = '$imagePath/logo-icon.png';
 
-  static String eye = 'asset/icon/eye.svg';
-  static String eyeOff = 'asset/icon/eye_off.svg';
-  static String image = 'asset/icon/image.svg';
-
+  //icons
+  static const String eye = '$iconPath/eye.svg';
+  static const String eyeoff = '$iconPath/eye-off.svg';
+  static const String back = '$iconPath/back.svg';
+  
 }
