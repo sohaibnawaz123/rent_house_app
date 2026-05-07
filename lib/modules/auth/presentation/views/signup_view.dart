@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
-import 'package:taxi_app/modules/auth/presentation/blocs/login/login_bloc.dart';
+import 'package:taxi_app/modules/auth/presentation/blocs/signup/signup_bloc.dart';
 
 
-class LoginView extends StatefulWidget {
-  final LoginBloc bloc;
-  const LoginView({
+class SignupView extends StatefulWidget {
+  final SignupBloc bloc;
+  const SignupView({
     super.key,
     required this.bloc,
   });
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<SignupView> createState() => _SignupViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _SignupViewState extends State<SignupView> {
   @override
   void initState() {
     super.initState();

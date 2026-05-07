@@ -1,18 +1,18 @@
-import 'package:taxi_app/modules/auth/domain/entities/login_entity.dart';
+import 'package:taxi_app/modules/auth/domain/entities/signup_entity.dart';
 
-class LoginModel {
+class SignupModel {
   String? userMessage;
   bool? status;
 
-  LoginModel({
+  SignupModel({
     this.userMessage,
     this.status,
   });
 
-  factory LoginModel.fromJson(
+  factory SignupModel.fromJson(
     Map<String, dynamic> json,
   ) =>
-      LoginModel(
+      SignupModel(
         userMessage: json['userMessage'] as String?,
         status: json['status'] as bool?,
       );
@@ -22,8 +22,8 @@ class LoginModel {
         'status': status,
       };
 
-  LoginEntity toEntity() {
-    return LoginEntity(
+  SignupEntity toEntity() {
+    return SignupEntity(
       userMessage: userMessage ?? '',
       status: status ?? false,
     );

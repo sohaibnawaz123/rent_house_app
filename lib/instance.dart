@@ -11,6 +11,13 @@ import 'package:taxi_app/modules/onboarding/domain/repository/onboarding_repo.da
 import 'package:taxi_app/modules/onboarding/domain/usecase/onboarding_use_case.dart';
 import 'package:taxi_app/modules/onboarding/presentation/blocs/onboarding/onboarding_bloc.dart';
 import 'package:taxi_app/modules/onboarding/presentation/routes/onboarding_view_initial_params.dart';
+import 'package:taxi_app/modules/auth/data/datasource/signup_remote_data_source.dart';
+import 'package:taxi_app/modules/auth/data/datasource/signup_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/auth/data/rest_api/signup_rest_api_repo.dart';
+import 'package:taxi_app/modules/auth/domain/repository/signup_repo.dart';
+import 'package:taxi_app/modules/auth/domain/usecase/signup_use_case.dart';
+import 'package:taxi_app/modules/auth/presentation/blocs/signup/signup_bloc.dart';
+import 'package:taxi_app/modules/auth/presentation/routes/signup_view_initial_params.dart';
 void getInstance(BuildContext context) {
   getIt = GetIt.instance;
   getIt.registerSingleton<Network>(NetworkService());
@@ -30,4 +37,17 @@ void getInstance(BuildContext context) {
     OnboardingViewInitialParams,
     dynamic
   >((params, _) => OnboardingBloc(params, getIt()));
+
+   // <<<<<<<<<<<<<<<<<<<<<<<  Signup  >>>>>>>>>>>>>>>>>>>>>>>
+  getIt.registerSingleton<SignupRemoteDataSource>(
+    SignupRemoteDataSourceImpl(getIt(), getIt()),
+  );
+
+  getIt.registerSingleton<SignupRepo>(SignupRestApiRepo(getIt()));
+
+  getIt.registerSingleton<SignupUseCase>(SignupUseCase(getIt()));
+
+  getIt.registerFactoryParam<SignupBloc, SignupViewInitialParams, dynamic>(
+    (params, _) => SignupBloc(params, getIt()),
+  );
 }

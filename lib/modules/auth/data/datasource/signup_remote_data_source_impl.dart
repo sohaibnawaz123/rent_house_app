@@ -6,26 +6,26 @@ import 'package:taxi_app/core/failures/repo_failure.dart';
 
 import 'package:taxi_app/core/network/api_header.dart';
 import 'package:taxi_app/modules/app/data/models/base_json.dart';
-import 'package:taxi_app/modules/auth/data/datasource/login_remote_data_source.dart';
-import 'package:taxi_app/modules/auth/data/model/response/login_model/login_model.dart';
-import 'package:taxi_app/modules/auth/domain/params/login_param.dart';
+import 'package:taxi_app/modules/auth/data/datasource/signup_remote_data_source.dart';
+import 'package:taxi_app/modules/auth/data/model/response/signup_model/signup_model.dart';
+import 'package:taxi_app/modules/auth/domain/params/signup_param.dart';
 
-class LoginRemoteDataSourceImpl
-    implements LoginRemoteDataSource {
+class SignupRemoteDataSourceImpl
+    implements SignupRemoteDataSource {
   final NetworkService network;
   final AppUrl appUrl;
 
-  LoginRemoteDataSourceImpl(
+  SignupRemoteDataSourceImpl(
     this.network,
     this.appUrl,
   );
 
   @override
-  Future<Either<RepoFailure, BaseJson<LoginModel>>> 
-      login(LoginParam data) =>
+  Future<Either<RepoFailure, BaseJson<SignupModel>>> 
+      signup(SignupParam data) =>
       network
           .get(
-            AppUrl.loginUrl,
+            AppUrl.signupUrl,
             query: data.toModel().toJson(),
             ApiHeader.json(),
         // authType: AuthType.cookie,
@@ -36,9 +36,9 @@ class LoginRemoteDataSourceImpl
               (response) {
                 try {
                   return right(
-                    BaseJson<LoginModel>.fromJson(
+                    BaseJson<SignupModel>.fromJson(
                       response.data,
-                          LoginModel.fromJson,
+                          SignupModel.fromJson,
                     ),
                   );
                 } catch (e) {
