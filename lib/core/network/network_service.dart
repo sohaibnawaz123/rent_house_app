@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:taxi_app/core/failures/network_failure.dart';
 import 'package:taxi_app/core/utils/utils.dart';
-
 import 'network.dart';
 
 class NetworkService extends Network {

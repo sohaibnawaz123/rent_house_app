@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:taxi_app/component/shimmer/app_shimmer.dart';
 import 'package:taxi_app/core/constant/app_url.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 
@@ -14,7 +14,7 @@ class AppNetworkImage extends StatelessWidget {
   final double size;
   final BoxFit fit;
   final Color? errorBgColor;
-  final ShapeBorder shape;
+  final ShapeBorder? shape;
   final double? borderRadius;
   final String? defaultImage;
   final Widget? placeholder;
@@ -25,7 +25,7 @@ class AppNetworkImage extends StatelessWidget {
     this.size = 38.0,
     this.fit = BoxFit.cover,
     this.errorBgColor = AppColor.highlight,
-    this.shape = const CircleBorder(),
+    this.shape,
     this.borderRadius,
     this.defaultImage,
     this.placeholder,
@@ -41,8 +41,15 @@ class AppNetworkImage extends StatelessWidget {
         height: size,
         width: size,
         fit: fit,
-        placeholder: (context, url) => Skeleton.leaf(
-          child: _imageContainer(color: errorBgColor, shape: shape, size: size),
+        placeholder: (context, url) => _clipImage(
+          shape: shape,
+          borderRadius: borderRadius,
+          child: AppShimmer(
+            height: size,
+            width: size,
+            shape: shape,
+            baseColor: errorBgColor ?? AppColor.grey,
+          ),
         ),
         errorWidget: (context, error, stackTrace) {
           return placeholder ?? _errorImage();
@@ -73,7 +80,7 @@ class AppImage extends StatelessWidget {
   final String localImage;
   final double size;
   final BoxFit fit;
-  final ShapeBorder shape;
+  final ShapeBorder? shape;
   final double? borderRadius;
   final String? defaultImage;
   final Widget? placeholder;
@@ -88,7 +95,7 @@ class AppImage extends StatelessWidget {
     this.localImage = '',
     this.size = 38.0,
     this.fit = BoxFit.cover,
-    this.shape = const CircleBorder(),
+    this.shape,
     this.borderRadius,
     this.defaultImage,
     this.placeholder,
@@ -102,7 +109,7 @@ class AppImage extends StatelessWidget {
     required String imageUrl,
     double size = 38.0,
     BoxFit fit = BoxFit.cover,
-    ShapeBorder shape = const CircleBorder(),
+    ShapeBorder? shape,
     double? borderRadius,
     String? defaultImage,
     Widget? placeholder,
@@ -129,7 +136,7 @@ class AppImage extends StatelessWidget {
     required String assetPath,
     double size = 38.0,
     BoxFit fit = BoxFit.cover,
-    ShapeBorder shape = const CircleBorder(),
+    ShapeBorder? shape,
     double? borderRadius,
     String? defaultImage,
     Widget? placeholder,
@@ -155,7 +162,7 @@ class AppImage extends StatelessWidget {
     required String svgPath,
     double size = 38.0,
     BoxFit fit = BoxFit.contain,
-    ShapeBorder shape = const CircleBorder(),
+    ShapeBorder? shape,
     double? borderRadius,
     String? defaultImage,
     Widget? placeholder,
@@ -183,7 +190,7 @@ class AppImage extends StatelessWidget {
     required String filePath,
     double size = 38.0,
     BoxFit fit = BoxFit.cover,
-    ShapeBorder shape = const CircleBorder(),
+    ShapeBorder? shape,
     double? borderRadius,
     String? defaultImage,
     Widget? placeholder,
@@ -210,7 +217,7 @@ class AppImage extends StatelessWidget {
     this.localImage = '',
     this.size = 38.0,
     this.fit = BoxFit.cover,
-    this.shape = const CircleBorder(),
+    this.shape,
     this.borderRadius,
     this.defaultImage,
     this.placeholder,
@@ -317,23 +324,34 @@ bool _isAssetPath(String path) {
 
 Widget _imageContainer({
   required Color? color,
-  required ShapeBorder shape,
+  required ShapeBorder? shape,
   required double size,
   Widget? child,
 }) {
   return Container(
     height: size,
     width: size,
-    decoration: ShapeDecoration(color: color, shape: shape),
+    decoration: shape == null
+        ? BoxDecoration(color: color)
+        : ShapeDecoration(color: color, shape: shape),
     child: child,
   );
 }
 
 Widget _clipImage({
-  required ShapeBorder shape,
+  required ShapeBorder? shape,
   required double? borderRadius,
   required Widget child,
 }) {
+  if (shape == null && borderRadius == null) return child;
+
+  if (shape == null) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius!),
+      child: child,
+    );
+  }
+
   if (shape is RoundedRectangleBorder) {
     final borderRadiusValue =
         borderRadius ??

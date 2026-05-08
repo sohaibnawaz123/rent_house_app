@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:taxi_app/core/network/network_service.dart';
+import 'package:taxi_app/core/network/network.dart';
 import 'package:taxi_app/core/constant/app_url.dart';
 import 'package:taxi_app/core/failures/repo_failure.dart';
 import 'package:taxi_app/core/network/api_header.dart';
@@ -8,9 +8,8 @@ import 'package:taxi_app/modules/onboarding/data/datasource/onboarding_remote_da
 import 'package:taxi_app/modules/onboarding/data/model/response/onboarding_model/onboarding_model.dart';
 import 'package:taxi_app/modules/onboarding/domain/params/onboarding_param.dart';
 
-class OnboardingRemoteDataSourceImpl
-    implements OnboardingRemoteDataSource {
-  final NetworkService network;
+class OnboardingRemoteDataSourceImpl implements OnboardingRemoteDataSource {
+  final Network network;
   final AppUrl appUrl;
 
   OnboardingRemoteDataSourceImpl(
@@ -19,14 +18,15 @@ class OnboardingRemoteDataSourceImpl
   );
 
   @override
-  Future<Either<RepoFailure, BaseJson<OnboardingModel>>> 
-      onboarding(OnboardingParam data) =>
+  Future<Either<RepoFailure, BaseJson<OnboardingModel>>> onboarding(
+    OnboardingParam data,
+  ) =>
       network
           .get(
             AppUrl.onboardingUrl,
-            query: data.toModel().toJson(),
             ApiHeader.json(),
-        // authType: AuthType.cookie,
+            query: data.toModel().toJson(),
+            // authType: AuthType.cookie,
           )
           .then(
             (value) => value.fold(
@@ -36,7 +36,7 @@ class OnboardingRemoteDataSourceImpl
                   return right(
                     BaseJson<OnboardingModel>.fromJson(
                       response.data,
-                          OnboardingModel.fromJson,
+                      OnboardingModel.fromJson,
                     ),
                   );
                 } catch (e) {

@@ -5,12 +5,12 @@ import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 
 class AppText {
   AppText._internal()
-    : _baseTextStyle = GoogleFonts.archivo(
+    : _baseTextStyle = GoogleFonts.inter(
         fontWeight: AppFontWeight.regular,
         // letterSpacing: -0.8,
         height: 1.2,
       ),
-      _secondaryTextStyle = GoogleFonts.anton(
+      _secondaryTextStyle = GoogleFonts.inter(
         fontWeight: AppFontWeight.regular,
         letterSpacing: -0.5,
         height: 1.1,
@@ -30,12 +30,12 @@ class AppText {
     fontWeight: AppFontWeight.medium,
   );
   TextStyle get headingText =>
-      _baseTextStyle.copyWith(fontSize: 18, fontWeight: AppFontWeight.bold);
+      _baseTextStyle.copyWith(fontSize: 24, fontWeight: AppFontWeight.bold);
   TextStyle get subHeadingText =>
-      _baseTextStyle.copyWith(fontSize: 18, fontWeight: AppFontWeight.semiBold);
+      _baseTextStyle.copyWith(fontSize: 20, fontWeight: AppFontWeight.semiBold);
 
   TextStyle get bodyText =>
-      _baseTextStyle.copyWith(fontSize: 18, fontWeight: AppFontWeight.medium);
+      _baseTextStyle.copyWith(fontSize: 16, fontWeight: AppFontWeight.medium);
 
   TextStyle get lightText =>
       _baseTextStyle.copyWith(fontSize: 14, fontWeight: AppFontWeight.light);
