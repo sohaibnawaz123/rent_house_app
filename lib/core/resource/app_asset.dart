@@ -16,5 +16,6 @@ class AppAsset {
   static const String eye = '$iconPath/eye.svg';
   static const String eyeoff = '$iconPath/eye-off.svg';
   static const String back = '$iconPath/back.svg';
+  static const String info = '$iconPath/Paper.svg';
   
 }
