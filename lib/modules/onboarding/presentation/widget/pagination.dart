@@ -16,6 +16,9 @@ class Pagination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final activeWidth = width ?? 12;
+    final dotHeight = height ?? 6;
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -24,8 +27,8 @@ class Pagination extends StatelessWidget {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           margin: const EdgeInsets.symmetric(horizontal: 4),
-          width: isActive ? (width ?? 12) : ((width! / 2) ?? 6),
-          height: isActive ? (height ?? 6) : (height ?? 6),
+          width: isActive ? activeWidth : activeWidth / 2,
+          height: dotHeight,
           decoration: BoxDecoration(
             color: isActive ? AppColor.primary : AppColor.highlight,
             borderRadius: BorderRadius.circular(6),

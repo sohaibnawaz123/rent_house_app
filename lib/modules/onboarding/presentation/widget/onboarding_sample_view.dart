@@ -30,10 +30,11 @@ class OnboardingSampleView extends StatelessWidget {
           flex: 2,
           child: Padding(
             padding: EdgeInsets.all(context.pagePadding.top),
-            child: AppImage.asset(
-              assetPath: model.assetPath,
+            child: AppImage.svg(
+              svgPath: model.assetPath,
               size: double.infinity,
               fit: BoxFit.contain,
+             
             ),
           ),
         ),

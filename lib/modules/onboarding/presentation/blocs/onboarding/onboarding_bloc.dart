@@ -16,21 +16,50 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   final OnboardingUseCase _useCase;
 
   OnboardingBloc(this.initialParams, this._useCase)
-      : super(OnboardingState(initialParams: initialParams)) {
+    : super(OnboardingState(initialParams: initialParams)) {
     on<LoadOnboardingEvent>(_loadOnboardingAction);
+    on<ChangePageEvent>(changePage);
+    on<NextPageEvent>(nextPage);
+    on<PreviousPageEvent>(previousPage);
   }
 
   Future<void> _loadOnboardingAction(
-      LoadOnboardingEvent event, Emitter<OnboardingState> emit) async {
+    LoadOnboardingEvent event,
+    Emitter<OnboardingState> emit,
+  ) async {
     emit(state.copyWith(onboardingResponse: ApiResponse.loading()));
-    
-    await _useCase.execute(event.param).then((value) => value.fold(
-      (l) {
-        emit(state.copyWith(onboardingResponse: ApiResponse.error(l.error)));
-      }, 
-      (r) {
-        emit(state.copyWith(onboardingResponse: ApiResponse.completed(r)));
-      },
-    ));
+
+    await _useCase
+        .execute(event.param)
+        .then(
+          (value) => value.fold(
+            (l) {
+              emit(
+                state.copyWith(onboardingResponse: ApiResponse.error(l.error)),
+              );
+            },
+            (r) {
+              emit(
+                state.copyWith(onboardingResponse: ApiResponse.completed(r)),
+              );
+            },
+          ),
+        );
+  }
+
+  void changePage(ChangePageEvent event, Emitter<OnboardingState> emit) {
+    emit(state.copyWith(currentPage: event.page));
+  }
+
+  void nextPage(NextPageEvent event, Emitter<OnboardingState> emit) {
+    if (state.currentPage < event.listLength - 1) {
+      emit(state.copyWith(currentPage: state.currentPage + 1));
+    }
+  }
+
+  void previousPage(PreviousPageEvent event, Emitter<OnboardingState> emit) {
+    if (state.currentPage > 0) {
+      emit(state.copyWith(currentPage: state.currentPage - 1));
+    }
   }
 }
