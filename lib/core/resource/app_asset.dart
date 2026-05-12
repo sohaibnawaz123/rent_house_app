@@ -14,9 +14,9 @@ class AppAsset {
 
   //onboarding
   //onboarding images
-  static const String onboarding1 = '$iconPath/onboarding_one.svg';
-  static const String onboarding2 = '$iconPath/onboarding_two.svg';
-  static const String onboarding3 = '$iconPath/onboarding_three.svg';
+  static const String onboarding1 = '$imagePath/onboarding_one.png';
+  static const String onboarding2 = '$imagePath/onboarding_two.png';
+  static const String onboarding3 = '$imagePath/onboarding_three.png';
 
   //icons
   static const String eye = '$iconPath/eye.svg';

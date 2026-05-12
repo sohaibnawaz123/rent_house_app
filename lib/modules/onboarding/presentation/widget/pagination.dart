@@ -30,7 +30,7 @@ class Pagination extends StatelessWidget {
           width: isActive ? activeWidth : activeWidth / 2,
           height: dotHeight,
           decoration: BoxDecoration(
-            color: isActive ? AppColor.primary : AppColor.highlight,
+            color: isActive ? AppColor.btnBg : AppColor.highlight,
             borderRadius: BorderRadius.circular(6),
           ),
         );

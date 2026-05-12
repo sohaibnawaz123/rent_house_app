@@ -21,21 +21,34 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  OnboardingBloc? _onboardingBloc;
+
   @override
   void didChangeDependencies() {
-    getInstance(context);
     super.didChangeDependencies();
+    getInstance(context);
+    _onboardingBloc ??= getIt<OnboardingBloc>(
+      param1: OnboardingViewInitialParams(),
+    );
   }
+
+  @override
+  void dispose() {
+    _onboardingBloc?.close();
+    super.dispose();
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Housely',
       home: ScreenUtilInit(
         designSize: const Size(402, 871),
 
         child: OnboardingView(
-          bloc: getIt<OnboardingBloc>(param1: OnboardingViewInitialParams()),
+          bloc: _onboardingBloc!,
         ),
       ),
     );

@@ -57,7 +57,7 @@ class _OnboardingViewState extends State<OnboardingView> {
 
       body: BlocBuilder<OnboardingBloc, OnboardingState>(
         bloc: widget.bloc,
-        
+
         builder: (context, state) {
           final currentPage = state.currentPage;
           final isLastPage = currentPage == model.length - 1;
@@ -81,8 +81,13 @@ class _OnboardingViewState extends State<OnboardingView> {
                   top: context.pagePadding.top,
                   right: 20,
                   child: AppButton.textButton(
-                    width: 76.w,
-                    height: 40,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 5.h,
+                    ),
+                    isResponsiveWidth: true,
+                    isResponsiveHeight: true,
+                    // height: 40,
                     buttonColor: AppColor.transparent,
                     fontColor: AppColor.baseText,
                     borderColor: AppColor.baseText,
@@ -99,44 +104,19 @@ class _OnboardingViewState extends State<OnboardingView> {
                     },
                   ),
                 ),
-              if (currentPage > 0)
-                Positioned(
-                  top: context.pagePadding.top,
-                  left: 20,
-                  child: AppButton.iconButton(
-                    iconPath: AppAsset.back,
-                    width: 48.w,
-                    height: 40,
-                    buttonColor: AppColor.transparent,
-                    fontColor: AppColor.baseText,
-                    borderColor: AppColor.baseText,
-                    borderWidth: 1,
-                    radius: 20,
-
-                    onTap: () {
-                      final previousPage = currentPage - 1;
-                      widget.bloc.add(PreviousPageEvent());
-                      _pageController.animateToPage(
-                        previousPage,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeInOut,
-                      );
-                    },
-                  ),
-                ),
               //next button
               Positioned(
-                bottom: context.pagePadding.bottom + 40,
+                bottom: context.pagePadding.bottom + 20,
                 right: 20,
-                left: isLastPage ? 20 : null,
+                left: 20,
                 child: AppButton.textButton(
-                  width: isLastPage ? null : 96.w,
-                  height: 40,
-                  buttonColor: AppColor.primary,
+                  width: double.infinity,
+                  height: 50.h,
+                  // buttonColor: AppColor.primary,
                   fontColor: AppColor.white,
-                  borderColor: AppColor.primary,
+                  // borderColor: AppColor.primary,
                   borderWidth: 1,
-                  radius: 20,
+                  radius: 10,
                   title: isLastPage ? 'Let\'s Start' : 'Next',
                   onTap: () {
                     if (isLastPage) {
@@ -153,18 +133,19 @@ class _OnboardingViewState extends State<OnboardingView> {
                   },
                 ),
               ),
+
               // pagination
               Positioned(
                 bottom: MediaQuery.of(context).viewInsets.bottom > 0
                     ? 20
-                    : context.pagePadding.bottom,
+                    : context.pagePadding.bottom + 100,
                 left: 0,
                 right: 0,
                 child: Pagination(
                   currentPage: currentPage,
                   totalPages: model.length,
                   width: 20,
-                  height: 8,
+                  height: 10,
                 ),
               ),
             ],

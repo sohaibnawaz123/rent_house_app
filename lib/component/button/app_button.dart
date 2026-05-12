@@ -235,10 +235,10 @@ class AppButton extends StatelessWidget {
         width: isResponsiveWidth ? null : width,
         decoration: BoxDecoration(
           color: isDisable
-              ? AppColor.primary.withValues(alpha: 0.3)
+              ? AppColor.btnBg.withValues(alpha: 0.3)
               : isLoading
-              ? buttonColor ?? AppColor.primary.withValues(alpha: 0.7)
-              : buttonColor ?? AppColor.primary,
+              ? buttonColor ?? AppColor.btnBg.withValues(alpha: 0.7)
+              : buttonColor ?? AppColor.btnBg,
           gradient: gradient,
           borderRadius: BorderRadius.circular(radius.r),
           border: border != null

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taxi_app/component/image/app_network_image.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
+import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 
 class OnboardingSampleModel {
@@ -27,11 +28,11 @@ class OnboardingSampleView extends StatelessWidget {
       children: [
         //image part
         Expanded(
-          flex: 2,
+          flex: 1,
           child: Padding(
             padding: EdgeInsets.all(context.pagePadding.top),
-            child: AppImage.svg(
-              svgPath: model.assetPath,
+            child: AppImage.asset(
+              assetPath:model.assetPath,
               size: double.infinity,
               fit: BoxFit.contain,
              
@@ -39,26 +40,29 @@ class OnboardingSampleView extends StatelessWidget {
           ),
         ),
         //text part
-        Expanded(
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.45,
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: context.pagePadding.horizontal,
               vertical: 20.h,
             ),
             child: Column(
-              spacing: 10.h,
+              spacing: 20.h,
               children: [
                 Content(
                   data: model.heading,
                   textStyle: context.headingText,
                   size: 28.sp,
                   alignment: TextAlign.center,
+                  weight: AppFontWeight.bold,
                 ),
                 Content(
                   data: model.text,
                   textStyle: context.bodyText,
                   alignment: TextAlign.center,
                   size: 16.sp,
+                  weight: AppFontWeight.medium,
                 ),
               ],
             ),
