@@ -36,6 +36,8 @@ class AppText {
 
   TextStyle get bodyText =>
       _baseTextStyle.copyWith(fontSize: 16, fontWeight: AppFontWeight.medium);
+  TextStyle get lableText =>
+      _baseTextStyle.copyWith(fontSize: 14, fontWeight: AppFontWeight.medium);
 
   TextStyle get lightText =>
       _baseTextStyle.copyWith(fontSize: 14, fontWeight: AppFontWeight.light);

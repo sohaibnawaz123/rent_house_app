@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_padding.dart';
@@ -119,18 +120,20 @@ class _LabelTextFieldState extends State<LabelTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          widget.labelText,
-          style:
+        Content(
+          data: widget.labelText,
+          textStyle:
               widget.labelStyle ??
-              context.bodyText.copyWith(
+              context.lableText.copyWith(
                 color: AppColor.primaryText,
-                fontSize: 14.sp,
+                // fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
               ),
         ),
         SizedBox(height: 8.h),
         TextFormField(
+          cursorHeight: 20,
+          keyboardAppearance: Brightness.light,
           obscuringCharacter: '*',
           enabled: widget.enabled,
           initialValue: widget.initialValue,
@@ -150,8 +153,10 @@ class _LabelTextFieldState extends State<LabelTextField> {
           style:
               widget.textStyle ??
               context.bodyText.copyWith(
-                fontSize: 14.sp,
-                color: widget.enabled ? AppColor.primaryText : AppColor.baseText,
+                fontSize: 16.sp,
+                color: widget.enabled
+                    ? AppColor.primaryText
+                    : AppColor.baseText,
               ),
           maxLines: widget.obscureText ? 1 : widget.maxLines,
           minLines: widget.minLines,
@@ -168,11 +173,11 @@ class _LabelTextFieldState extends State<LabelTextField> {
             isDense: true,
             contentPadding:
                 widget.contentPadding ??
-                EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-            prefixIcon: widget.prefixIcon ?? _buildDefaultIcon(iconColor),
+                EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+            prefixIcon: widget.prefixIcon,
             suffixIcon: widget.obscureText
                 ? _buildPasswordIcon(iconColor)
-                : widget.suffixIcon ?? _buildDefaultIcon(iconColor),
+                : widget.suffixIcon,
             prefixIconConstraints: BoxConstraints(
               minWidth: 44.w,
               minHeight: 24.h,
@@ -197,11 +202,11 @@ class _LabelTextFieldState extends State<LabelTextField> {
         ),
         if (helperText != null) ...[
           SizedBox(height: 6.h),
-          Text(
-            helperText,
-            style:
+          Content(
+            data: helperText,
+            textStyle:
                 (hasError ? widget.errorStyle : widget.helperStyle) ??
-                context.bodyText.copyWith(color: helperColor, fontSize: 12.sp),
+                context.lightText.copyWith(color: helperColor, fontSize: 12.sp),
           ),
         ],
       ],
@@ -227,24 +232,24 @@ class _LabelTextFieldState extends State<LabelTextField> {
     );
   }
 
-  Widget _buildDefaultIcon(Color color) {
-    return SvgPicture.asset(
-      AppAsset.eyeoff,
-      height: 20.h,
-      width: 20.w,
-      fit: BoxFit.scaleDown,
-      theme: SvgTheme(currentColor: color),
-      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-    ).paddingAll(12.h);
-  }
+  // Widget _buildDefaultIcon(Color color) {
+  //   return SvgPicture.asset(
+  //     AppAsset.eyeoff,
+  //     height: 20.h,
+  //     width: 20.w,
+  //     fit: BoxFit.scaleDown,
+  //     theme: SvgTheme(currentColor: color),
+  //     colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+  //   ).paddingAll(12.h);
+  // }
 
   Widget _buildPasswordIcon(Color color) {
     return GestureDetector(
       onTap: _toggleObscure,
       child: SvgPicture.asset(
         _obscureText ? AppAsset.eye : AppAsset.eyeoff,
-        height: 20.h,
-        width: 20.w,
+        height: 24.h,
+        width: 24.w,
         fit: BoxFit.scaleDown,
         theme: SvgTheme(currentColor: color),
         colorFilter: ColorFilter.mode(color, BlendMode.srcIn),

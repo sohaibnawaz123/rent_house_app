@@ -1,32 +1,34 @@
 import 'package:fpdart/fpdart.dart';
+
 import 'package:taxi_app/core/constant/app_url.dart';
 import 'package:taxi_app/core/failures/repo_failure.dart';
 import 'package:taxi_app/core/network/api_header.dart';
 import 'package:taxi_app/core/network/network_service.dart';
 import 'package:taxi_app/modules/app/data/models/base_json.dart';
-import 'package:taxi_app/modules/auth/data/datasource/signup_remote_data_source.dart';
-import 'package:taxi_app/modules/auth/data/model/response/signup_model/signup_model.dart';
-import 'package:taxi_app/modules/auth/domain/params/signup_param.dart';
+import 'package:taxi_app/modules/auth/data/datasource/forgetpassword_remote_data_source.dart';
+import 'package:taxi_app/modules/auth/data/model/response/forgetpassword_model/forgetpassword_model.dart';
+import 'package:taxi_app/modules/auth/domain/params/forgetpassword_param.dart';
 
-class SignupRemoteDataSourceImpl implements SignupRemoteDataSource {
+class ForgetpasswordRemoteDataSourceImpl
+    implements ForgetpasswordRemoteDataSource {
   final NetworkService network;
   final AppUrl appUrl;
 
-  SignupRemoteDataSourceImpl(
+  ForgetpasswordRemoteDataSourceImpl(
     this.network,
     this.appUrl,
   );
 
   @override
-  Future<Either<RepoFailure, BaseJson<SignupModel>>> signup(
-    SignupParam data,
-  ) =>
+  Future<Either<RepoFailure, BaseJson<ForgetpasswordModel>>> 
+      forgetpassword(ForgetpasswordParam data) =>
       network
-          .get(
-            AppUrl.signupUrl,
+          .post(
+            AppUrl.forgetpasswordUrl,
+             data.toModel().toJson(),
             ApiHeader.json(),
-            query: data.toModel().toJson(),
-            // authType: AuthType.cookie,
+        // authType: AuthType.cookie,
+
           )
           .then(
             (value) => value.fold(
@@ -34,9 +36,9 @@ class SignupRemoteDataSourceImpl implements SignupRemoteDataSource {
               (response) {
                 try {
                   return right(
-                    BaseJson<SignupModel>.fromJson(
+                    BaseJson<ForgetpasswordModel>.fromJson(
                       response.data,
-                      SignupModel.fromJson,
+                          ForgetpasswordModel.fromJson,
                     ),
                   );
                 } catch (e) {

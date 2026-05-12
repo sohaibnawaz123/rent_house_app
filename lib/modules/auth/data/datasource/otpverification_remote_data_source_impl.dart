@@ -4,29 +4,30 @@ import 'package:taxi_app/core/failures/repo_failure.dart';
 import 'package:taxi_app/core/network/api_header.dart';
 import 'package:taxi_app/core/network/network_service.dart';
 import 'package:taxi_app/modules/app/data/models/base_json.dart';
-import 'package:taxi_app/modules/auth/data/datasource/signup_remote_data_source.dart';
-import 'package:taxi_app/modules/auth/data/model/response/signup_model/signup_model.dart';
-import 'package:taxi_app/modules/auth/domain/params/signup_param.dart';
+import 'package:taxi_app/modules/auth/data/datasource/otpverification_remote_data_source.dart';
+import 'package:taxi_app/modules/auth/data/model/response/otpverification_model/otpverification_model.dart';
+import 'package:taxi_app/modules/auth/domain/params/otpverification_param.dart';
 
-class SignupRemoteDataSourceImpl implements SignupRemoteDataSource {
+class OtpverificationRemoteDataSourceImpl
+    implements OtpverificationRemoteDataSource {
   final NetworkService network;
   final AppUrl appUrl;
 
-  SignupRemoteDataSourceImpl(
+  OtpverificationRemoteDataSourceImpl(
     this.network,
     this.appUrl,
   );
 
   @override
-  Future<Either<RepoFailure, BaseJson<SignupModel>>> signup(
-    SignupParam data,
-  ) =>
+  Future<Either<RepoFailure, BaseJson<OtpverificationModel>>> 
+      otpverification(OtpverificationParam data) =>
       network
-          .get(
-            AppUrl.signupUrl,
+          .post(
+            AppUrl.otpverificationUrl,
+             data.toModel().toJson(),
             ApiHeader.json(),
-            query: data.toModel().toJson(),
-            // authType: AuthType.cookie,
+        // authType: AuthType.cookie,
+
           )
           .then(
             (value) => value.fold(
@@ -34,9 +35,9 @@ class SignupRemoteDataSourceImpl implements SignupRemoteDataSource {
               (response) {
                 try {
                   return right(
-                    BaseJson<SignupModel>.fromJson(
+                    BaseJson<OtpverificationModel>.fromJson(
                       response.data,
-                      SignupModel.fromJson,
+                          OtpverificationModel.fromJson,
                     ),
                   );
                 } catch (e) {

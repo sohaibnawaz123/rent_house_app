@@ -5,6 +5,11 @@ import 'package:taxi_app/component/button/app_button.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
+import 'package:taxi_app/core/utils/extension/app_navigation.dart';
+import 'package:taxi_app/main.dart';
+import 'package:taxi_app/modules/auth/presentation/blocs/login/login_bloc.dart';
+import 'package:taxi_app/modules/auth/presentation/routes/login_view_initial_params.dart';
+import 'package:taxi_app/modules/auth/presentation/views/login_view.dart';
 import 'package:taxi_app/modules/onboarding/presentation/blocs/onboarding/onboarding_bloc.dart';
 import 'package:taxi_app/modules/onboarding/presentation/widget/onboarding_sample_view.dart';
 import 'package:taxi_app/modules/onboarding/presentation/widget/pagination.dart';
@@ -116,11 +121,16 @@ class _OnboardingViewState extends State<OnboardingView> {
                   fontColor: AppColor.white,
                   // borderColor: AppColor.primary,
                   borderWidth: 1,
-                  radius: 10,
                   title: isLastPage ? 'Let\'s Start' : 'Next',
                   onTap: () {
                     if (isLastPage) {
-                      return;
+                      context.pushPage(
+                        LoginView(
+                          bloc: getIt<LoginBloc>(
+                            param1: LoginViewInitialParams(),
+                          ),
+                        ),
+                      );
                     }
 
                     final nextPage = currentPage + 1;

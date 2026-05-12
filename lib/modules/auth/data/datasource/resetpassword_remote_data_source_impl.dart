@@ -4,29 +4,30 @@ import 'package:taxi_app/core/failures/repo_failure.dart';
 import 'package:taxi_app/core/network/api_header.dart';
 import 'package:taxi_app/core/network/network_service.dart';
 import 'package:taxi_app/modules/app/data/models/base_json.dart';
-import 'package:taxi_app/modules/auth/data/datasource/signup_remote_data_source.dart';
-import 'package:taxi_app/modules/auth/data/model/response/signup_model/signup_model.dart';
-import 'package:taxi_app/modules/auth/domain/params/signup_param.dart';
+import 'package:taxi_app/modules/auth/data/datasource/resetpassword_remote_data_source.dart';
+import 'package:taxi_app/modules/auth/data/model/response/resetpassword_model/resetpassword_model.dart';
+import 'package:taxi_app/modules/auth/domain/params/resetpassword_param.dart';
 
-class SignupRemoteDataSourceImpl implements SignupRemoteDataSource {
+class ResetpasswordRemoteDataSourceImpl
+    implements ResetpasswordRemoteDataSource {
   final NetworkService network;
   final AppUrl appUrl;
 
-  SignupRemoteDataSourceImpl(
+  ResetpasswordRemoteDataSourceImpl(
     this.network,
     this.appUrl,
   );
 
   @override
-  Future<Either<RepoFailure, BaseJson<SignupModel>>> signup(
-    SignupParam data,
-  ) =>
+  Future<Either<RepoFailure, BaseJson<ResetpasswordModel>>> 
+      resetpassword(ResetpasswordParam data) =>
       network
-          .get(
-            AppUrl.signupUrl,
+          .post(
+            AppUrl.resetpasswordUrl,
+             data.toModel().toJson(),
             ApiHeader.json(),
-            query: data.toModel().toJson(),
-            // authType: AuthType.cookie,
+        // authType: AuthType.cookie,
+
           )
           .then(
             (value) => value.fold(
@@ -34,9 +35,9 @@ class SignupRemoteDataSourceImpl implements SignupRemoteDataSource {
               (response) {
                 try {
                   return right(
-                    BaseJson<SignupModel>.fromJson(
+                    BaseJson<ResetpasswordModel>.fromJson(
                       response.data,
-                      SignupModel.fromJson,
+                          ResetpasswordModel.fromJson,
                     ),
                   );
                 } catch (e) {

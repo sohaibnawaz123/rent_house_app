@@ -3,9 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
-import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
-import 'package:taxi_app/core/utils/extension/app_padding.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -30,11 +28,13 @@ class AppAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final actionWidth = width ?? 25.h;
     final leading = SizedBox(
-      width: width,
+      width: actionWidth,
       child: Align(
         alignment: Alignment.centerLeft,
         child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTap: onLeadingTap ?? () => context.popPage(),
           child: SvgPicture.asset(
             AppAsset.back,
@@ -49,7 +49,7 @@ class AppAppbar extends StatelessWidget {
     );
 
     final trailingWidget = SizedBox(
-      width: width,
+      width: actionWidth,
       child: trailing ?? SizedBox(width: 30.h, height: 30.h),
     );
 
@@ -70,6 +70,6 @@ class AppAppbar extends StatelessWidget {
           if (isLeading) trailingWidget,
         ],
       ),
-    ).paddingSymmetric(horizontal: context.pagePadding.left);
+    );
   }
 }

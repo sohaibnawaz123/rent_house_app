@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:taxi_app/core/network/network.dart';
+import 'package:taxi_app/core/network/network_service.dart';
 import 'package:taxi_app/core/constant/app_url.dart';
 import 'package:taxi_app/core/failures/repo_failure.dart';
 import 'package:taxi_app/core/network/api_header.dart';
@@ -9,7 +9,7 @@ import 'package:taxi_app/modules/onboarding/data/model/response/onboarding_model
 import 'package:taxi_app/modules/onboarding/domain/params/onboarding_param.dart';
 
 class OnboardingRemoteDataSourceImpl implements OnboardingRemoteDataSource {
-  final Network network;
+  final NetworkService network;
   final AppUrl appUrl;
 
   OnboardingRemoteDataSourceImpl(
