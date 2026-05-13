@@ -5,7 +5,6 @@ import 'package:taxi_app/modules/auth/domain/failures/resetpassword_failure.dart
 import 'package:taxi_app/modules/auth/domain/params/resetpassword_param.dart';
 import 'package:taxi_app/modules/auth/domain/repository/resetpassword_repo.dart';
 import 'package:taxi_app/modules/auth/presentation/validator/resetpassword_validator.dart';
-import 'package:taxi_app/modules/auth/domain/failures/resetpassword_failure.dart';
 
 class ResetpasswordUseCase {
   final ResetpasswordValidator validator;

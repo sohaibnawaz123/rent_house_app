@@ -41,4 +41,6 @@ class AppText {
 
   TextStyle get lightText =>
       _baseTextStyle.copyWith(fontSize: 14, fontWeight: AppFontWeight.light);
+  TextStyle get errorText =>
+      _baseTextStyle.copyWith(fontSize: 12, fontWeight: AppFontWeight.light);
 }

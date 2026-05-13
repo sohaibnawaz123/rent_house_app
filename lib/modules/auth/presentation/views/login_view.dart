@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taxi_app/component/app_bar/app_appbar.dart';
 import 'package:taxi_app/component/button/app_button.dart';
-import 'package:taxi_app/component/image/app_network_image.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/component/text_field/label_text_field.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
@@ -11,6 +10,7 @@ import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/core/validator/validator.dart';
 import 'package:taxi_app/modules/auth/presentation/blocs/login/login_bloc.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/auth_header.dart';
 
@@ -23,9 +23,15 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -50,9 +56,22 @@ class _LoginViewState extends State<LoginView> {
                   'Sign in with your email and password or social media to continue',
             ),
             30.heightBox,
-            FeildSection(),
+            Form(
+              key: _formKey,
+              child: FeildSection(
+                emailController: _emailController,
+                passwordController: _passwordController,
+              ),
+            ),
             30.heightBox,
-            AppButton(title: 'Sign In'),
+            AppButton(
+              title: 'Sign In',
+              onTap: () {
+                if (_formKey.currentState?.validate() ?? false) {
+                  // Handle successful validation (login logic)
+                }
+              },
+            ),
             30.heightBox,
             Content(
               data: 'OR',
@@ -80,7 +99,13 @@ class _LoginViewState extends State<LoginView> {
 }
 
 class FeildSection extends StatefulWidget {
-  const FeildSection({super.key});
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  const FeildSection({
+    super.key,
+    required this.emailController,
+    required this.passwordController,
+  });
 
   @override
   State<FeildSection> createState() => _FeildSectionState();
@@ -88,22 +113,45 @@ class FeildSection extends StatefulWidget {
 
 class _FeildSectionState extends State<FeildSection> {
   bool isRemember = false;
+  String? emailError;
+  String? passwordError;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         LabelTextField(
+          
+          controller: widget.emailController,
           labelText: "Email",
           hintText: "Enter your email",
+          errorStyle: context.lightText.copyWith(
+            color: AppColor.errorText,
+          ),
           keyboardType: TextInputType.emailAddress,
+          validator: (value) => Validator.validateEmail(value ?? ''),
+          errorText: emailError,
+          onChanged: (value) {
+            setState(() {
+              emailError = Validator.validateEmail(value);
+            });
+          },
         ),
         20.heightBox,
         LabelTextField(
+          controller: widget.passwordController,
           labelText: "Password",
           hintText: "Enter your password",
           obscureText: true,
           keyboardType: TextInputType.visiblePassword,
+          validator: (value) => Validator.validatePassword(value ?? ''),
+          errorText: passwordError,
+          onChanged: (value) {
+            setState(() {
+              passwordError = Validator.validatePassword(value);
+            });
+          },
         ),
         20.heightBox,
         Row(

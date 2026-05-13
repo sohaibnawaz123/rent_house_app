@@ -5,7 +5,6 @@ import 'package:taxi_app/modules/auth/domain/failures/forgetpassword_failure.dar
 import 'package:taxi_app/modules/auth/domain/params/forgetpassword_param.dart';
 import 'package:taxi_app/modules/auth/domain/repository/forgetpassword_repo.dart';
 import 'package:taxi_app/modules/auth/presentation/validator/forgetpassword_validator.dart';
-import 'package:taxi_app/modules/auth/domain/failures/forgetpassword_failure.dart';
 
 class ForgetpasswordUseCase {
   final ForgetpasswordValidator validator;

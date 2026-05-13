@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -92,11 +94,44 @@ class LabelTextField extends StatefulWidget {
 
 class _LabelTextFieldState extends State<LabelTextField> {
   late bool _obscureText;
+  late FocusNode _focusNode;
+  bool _hasFocus = false;
+  bool _isFilled = false;
 
   @override
   void initState() {
     super.initState();
     _obscureText = widget.obscureText;
+    _focusNode = widget.focusNode ?? FocusNode();
+    _focusNode.addListener(_handleFocusChange);
+    if (widget.controller != null) {
+      _isFilled = widget.controller!.text.isNotEmpty;
+      widget.controller!.addListener(_handleTextChange);
+    }
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_handleFocusChange);
+    if (widget.controller != null) {
+      widget.controller!.removeListener(_handleTextChange);
+    }
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
+    super.dispose();
+  }
+
+  void _handleFocusChange() {
+    setState(() {
+      _hasFocus = _focusNode.hasFocus;
+    });
+  }
+
+  void _handleTextChange() {
+    setState(() {
+      _isFilled = widget.controller!.text.isNotEmpty;
+    });
   }
 
   void _toggleObscure() {
@@ -108,13 +143,47 @@ class _LabelTextFieldState extends State<LabelTextField> {
   @override
   Widget build(BuildContext context) {
     final hasError = widget.errorText != null;
-    final helperText = widget.errorText ?? widget.helperText;
-    final helperColor = hasError
-        ? widget.errorColor
-        : widget.isSuccess
-        ? widget.successColor
-        : AppColor.baseText;
-    final iconColor = widget.iconColor ?? _iconColor(hasError);
+    final isDisabled = !widget.enabled;
+    final isSuccess = widget.isSuccess && !hasError && !isDisabled;
+    final isTyping = _hasFocus;
+    // ignore: unused_local_variable
+    final isFilled = _isFilled;
+
+    // Border color logic
+    Color borderColor = widget.borderColor;
+    if (isDisabled) {
+      borderColor = widget.disabledColor;
+    } else if (hasError) {
+      borderColor = widget.errorColor;
+    } else if (isSuccess) {
+      borderColor = widget.successColor;
+    } else if (isTyping) {
+      borderColor = widget.focusedColor;
+    }
+
+    // Helper text and color logic
+    String? helperText = widget.errorText ?? widget.helperText;
+    Color helperColor = AppColor.baseText;
+    if (hasError) {
+      helperColor = widget.errorColor;
+    } else if (isSuccess) {
+      helperColor = widget.successColor;
+    } else if (isDisabled) {
+      helperColor = widget.disabledColor;
+    }
+
+    // Fill color logic
+    Color fillColor = AppColor.white;
+    if (isDisabled) {
+      fillColor = widget.disabledColor;
+    } else if (isSuccess) {
+      fillColor = widget.successColor.withOpacity(0.10);
+    }
+
+    // Icon color logic
+    Color iconColor =
+        widget.iconColor ??
+        _iconColor(hasError, isDisabled, isSuccess, isTyping);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +195,6 @@ class _LabelTextFieldState extends State<LabelTextField> {
               widget.labelStyle ??
               context.lableText.copyWith(
                 color: AppColor.primaryText,
-                // fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
               ),
         ),
@@ -147,7 +215,7 @@ class _LabelTextFieldState extends State<LabelTextField> {
           keyboardType: widget.keyboardType,
           controller: widget.controller,
           onChanged: widget.onChanged,
-          focusNode: widget.focusNode,
+          focusNode: _focusNode,
           onFieldSubmitted: widget.onFieldSubmitted,
           validator: widget.validator,
           style:
@@ -162,7 +230,7 @@ class _LabelTextFieldState extends State<LabelTextField> {
           minLines: widget.minLines,
           decoration: InputDecoration(
             filled: true,
-            fillColor: widget.fillColor ?? _fillColor,
+            fillColor: widget.fillColor ?? fillColor,
             hintText: widget.hintText,
             hintStyle:
                 widget.hintStyle ??
@@ -187,13 +255,9 @@ class _LabelTextFieldState extends State<LabelTextField> {
               minHeight: 24.h,
             ),
             border: _outlineBorder(widget.borderColor),
-            enabledBorder: _outlineBorder(
-              widget.isSuccess ? widget.successColor : widget.borderColor,
-            ),
-            focusedBorder: _outlineBorder(
-              widget.isSuccess ? widget.successColor : widget.focusedColor,
-            ),
-            disabledBorder: _outlineBorder(widget.borderColor),
+            enabledBorder: _outlineBorder(borderColor),
+            focusedBorder: _outlineBorder(borderColor),
+            disabledBorder: _outlineBorder(widget.disabledColor),
             errorBorder: _outlineBorder(widget.errorColor),
             focusedErrorBorder: _outlineBorder(widget.errorColor),
             errorText: widget.errorText,
@@ -201,27 +265,29 @@ class _LabelTextFieldState extends State<LabelTextField> {
           ),
         ),
         if (helperText != null) ...[
-          SizedBox(height: 6.h),
+          SizedBox(height: 4.h),
           Content(
             data: helperText,
             textStyle:
                 (hasError ? widget.errorStyle : widget.helperStyle) ??
-                context.lightText.copyWith(color: helperColor, fontSize: 12.sp),
+                context.errorText.copyWith(color: helperColor, fontSize: 12),
+            size: 12,
           ),
         ],
       ],
     );
   }
 
-  Color get _fillColor {
-    if (!widget.enabled) return widget.disabledColor;
-    if (widget.isSuccess) return widget.successColor.withValues(alpha: 0.10);
-    return AppColor.white;
-  }
-
-  Color _iconColor(bool hasError) {
+  Color _iconColor(
+    bool hasError,
+    bool isDisabled,
+    bool isSuccess,
+    bool isTyping,
+  ) {
     if (hasError) return AppColor.primaryText;
-    if (!widget.enabled) return AppColor.baseText;
+    if (isDisabled) return AppColor.baseText;
+    if (isSuccess) return widget.successColor;
+    if (isTyping) return widget.focusedColor;
     return AppColor.baseText;
   }
 
@@ -231,17 +297,6 @@ class _LabelTextFieldState extends State<LabelTextField> {
       borderSide: BorderSide(color: color, width: 1),
     );
   }
-
-  // Widget _buildDefaultIcon(Color color) {
-  //   return SvgPicture.asset(
-  //     AppAsset.eyeoff,
-  //     height: 20.h,
-  //     width: 20.w,
-  //     fit: BoxFit.scaleDown,
-  //     theme: SvgTheme(currentColor: color),
-  //     colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-  //   ).paddingAll(12.h);
-  // }
 
   Widget _buildPasswordIcon(Color color) {
     return GestureDetector(

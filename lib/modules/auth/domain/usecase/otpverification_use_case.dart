@@ -5,7 +5,6 @@ import 'package:taxi_app/modules/auth/domain/failures/otpverification_failure.da
 import 'package:taxi_app/modules/auth/domain/params/otpverification_param.dart';
 import 'package:taxi_app/modules/auth/domain/repository/otpverification_repo.dart';
 import 'package:taxi_app/modules/auth/presentation/validator/otpverification_validator.dart';
-import 'package:taxi_app/modules/auth/domain/failures/otpverification_failure.dart';
 
 class OtpverificationUseCase {
   final OtpverificationValidator validator;

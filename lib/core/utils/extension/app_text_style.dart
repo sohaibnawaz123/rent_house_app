@@ -26,4 +26,6 @@ extension AppTextStyle on BuildContext {
       AppText().lableText.copyWith(color: AppColor.baseText, fontSize: 14.sp);
   TextStyle get lightText =>
       AppText().lightText.copyWith(color: AppColor.baseText,fontSize: 14);
+  TextStyle get errorText =>
+      AppText().errorText.copyWith(color: AppColor.baseText,fontSize: 14);
 }
