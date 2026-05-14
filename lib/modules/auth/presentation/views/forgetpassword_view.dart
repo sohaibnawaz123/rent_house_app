@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:taxi_app/component/app_bar/app_appbar.dart';
 import 'package:taxi_app/component/button/app_button.dart';
+import 'package:taxi_app/component/status_tile/status_tile.dart';
+import 'package:taxi_app/component/status_tile/status_tile_snackbar_extension.dart';
 import 'package:taxi_app/component/text_field/label_text_field.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
+import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/validator/validator.dart';
+import 'package:taxi_app/main.dart';
 import 'package:taxi_app/modules/auth/presentation/blocs/forgetpassword/forgetpassword_bloc.dart';
+import 'package:taxi_app/modules/auth/presentation/blocs/otpverification/otpverification_bloc.dart';
+import 'package:taxi_app/modules/auth/presentation/routes/otpverification_view_initial_params.dart';
+import 'package:taxi_app/modules/auth/presentation/views/otpverification_view.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/auth_header.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/phone_email_card.dart';
 
@@ -65,16 +72,7 @@ class _ForgetpasswordViewState extends State<ForgetpasswordView> {
                 child: FeildSection(emailController: _emailController),
               ),
             if (!widget.hasEmail) 20.heightBox,
-            if (!widget.hasEmail)
-              AppButton(
-                buttonColor: AppColor.btnBg,
-                title: 'Send Otp',
-                onTap: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    // Handle successful validation (login logic)
-                  }
-                },
-              ),
+
             if (widget.hasEmail)
               EmailorPhoneCard(
                 isSelected: selectedContactType == 'email',
@@ -116,13 +114,32 @@ class _ForgetpasswordViewState extends State<ForgetpasswordView> {
           onTap: () {
             if (!widget.hasEmail) {
               if (_formKey.currentState?.validate() ?? false) {
+                context.pushPage(
+                  OtpverificationView(
+                    bloc: getIt<OtpverificationBloc>(
+                      param1: OtpverificationViewInitialParams(),
+                    ),
+                  ),
+                );
                 // Handle successful validation (login logic)
               }
             } else {
               if (selectedContactType != null) {
-                // Handle continue action based on selected contact type
+                context.pushPage(
+                  OtpverificationView(
+                    bloc: getIt<OtpverificationBloc>(
+                      param1: OtpverificationViewInitialParams(),
+                    ),
+                  ),
+                );
               } else {
                 // Show error message or prompt user to select a contact type
+               context.showStatusTileSnackbar(
+                backgroundColor: AppColor.errorText.withValues(alpha: 0.1),
+                textColor: AppColor.errorText,
+                  message: "Select to option to reset password",
+                  type: StatusTileType.error,
+                );
               }
             }
           },
