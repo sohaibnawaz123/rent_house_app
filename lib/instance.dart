@@ -10,13 +10,6 @@ import 'package:taxi_app/modules/onboarding/domain/repository/onboarding_repo.da
 import 'package:taxi_app/modules/onboarding/domain/usecase/onboarding_use_case.dart';
 import 'package:taxi_app/modules/onboarding/presentation/blocs/onboarding/onboarding_bloc.dart';
 import 'package:taxi_app/modules/onboarding/presentation/routes/onboarding_view_initial_params.dart';
-import 'package:taxi_app/modules/auth/data/datasource/signup_remote_data_source.dart';
-import 'package:taxi_app/modules/auth/data/datasource/signup_remote_data_source_impl.dart';
-import 'package:taxi_app/modules/auth/data/rest_api/signup_rest_api_repo.dart';
-import 'package:taxi_app/modules/auth/domain/repository/signup_repo.dart';
-import 'package:taxi_app/modules/auth/domain/usecase/signup_use_case.dart';
-import 'package:taxi_app/modules/auth/presentation/blocs/signup/signup_bloc.dart';
-import 'package:taxi_app/modules/auth/presentation/routes/signup_view_initial_params.dart';
 import 'package:taxi_app/modules/auth/data/datasource/login_remote_data_source.dart';
 import 'package:taxi_app/modules/auth/data/datasource/login_remote_data_source_impl.dart';
 import 'package:taxi_app/modules/auth/data/rest_api/login_rest_api_repo.dart';
@@ -86,26 +79,6 @@ void getInstance(BuildContext context) {
     >((params, _) => OnboardingBloc(params, getIt()));
   }
 
-  // <<<<<<<<<<<<<<<<<<<<<<<  Signup  >>>>>>>>>>>>>>>>>>>>>>>
-  if (!getIt.isRegistered<SignupRemoteDataSource>()) {
-    getIt.registerSingleton<SignupRemoteDataSource>(
-      SignupRemoteDataSourceImpl(getIt(), getIt()),
-    );
-  }
-
-  if (!getIt.isRegistered<SignupRepo>()) {
-    getIt.registerSingleton<SignupRepo>(SignupRestApiRepo(getIt()));
-  }
-
-  if (!getIt.isRegistered<SignupUseCase>()) {
-    getIt.registerSingleton<SignupUseCase>(SignupUseCase(getIt()));
-  }
-
-  if (!getIt.isRegistered<SignupBloc>()) {
-    getIt.registerFactoryParam<SignupBloc, SignupViewInitialParams, dynamic>(
-      (params, _) => SignupBloc(params, getIt()),
-    );
-  }
   // <<<<<<<<<<<<<<<<<<<<<<<  Login  >>>>>>>>>>>>>>>>>>>>>>>
   if (!getIt.isRegistered<LoginRemoteDataSource>()) {
     getIt.registerSingleton<LoginRemoteDataSource>(

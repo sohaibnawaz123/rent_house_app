@@ -29,6 +29,7 @@ class AppColor {
   static const Color baseText = Color(0xFF9DA4AE);
 
   static const Color disabledText = Color(0xFFF9FAFB);
+  static const Color disabledbtn = Color(0xFFD6BBFB);
   static const Color errorText = Color(0xFFF97066);
   static const Color success = Color(0xFF32D583);
 

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taxi_app/component/app_bar/app_appbar.dart';
@@ -65,6 +67,10 @@ class _LoginViewState extends State<LoginView> {
             ),
             30.heightBox,
             AppButton(
+              buttonColor: _formKey.currentState?.validate() == false
+                  ? AppColor.disabledbtn
+                  : AppColor.btnBg,
+              // isDisable: _formKey.currentState?.validate() == false,
               title: 'Sign In',
               onTap: () {
                 if (_formKey.currentState?.validate() ?? false) {
@@ -91,6 +97,26 @@ class _LoginViewState extends State<LoginView> {
               iconPath: AppAsset.google,
               iconSize: 20.h,
             ),
+            30.heightBox,
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text: "Don't have an account? ",
+                style: context.lightText.copyWith(
+                  color: AppColor.baseText,
+                  fontWeight: AppFontWeight.light,
+                ),
+                children: [
+                  TextSpan(
+                    text: 'Sign Up',
+                    style: context.bodyText.copyWith(
+                      color: AppColor.primary,
+                      fontWeight: AppFontWeight.light,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -113,8 +139,6 @@ class FeildSection extends StatefulWidget {
 
 class _FeildSectionState extends State<FeildSection> {
   bool isRemember = false;
-  String? emailError;
-  String? passwordError;
 
   @override
   Widget build(BuildContext context) {
@@ -122,21 +146,11 @@ class _FeildSectionState extends State<FeildSection> {
       mainAxisSize: MainAxisSize.min,
       children: [
         LabelTextField(
-          
           controller: widget.emailController,
           labelText: "Email",
           hintText: "Enter your email",
-          errorStyle: context.lightText.copyWith(
-            color: AppColor.errorText,
-          ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) => Validator.validateEmail(value ?? ''),
-          errorText: emailError,
-          onChanged: (value) {
-            setState(() {
-              emailError = Validator.validateEmail(value);
-            });
-          },
         ),
         20.heightBox,
         LabelTextField(
@@ -146,12 +160,6 @@ class _FeildSectionState extends State<FeildSection> {
           obscureText: true,
           keyboardType: TextInputType.visiblePassword,
           validator: (value) => Validator.validatePassword(value ?? ''),
-          errorText: passwordError,
-          onChanged: (value) {
-            setState(() {
-              passwordError = Validator.validatePassword(value);
-            });
-          },
         ),
         20.heightBox,
         Row(

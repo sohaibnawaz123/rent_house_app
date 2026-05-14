@@ -49,6 +49,8 @@ class LabelTextField extends StatefulWidget {
     this.borderColor = const Color(0xFFD0D5DD),
     this.disabledColor = AppColor.disabledText,
     this.iconColor,
+    this.validateWhileTyping = true,
+    this.resetValidationOnUnfocus = true,
   });
 
   final TextEditingController? controller;
@@ -87,6 +89,8 @@ class LabelTextField extends StatefulWidget {
   final Color borderColor;
   final Color disabledColor;
   final Color? iconColor;
+  final bool validateWhileTyping;
+  final bool resetValidationOnUnfocus;
 
   @override
   State<LabelTextField> createState() => _LabelTextFieldState();
@@ -97,6 +101,9 @@ class _LabelTextFieldState extends State<LabelTextField> {
   late FocusNode _focusNode;
   bool _hasFocus = false;
   bool _isFilled = false;
+  bool _hasInteracted = false;
+  String? _liveErrorText;
+  String? _formErrorText;
 
   @override
   void initState() {
@@ -125,13 +132,45 @@ class _LabelTextFieldState extends State<LabelTextField> {
   void _handleFocusChange() {
     setState(() {
       _hasFocus = _focusNode.hasFocus;
+      if (_hasFocus && _isFilled) {
+        _validateText(_currentText);
+      } else if (widget.resetValidationOnUnfocus) {
+        _hasInteracted = false;
+        _liveErrorText = null;
+      }
     });
   }
 
   void _handleTextChange() {
     setState(() {
       _isFilled = widget.controller!.text.isNotEmpty;
+      if (widget.validateWhileTyping) {
+        _validateText(widget.controller!.text);
+      }
     });
+  }
+
+  String get _currentText {
+    if (widget.controller != null) return widget.controller!.text;
+    return widget.initialValue ?? '';
+  }
+
+  void _validateText(String value) {
+    if (!_hasFocus || widget.validator == null) return;
+    _hasInteracted = true;
+    _liveErrorText = widget.validator!(value);
+    _formErrorText = null;
+  }
+
+  String? _validateFormField(String? value) {
+    final errorText = widget.validator?.call(value);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _formErrorText == errorText) return;
+      setState(() {
+        _formErrorText = errorText;
+      });
+    });
+    return errorText;
   }
 
   void _toggleObscure() {
@@ -142,12 +181,22 @@ class _LabelTextFieldState extends State<LabelTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final hasError = widget.errorText != null;
     final isDisabled = !widget.enabled;
-    final isSuccess = widget.isSuccess && !hasError && !isDisabled;
     final isTyping = _hasFocus;
-    // ignore: unused_local_variable
     final isFilled = _isFilled;
+    final liveValidationIsVisible =
+        widget.validateWhileTyping &&
+        isTyping &&
+        _hasInteracted &&
+        widget.validator != null;
+    final effectiveErrorText = liveValidationIsVisible
+        ? _liveErrorText
+        : widget.errorText ?? _formErrorText;
+    final hasError = effectiveErrorText != null;
+    final isSuccess =
+        !hasError &&
+        !isDisabled &&
+        ((liveValidationIsVisible && isFilled) || widget.isSuccess);
 
     // Border color logic
     Color borderColor = widget.borderColor;
@@ -162,7 +211,7 @@ class _LabelTextFieldState extends State<LabelTextField> {
     }
 
     // Helper text and color logic
-    String? helperText = widget.errorText ?? widget.helperText;
+    String? helperText = effectiveErrorText ?? widget.helperText;
     Color helperColor = AppColor.baseText;
     if (hasError) {
       helperColor = widget.errorColor;
@@ -214,10 +263,21 @@ class _LabelTextFieldState extends State<LabelTextField> {
           readOnly: widget.readOnly,
           keyboardType: widget.keyboardType,
           controller: widget.controller,
-          onChanged: widget.onChanged,
+          onChanged: (value) {
+            if (widget.validateWhileTyping && widget.controller == null) {
+              setState(() {
+                _isFilled = value.isNotEmpty;
+                _validateText(value);
+              });
+            }
+            widget.onChanged?.call(value);
+          },
           focusNode: _focusNode,
           onFieldSubmitted: widget.onFieldSubmitted,
-          validator: widget.validator,
+          validator: widget.validator == null ? null : _validateFormField,
+          autovalidateMode: widget.validateWhileTyping
+              ? AutovalidateMode.onUserInteraction
+              : AutovalidateMode.disabled,
           style:
               widget.textStyle ??
               context.bodyText.copyWith(
@@ -260,7 +320,7 @@ class _LabelTextFieldState extends State<LabelTextField> {
             disabledBorder: _outlineBorder(widget.disabledColor),
             errorBorder: _outlineBorder(widget.errorColor),
             focusedErrorBorder: _outlineBorder(widget.errorColor),
-            errorText: widget.errorText,
+            errorText: effectiveErrorText,
             errorStyle: const TextStyle(height: 0, fontSize: 0),
           ),
         ),
