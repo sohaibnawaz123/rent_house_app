@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taxi_app/component/app_bar/app_appbar.dart';
@@ -14,29 +12,27 @@ import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/core/validator/validator.dart';
-import 'package:taxi_app/main.dart';
-import 'package:taxi_app/modules/auth/presentation/blocs/login/login_bloc.dart';
 import 'package:taxi_app/modules/auth/presentation/blocs/register/register_bloc.dart';
-import 'package:taxi_app/modules/auth/presentation/routes/register_view_initial_params.dart';
-import 'package:taxi_app/modules/auth/presentation/views/register_view.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/auth_header.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/checkbox_row.dart';
 
-class LoginView extends StatefulWidget {
-  final LoginBloc bloc;
-  const LoginView({super.key, required this.bloc});
+class RegisterView extends StatefulWidget {
+  final RegisterBloc bloc;
+  const RegisterView({super.key, required this.bloc});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _RegisterViewState extends State<RegisterView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -57,31 +53,32 @@ class _LoginViewState extends State<LoginView> {
         child: ListView(
           children: [
             AppAppbar(title: ''),
-            30.heightBox,
+            20.heightBox,
             AuthHeader(
-              title: 'Welcome Back !',
+              title: 'Register Account',
               subTitle:
                   'Sign in with your email and password or social media to continue',
             ),
-            30.heightBox,
+            20.heightBox,
             Form(
               key: _formKey,
               child: FeildSection(
+                nameController: _nameController,
                 emailController: _emailController,
                 passwordController: _passwordController,
               ),
             ),
-            30.heightBox,
+            20.heightBox,
             AppButton(
               buttonColor: AppColor.btnBg,
-              title: 'Sign In',
+              title: 'Sign Up',
               onTap: () {
                 if (_formKey.currentState?.validate() ?? false) {
                   // Handle successful validation (login logic)
                 }
               },
             ),
-            30.heightBox,
+            20.heightBox,
             Content(
               data: 'OR',
               textStyle: context.titleText.copyWith(
@@ -90,7 +87,7 @@ class _LoginViewState extends State<LoginView> {
               ),
               alignment: TextAlign.center,
             ),
-            30.heightBox,
+            20.heightBox,
             AppButton(
               title: 'Sign In with Google',
               buttonColor: AppColor.transparent,
@@ -100,15 +97,9 @@ class _LoginViewState extends State<LoginView> {
               iconPath: AppAsset.google,
               iconSize: 20.h,
             ),
-            30.heightBox,
+            20.heightBox,
             GestureDetector(
-              onTap: () => context.pushPage(
-                RegisterView(
-                  bloc: getIt<RegisterBloc>(
-                    param1: RegisterViewInitialParams(),
-                  ),
-                ),
-              ),
+              onTap: () => context.popPage(),
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
@@ -119,7 +110,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   children: [
                     TextSpan(
-                      text: 'Sign Up',
+                      text: 'Sign In',
                       style: context.bodyText.copyWith(
                         color: AppColor.primary,
                         fontWeight: AppFontWeight.light,
@@ -137,10 +128,12 @@ class _LoginViewState extends State<LoginView> {
 }
 
 class FeildSection extends StatefulWidget {
+  final TextEditingController nameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   const FeildSection({
     super.key,
+    required this.nameController,
     required this.emailController,
     required this.passwordController,
   });
@@ -156,7 +149,16 @@ class _FeildSectionState extends State<FeildSection> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        LabelTextField(
+          controller: widget.nameController,
+          labelText: "User Name",
+          hintText: "Enter your user name",
+          keyboardType: TextInputType.text,
+          validator: (value) => Validator.validateFullName(value ?? '', 'Full'),
+        ),
+        10.heightBox,
         LabelTextField(
           controller: widget.emailController,
           labelText: "Email",
@@ -164,7 +166,7 @@ class _FeildSectionState extends State<FeildSection> {
           keyboardType: TextInputType.emailAddress,
           validator: (value) => Validator.validateEmail(value ?? ''),
         ),
-        20.heightBox,
+        10.heightBox,
         LabelTextField(
           controller: widget.passwordController,
           labelText: "Password",
@@ -174,31 +176,16 @@ class _FeildSectionState extends State<FeildSection> {
           validator: (value) => Validator.validatePassword(value ?? ''),
         ),
         20.heightBox,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CheckRow(
-              title: 'Remember me',
-              isChecked: isRemember,
-              onTap: () {
-                setState(() {
-                  isRemember = !isRemember;
-                });
-              },
-            ),
-            Content(
-              data: 'Forgot Password ?',
-              textStyle: context.lightText.copyWith(
-                color: AppColor.primary,
-                fontWeight: AppFontWeight.semiBold,
-              ),
-              size: 14,
-            ),
-          ],
+        CheckRow(
+          title: "Agree with terms and privacy policy",
+          isChecked: isRemember,
+          onTap: () {
+            setState(() {
+              isRemember = !isRemember;
+            });
+          },
         ),
       ],
     );
   }
 }
-
-

@@ -23,7 +23,7 @@ class AuthHeader extends StatelessWidget {
             color: AppColor.primaryText,
             fontWeight: AppFontWeight.semiBold,
           ),
-          size: 20,
+          size: 28,
         ),
         if (subTitle != null)
           Content(

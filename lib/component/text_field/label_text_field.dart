@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
+import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_padding.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 
@@ -244,8 +245,9 @@ class _LabelTextFieldState extends State<LabelTextField> {
               widget.labelStyle ??
               context.lableText.copyWith(
                 color: AppColor.primaryText,
-                fontWeight: FontWeight.w600,
+                fontWeight: AppFontWeight.semiBold,
               ),
+              size: 14,
         ),
         SizedBox(height: 8.h),
         TextFormField(
