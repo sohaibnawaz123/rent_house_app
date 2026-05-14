@@ -5,7 +5,6 @@ import 'package:taxi_app/modules/auth/domain/failures/register_failure.dart';
 import 'package:taxi_app/modules/auth/domain/params/register_param.dart';
 import 'package:taxi_app/modules/auth/domain/repository/register_repo.dart';
 import 'package:taxi_app/modules/auth/presentation/validator/register_validator.dart';
-import 'package:taxi_app/modules/auth/domain/failures/register_failure.dart';
 
 class RegisterUseCase {
   final RegisterValidator validator;

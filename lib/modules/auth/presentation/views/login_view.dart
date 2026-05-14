@@ -15,9 +15,12 @@ import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/core/validator/validator.dart';
 import 'package:taxi_app/main.dart';
+import 'package:taxi_app/modules/auth/presentation/blocs/forgetpassword/forgetpassword_bloc.dart';
 import 'package:taxi_app/modules/auth/presentation/blocs/login/login_bloc.dart';
 import 'package:taxi_app/modules/auth/presentation/blocs/register/register_bloc.dart';
+import 'package:taxi_app/modules/auth/presentation/routes/forgetpassword_view_initial_params.dart';
 import 'package:taxi_app/modules/auth/presentation/routes/register_view_initial_params.dart';
+import 'package:taxi_app/modules/auth/presentation/views/forgetpassword_view.dart';
 import 'package:taxi_app/modules/auth/presentation/views/register_view.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/auth_header.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/checkbox_row.dart';
@@ -34,7 +37,7 @@ class _LoginViewState extends State<LoginView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  bool isRemember = false;
   @override
   void dispose() {
     _emailController.dispose();
@@ -70,6 +73,42 @@ class _LoginViewState extends State<LoginView> {
                 emailController: _emailController,
                 passwordController: _passwordController,
               ),
+            ),
+            20.heightBox,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CheckRow(
+                  title: 'Remember me',
+                  isChecked: isRemember,
+                  onTap: () {
+                    setState(() {
+                      isRemember = !isRemember;
+                    });
+                  },
+                ),
+                GestureDetector(
+                  onTap: () => context.pushPage(
+                    ForgetpasswordView(
+                      hasEmail: _emailController.text.isNotEmpty,
+                      email: _emailController.text.isNotEmpty
+                          ? _emailController.text
+                          : null,
+                      bloc: getIt<ForgetpasswordBloc>(
+                        param1: ForgetpasswordViewInitialParams(),
+                      ),
+                    ),
+                  ),
+                  child: Content(
+                    data: 'Forgot Password ?',
+                    textStyle: context.lightText.copyWith(
+                      color: AppColor.primary,
+                      fontWeight: AppFontWeight.semiBold,
+                    ),
+                    size: 14,
+                  ),
+                ),
+              ],
             ),
             30.heightBox,
             AppButton(
@@ -150,8 +189,6 @@ class FeildSection extends StatefulWidget {
 }
 
 class _FeildSectionState extends State<FeildSection> {
-  bool isRemember = false;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -173,32 +210,7 @@ class _FeildSectionState extends State<FeildSection> {
           keyboardType: TextInputType.visiblePassword,
           validator: (value) => Validator.validatePassword(value ?? ''),
         ),
-        20.heightBox,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CheckRow(
-              title: 'Remember me',
-              isChecked: isRemember,
-              onTap: () {
-                setState(() {
-                  isRemember = !isRemember;
-                });
-              },
-            ),
-            Content(
-              data: 'Forgot Password ?',
-              textStyle: context.lightText.copyWith(
-                color: AppColor.primary,
-                fontWeight: AppFontWeight.semiBold,
-              ),
-              size: 14,
-            ),
-          ],
-        ),
       ],
     );
   }
 }
-
-

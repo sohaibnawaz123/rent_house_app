@@ -24,4 +24,6 @@ class AppAsset {
   static const String back = '$iconPath/back.svg';
   static const String info = '$iconPath/Paper.svg';
   static const String google = '$iconPath/google.svg';
+  static const String email = '$iconPath/Message.svg';
+  static const String phone = '$iconPath/phone.svg';
 }
