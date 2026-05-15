@@ -26,4 +26,13 @@ class AppAsset {
   static const String google = '$iconPath/google.svg';
   static const String email = '$iconPath/Message.svg';
   static const String phone = '$iconPath/phone.svg';
+
+  //illustration
+  static const String success = '$illustrationPath/success.svg';
+  static const String opps = '$illustrationPath/opps.svg';
+  static const String noNotification = '$illustrationPath/no-notification.svg';
+  static const String map = '$illustrationPath/map.svg';
+  static const String location = '$illustrationPath/location.svg';
+  static const String done = '$illustrationPath/done.svg';
+  static const String delete = '$illustrationPath/delete.svg';
 }

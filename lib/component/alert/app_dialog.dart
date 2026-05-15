@@ -9,6 +9,8 @@ appDialog(BuildContext context, Widget widget) {
     builder: (context) {
       return AlertDialog(
         backgroundColor: AppColor.transparent,
+        shadowColor: AppColor.primaryText.withValues(alpha: 0.5),
+        surfaceTintColor: AppColor.primaryText.withValues(alpha: 0.5),
         iconPadding: EdgeInsets.zero,
         buttonPadding: EdgeInsets.zero,
         contentPadding: EdgeInsets.zero,
@@ -20,7 +22,7 @@ appDialog(BuildContext context, Widget widget) {
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: AppColor.base,
+            color: AppColor.white,
           ),
           child: widget,
         ),

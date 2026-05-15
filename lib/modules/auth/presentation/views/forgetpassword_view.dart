@@ -134,9 +134,8 @@ class _ForgetpasswordViewState extends State<ForgetpasswordView> {
                 );
               } else {
                 // Show error message or prompt user to select a contact type
-               context.showSnackbar(
-                backgroundColor: AppColor.errorText.withValues(alpha: 0.1),
-                textColor: AppColor.errorText,
+                context.showSnackbar(
+                  backgroundColor: AppColor.errorText,
                   message: "Select to option to reset password",
                   type: StatusTileType.error,
                 );

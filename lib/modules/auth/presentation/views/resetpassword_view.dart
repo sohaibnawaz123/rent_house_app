@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:taxi_app/component/alert/app_dialog.dart';
 import 'package:taxi_app/component/app_bar/app_appbar.dart';
 import 'package:taxi_app/component/button/app_button.dart';
+import 'package:taxi_app/component/image/app_network_image.dart';
+import 'package:taxi_app/component/status_tile/status_tile.dart';
+import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/component/text_field/label_text_field.dart';
+import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
+import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
+import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
+import 'package:taxi_app/core/utils/extension/app_snackBar.dart';
+import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/core/validator/validator.dart';
 import 'package:taxi_app/modules/auth/presentation/blocs/resetpassword/resetpassword_bloc.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/auth_header.dart';
@@ -70,8 +79,17 @@ class _ResetpasswordViewState extends State<ResetpasswordView> {
           buttonColor: AppColor.btnBg,
           title: 'Change password',
           onTap: () {
+            if (_passwordController.text != _confirmPasswordController.text) {
+              // Show error message if passwords do not match
+              context.showSnackbar(
+                message: 'Passwords do not match',
+                type: StatusTileType.error,
+                backgroundColor: AppColor.errorText,
+              );
+              return;
+            }
             if (_formKey.currentState?.validate() ?? false) {
-              // Perform password reset logic here
+              appDialog(context, SuccessReset());
             }
           },
         ),
@@ -117,6 +135,52 @@ class _FeildSectionState extends State<FeildSection> {
           validator: (value) => Validator.validatePassword(value ?? ''),
         ),
       ],
+    );
+  }
+}
+
+class SuccessReset extends StatelessWidget {
+  const SuccessReset({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.sizeOf(context).width * 0.8,
+      // height: MediaQuery.sizeOf(context).h * 0.9,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AppImage.svg(svgPath: AppAsset.success, size: 150),
+            30.heightBox,
+            Content(
+              data: "Success!",
+              alignment: TextAlign.center,
+              textStyle: context.bodyText.copyWith(
+                color: AppColor.primaryText,
+                fontWeight: AppFontWeight.bold,
+              ),
+              size: 24,
+            ),
+            20.heightBox,
+
+            Content(
+              data: "Your password has been successfully reset",
+              alignment: TextAlign.center,
+              textStyle: context.bodyText.copyWith(color: AppColor.baseText),
+            ),
+            20.heightBox,
+            AppButton(title: "Continue", buttonColor: AppColor.btnBg,onTap: (){
+              context.popPage();
+              context.popPage();
+              context.popPage();
+              context.popPage();
+            },),
+          ],
+        ),
+      ),
     );
   }
 }
