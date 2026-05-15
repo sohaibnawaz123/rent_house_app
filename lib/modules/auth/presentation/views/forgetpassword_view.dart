@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:taxi_app/component/app_bar/app_appbar.dart';
 import 'package:taxi_app/component/button/app_button.dart';
 import 'package:taxi_app/component/status_tile/status_tile.dart';
-import 'package:taxi_app/component/status_tile/status_tile_snackbar_extension.dart';
 import 'package:taxi_app/component/text_field/label_text_field.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
+import 'package:taxi_app/core/utils/extension/app_snackBar.dart';
 import 'package:taxi_app/core/validator/validator.dart';
 import 'package:taxi_app/main.dart';
 import 'package:taxi_app/modules/auth/presentation/blocs/forgetpassword/forgetpassword_bloc.dart';
@@ -134,7 +134,7 @@ class _ForgetpasswordViewState extends State<ForgetpasswordView> {
                 );
               } else {
                 // Show error message or prompt user to select a contact type
-               context.showStatusTileSnackbar(
+               context.showSnackbar(
                 backgroundColor: AppColor.errorText.withValues(alpha: 0.1),
                 textColor: AppColor.errorText,
                   message: "Select to option to reset password",
