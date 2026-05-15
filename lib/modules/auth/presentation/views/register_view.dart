@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taxi_app/component/app_bar/app_appbar.dart';
 import 'package:taxi_app/component/button/app_button.dart';
+import 'package:taxi_app/component/status_tile/status_tile.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/component/text_field/label_text_field.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
@@ -10,11 +11,16 @@ import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
+import 'package:taxi_app/core/utils/extension/app_snackBar.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/core/validator/validator.dart';
+import 'package:taxi_app/main.dart';
 import 'package:taxi_app/modules/auth/presentation/blocs/register/register_bloc.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/auth_header.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/checkbox_row.dart';
+import 'package:taxi_app/modules/googlemap/presentation/blocs/locationselection/locationselection_bloc.dart';
+import 'package:taxi_app/modules/googlemap/presentation/routes/locationselection_view_initial_params.dart';
+import 'package:taxi_app/modules/googlemap/presentation/views/locationselection_view.dart';
 
 class RegisterView extends StatefulWidget {
   final RegisterBloc bloc;
@@ -36,6 +42,14 @@ class _RegisterViewState extends State<RegisterView> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  bool isRemember = false;
+
+  void _onRememberChanged(bool value) {
+    setState(() {
+      isRemember = value;
+    });
   }
 
   @override
@@ -63,6 +77,8 @@ class _RegisterViewState extends State<RegisterView> {
             Form(
               key: _formKey,
               child: FeildSection(
+                isRemember: isRemember,
+                onRememberChanged: _onRememberChanged,
                 nameController: _nameController,
                 emailController: _emailController,
                 passwordController: _passwordController,
@@ -73,8 +89,28 @@ class _RegisterViewState extends State<RegisterView> {
               buttonColor: AppColor.btnBg,
               title: 'Sign Up',
               onTap: () {
-                if (_formKey.currentState?.validate() ?? false) {
-                  // Handle successful validation (login logic)
+                if (isRemember == false) {
+                  context.showSnackbar(
+                    message: ' Please agree with terms and privacy policy',
+                    backgroundColor: AppColor.errorText,
+                    type: StatusTileType.error,
+                  );
+                  return;
+                }
+                if ((_formKey.currentState?.validate() ?? false) &&
+                    isRemember) {
+                  context.pushPage(
+                    LocationselectionView(
+                      bloc: getIt<LocationselectionBloc>(
+                        param1: LocationselectionViewInitialParams(),
+                      ),
+                    ),
+                  );
+                  context.showSnackbar(
+                    message: 'Registration successful',
+                    backgroundColor: AppColor.success,
+                    type: StatusTileType.success,
+                  );
                 }
               },
             ),
@@ -127,23 +163,20 @@ class _RegisterViewState extends State<RegisterView> {
   }
 }
 
-class FeildSection extends StatefulWidget {
+class FeildSection extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final bool isRemember;
+  final ValueChanged<bool> onRememberChanged;
   const FeildSection({
     super.key,
     required this.nameController,
     required this.emailController,
     required this.passwordController,
+    required this.isRemember,
+    required this.onRememberChanged,
   });
-
-  @override
-  State<FeildSection> createState() => _FeildSectionState();
-}
-
-class _FeildSectionState extends State<FeildSection> {
-  bool isRemember = false;
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +185,7 @@ class _FeildSectionState extends State<FeildSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LabelTextField(
-          controller: widget.nameController,
+          controller: nameController,
           labelText: "User Name",
           hintText: "Enter your user name",
           keyboardType: TextInputType.text,
@@ -160,7 +193,7 @@ class _FeildSectionState extends State<FeildSection> {
         ),
         10.heightBox,
         LabelTextField(
-          controller: widget.emailController,
+          controller: emailController,
           labelText: "Email",
           hintText: "Enter your email",
           keyboardType: TextInputType.emailAddress,
@@ -168,7 +201,7 @@ class _FeildSectionState extends State<FeildSection> {
         ),
         10.heightBox,
         LabelTextField(
-          controller: widget.passwordController,
+          controller: passwordController,
           labelText: "Password",
           hintText: "Enter your password",
           obscureText: true,
@@ -180,9 +213,7 @@ class _FeildSectionState extends State<FeildSection> {
           title: "Agree with terms and privacy policy",
           isChecked: isRemember,
           onTap: () {
-            setState(() {
-              isRemember = !isRemember;
-            });
+            onRememberChanged(!isRemember);
           },
         ),
       ],

@@ -6,4 +6,6 @@ class AppUrl {
   static String forgetpasswordUrl = '';
   static String otpverificationUrl = '';
   static String resetpasswordUrl = '';
+  static String locationselectionUrl = '';
+  static String locationpickUrl = '';
 }

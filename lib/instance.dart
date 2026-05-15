@@ -55,6 +55,22 @@ import 'package:taxi_app/modules/auth/presentation/blocs/register/register_bloc.
 import 'package:taxi_app/modules/auth/presentation/routes/register_view_initial_params.dart';
 import 'package:taxi_app/modules/auth/presentation/validator/register_validator.dart';
 
+import 'package:taxi_app/modules/googlemap/data/datasource/locationpick_remote_data_source.dart';
+import 'package:taxi_app/modules/googlemap/data/datasource/locationpick_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/googlemap/data/rest_api/locationpick_rest_api_repo.dart';
+import 'package:taxi_app/modules/googlemap/domain/repository/locationpick_repo.dart';
+import 'package:taxi_app/modules/googlemap/domain/usecase/locationpick_use_case.dart';
+import 'package:taxi_app/modules/googlemap/presentation/blocs/locationpick/locationpick_bloc.dart';
+import 'package:taxi_app/modules/googlemap/presentation/routes/locationpick_view_initial_params.dart';
+
+import 'package:taxi_app/modules/googlemap/data/datasource/locationselection_remote_data_source.dart';
+import 'package:taxi_app/modules/googlemap/data/datasource/locationselection_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/googlemap/data/rest_api/locationselection_rest_api_repo.dart';
+import 'package:taxi_app/modules/googlemap/domain/repository/locationselection_repo.dart';
+import 'package:taxi_app/modules/googlemap/domain/usecase/locationselection_use_case.dart';
+import 'package:taxi_app/modules/googlemap/presentation/blocs/locationselection/locationselection_bloc.dart';
+import 'package:taxi_app/modules/googlemap/presentation/routes/locationselection_view_initial_params.dart';
+
 void getInstance(BuildContext context) {
   getIt = GetIt.instance;
 
@@ -230,5 +246,54 @@ void getInstance(BuildContext context) {
         .registerFactoryParam<RegisterBloc, RegisterViewInitialParams, dynamic>(
           (params, _) => RegisterBloc(params, getIt()),
         );
+  }
+  // <<<<<<<<<<<<<<<<<<<<<<<  Locationpick  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<LocationpickRemoteDataSource>()) {
+    getIt.registerSingleton<LocationpickRemoteDataSource>(
+      LocationpickRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<LocationpickRepo>()) {
+    getIt.registerSingleton<LocationpickRepo>(LocationpickRestApiRepo(getIt()));
+  }
+
+  if (!getIt.isRegistered<LocationpickUseCase>()) {
+    getIt.registerSingleton<LocationpickUseCase>(LocationpickUseCase(getIt()));
+  }
+
+  if (!getIt.isRegistered<LocationpickBloc>()) {
+    getIt.registerFactoryParam<
+      LocationpickBloc,
+      LocationpickViewInitialParams,
+      dynamic
+    >((params, _) => LocationpickBloc(params, getIt()));
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Locationselection  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<LocationselectionRemoteDataSource>()) {
+    getIt.registerSingleton<LocationselectionRemoteDataSource>(
+      LocationselectionRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<LocationselectionRepo>()) {
+    getIt.registerSingleton<LocationselectionRepo>(
+      LocationselectionRestApiRepo(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<LocationselectionUseCase>()) {
+    getIt.registerSingleton<LocationselectionUseCase>(
+      LocationselectionUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<LocationselectionBloc>()) {
+    getIt.registerFactoryParam<
+      LocationselectionBloc,
+      LocationselectionViewInitialParams,
+      dynamic
+    >((params, _) => LocationselectionBloc(params, getIt()));
   }
 }
