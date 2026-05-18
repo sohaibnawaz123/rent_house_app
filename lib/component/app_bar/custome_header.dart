@@ -13,6 +13,7 @@ class HeaderWidget extends StatelessWidget {
     this.category,
     this.showBackButton = true,
     this.showactions = false,
+    this.haveBg = false,
     this.titleColor,
     this.iconColor,
     this.actions,
@@ -23,6 +24,7 @@ class HeaderWidget extends StatelessWidget {
   final Color? iconColor;
   final bool showBackButton;
   final bool showactions;
+  final bool haveBg;
   final List<Widget>? actions;
 
   @override
@@ -75,6 +77,7 @@ class HeaderWidget extends StatelessWidget {
                       ),
                     ),
                   )
+              
                 : SizedBox.shrink(),
             showactions
                 ? Positioned(
@@ -88,7 +91,7 @@ class HeaderWidget extends StatelessWidget {
                       children: actions ?? [],
                     ),
                   )
-                : SizedBox.shrink(),
+                :  SizedBox.shrink(),
           ],
         ),
       ),

@@ -6,9 +6,14 @@ import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
+import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/main.dart';
+import 'package:taxi_app/modules/googlemap/presentation/blocs/locationpick/locationpick_bloc.dart';
 import 'package:taxi_app/modules/googlemap/presentation/blocs/locationselection/locationselection_bloc.dart';
+import 'package:taxi_app/modules/googlemap/presentation/routes/locationpick_view_initial_params.dart';
+import 'package:taxi_app/modules/googlemap/presentation/views/locationpick_view.dart';
 
 class LocationselectionView extends StatefulWidget {
   final LocationselectionBloc bloc;
@@ -87,7 +92,16 @@ class _LocationselectionViewState extends State<LocationselectionView> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AppButton(title:'Use current location' ,),
+            AppButton(
+              title: 'Use current location',
+              onTap: () => context.pushPage(
+                LocationpickView(
+                  bloc: getIt<LocationpickBloc>(
+                    param1: LocationpickViewInitialParams(),
+                  ),
+                ),
+              ),
+            ),
             20.heightBox,
             AppButton(
               title: 'Select it manually',
