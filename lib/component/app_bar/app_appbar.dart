@@ -8,7 +8,7 @@ import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AppAppbar extends StatelessWidget {
-  final String title;
+  final String? title;
   final double fontSize;
   final double? width;
   final Widget? trailing;
@@ -18,7 +18,7 @@ class AppAppbar extends StatelessWidget {
   const AppAppbar({
     super.key,
     this.fontSize = 28,
-    required this.title,
+    this.title,
     this.trailing,
     this.width,
     this.isWhite = false,
@@ -61,12 +61,13 @@ class AppAppbar extends StatelessWidget {
             : MainAxisAlignment.spaceBetween,
         children: [
           if (isLeading) leading,
-          Content(
-            data: title,
-            size: fontSize,
-            textStyle: context.titleText,
-            color: isWhite ? AppColor.white : null,
-          ),
+          if (title != null)
+            Content(
+              data: title ?? "",
+              size: fontSize,
+              textStyle: context.titleText,
+              color: isWhite ? AppColor.white : null,
+            ),
           if (isLeading) trailingWidget,
         ],
       ),

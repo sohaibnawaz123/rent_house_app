@@ -32,3 +32,17 @@ class _LocationpickViewState extends State<LocationpickView> {
   
   }
 }
+
+class GoogleMapBackground extends StatefulWidget {
+  const GoogleMapBackground({super.key});
+
+  @override
+  State<GoogleMapBackground> createState() => _GoogleMapBackgroundState();
+}
+
+class _GoogleMapBackgroundState extends State<GoogleMapBackground> {
+  @override
+  Widget build(BuildContext context) {
+    return Placeholder();
+  }
+}

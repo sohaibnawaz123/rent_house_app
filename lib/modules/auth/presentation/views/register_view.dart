@@ -89,6 +89,14 @@ class _RegisterViewState extends State<RegisterView> {
               buttonColor: AppColor.btnBg,
               title: 'Sign Up',
               onTap: () {
+                if ((_formKey.currentState?.validate() == false)) {
+                  context.showSnackbar(
+                    message: ' Please agree with terms and privacy policy',
+                    backgroundColor: AppColor.errorText,
+                    type: StatusTileType.error,
+                  );
+                  return;
+                }
                 if (isRemember == false) {
                   context.showSnackbar(
                     message: ' Please agree with terms and privacy policy',
@@ -97,6 +105,7 @@ class _RegisterViewState extends State<RegisterView> {
                   );
                   return;
                 }
+
                 if ((_formKey.currentState?.validate() ?? false) &&
                     isRemember) {
                   context.pushPage(
