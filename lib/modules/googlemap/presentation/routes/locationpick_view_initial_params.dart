@@ -1,9 +1,16 @@
 class LocationpickViewInitialParams {
-  const LocationpickViewInitialParams();
+  final double? latitude;
+  final double? longitude;
+
+  const LocationpickViewInitialParams({
+    this.latitude,
+    this.longitude,
+  });
 
   factory LocationpickViewInitialParams.fromUri(Uri uri) {
     return LocationpickViewInitialParams(
-      // Parse the URI parameters as needed
+      latitude: double.tryParse(uri.queryParameters['latitude'] ?? ''),
+      longitude: double.tryParse(uri.queryParameters['longitude'] ?? ''),
     );
   }
 }

@@ -80,8 +80,8 @@ class _GoogleMapBackgroundState extends State<GoogleMapBackground> {
 
   Future<BitmapDescriptor> _bitmapDescriptorFromSvgAsset(
     String assetName, {
-    int width = 66,
-    int height = 66,
+    int width = 68,
+    int height = 68,
   }) async {
     try {
       final pictureInfo = await vg.loadPicture(SvgAssetLoader(assetName), null);
@@ -247,18 +247,18 @@ class _LocationSearchHeaderState extends State<LocationSearchHeader> {
                   return IconButton(
                     onPressed: () {
                       _searchController.clear();
-                      context
-                          .read<LocationpickBloc>()
-                          .add(ClearLocationSearchEvent());
+                      context.read<LocationpickBloc>().add(
+                        ClearLocationSearchEvent(),
+                      );
                     },
                     icon: Icon(Icons.close, color: AppColor.baseText),
                   );
                 },
               ),
               onChanged: (value) {
-                context
-                    .read<LocationpickBloc>()
-                    .add(SearchQueryChangedEvent(value));
+                context.read<LocationpickBloc>().add(
+                  SearchQueryChangedEvent(value),
+                );
               },
               filled: true,
               fillColor: AppColor.white,
@@ -296,7 +296,8 @@ class LocationSuggestionsPanel extends StatelessWidget {
           previous.searchQuery != current.searchQuery ||
           previous.isSearching != current.isSearching,
       builder: (context, state) {
-        final showEmptyMessage = state.searchQuery.trim().isNotEmpty &&
+        final showEmptyMessage =
+            state.searchQuery.trim().isNotEmpty &&
             !state.isSearching &&
             state.suggestions.isEmpty;
 
@@ -334,10 +335,8 @@ class LocationSuggestionsPanel extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   itemCount: state.suggestions.length,
-                  separatorBuilder: (_, __) => Divider(
-                    height: 1,
-                    color: AppColor.borderColor,
-                  ),
+                  separatorBuilder: (_, __) =>
+                      Divider(height: 1, color: AppColor.borderColor),
                   itemBuilder: (context, index) {
                     final suggestion = state.suggestions[index];
 
@@ -354,43 +353,34 @@ class LocationSuggestionsPanel extends StatelessWidget {
                           vertical: 12,
                         ),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
+                              padding: EdgeInsets.all(5),
                               height: 36,
                               width: 36,
                               decoration: BoxDecoration(
-                                color: AppColor.highlight.withValues(alpha: 0.5),
+                                color: AppColor.highlight.withValues(
+                                  alpha: 0.5,
+                                ),
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(
-                                Icons.location_on,
-                                color: AppColor.primary,
-                                size: 20,
+                              child: AppImage.svg(
+                                svgPath: AppAsset.locationIcon,
+                                size: 12,
                               ),
                             ),
                             12.widthBox,
                             Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Content(
-                                    data: suggestion.title,
-                                    maxLines: 1,
-                                    textStyle: context.bodyText.copyWith(
-                                      color: AppColor.primaryText,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  4.heightBox,
-                                  Content(
-                                    data: suggestion.address,
-                                    maxLines: 2,
-                                    textStyle: context.bodyText.copyWith(
-                                      color: AppColor.baseText,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
+                              child: Content(
+                                data:
+                                    "${suggestion.title} , ${suggestion.address}",
+                                maxLines: 2,
+                                textStyle: context.bodyText.copyWith(
+                                  color: AppColor.baseText,
+                                  fontSize: 12,
+                                ),
+                                size: 14,
                               ),
                             ),
                           ],

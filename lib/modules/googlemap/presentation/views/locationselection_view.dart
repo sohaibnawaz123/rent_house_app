@@ -5,6 +5,8 @@ import 'package:taxi_app/component/image/app_network_image.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
+import 'package:taxi_app/core/utils/location_utils.dart';
+import 'package:taxi_app/core/utils/utils.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
@@ -24,9 +26,54 @@ class LocationselectionView extends StatefulWidget {
 }
 
 class _LocationselectionViewState extends State<LocationselectionView> {
+  bool _isPickingCurrentLocation = false;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<void> _useCurrentLocation() async {
+    if (_isPickingCurrentLocation) return;
+
+    setState(() => _isPickingCurrentLocation = true);
+
+    try {
+      final position = await pickCurrentLocation();
+
+      if (!mounted) return;
+
+      context.pushPage(
+        LocationpickView(
+          bloc: getIt<LocationpickBloc>(
+            param1: LocationpickViewInitialParams(
+              latitude: position.latitude,
+              longitude: position.longitude,
+            ),
+          ),
+        ),
+      );
+    } on CurrentLocationException catch (error) {
+      if (!mounted) return;
+      Utils.toastErrMessage(error.message, context);
+    } catch (_) {
+      if (!mounted) return;
+      Utils.toastErrMessage('Unable to pick current location.', context);
+    } finally {
+      if (mounted) {
+        setState(() => _isPickingCurrentLocation = false);
+      }
+    }
+  }
+
+  void _selectManually() {
+    context.pushPage(
+      LocationpickView(
+        bloc: getIt<LocationpickBloc>(
+          param1: const LocationpickViewInitialParams(),
+        ),
+      ),
+    );
   }
 
   @override
@@ -94,13 +141,8 @@ class _LocationselectionViewState extends State<LocationselectionView> {
           children: [
             AppButton(
               title: 'Use current location',
-              onTap: () => context.pushPage(
-                LocationpickView(
-                  bloc: getIt<LocationpickBloc>(
-                    param1: LocationpickViewInitialParams(),
-                  ),
-                ),
-              ),
+              isLoading: _isPickingCurrentLocation,
+              onTap: _useCurrentLocation,
             ),
             20.heightBox,
             AppButton(
@@ -108,6 +150,7 @@ class _LocationselectionViewState extends State<LocationselectionView> {
               buttonColor: AppColor.transparent,
               borderColor: AppColor.btnBg,
               fontColor: AppColor.btnBg,
+              onTap: _selectManually,
             ),
           ],
         ),

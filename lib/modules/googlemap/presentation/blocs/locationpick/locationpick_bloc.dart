@@ -15,12 +15,23 @@ part 'locationpick_event.dart';
 part 'locationpick_state.dart';
 
 class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
+  static const String _defaultCity = 'Karachi';
+  static const String _defaultCountry = 'Pakistan';
+
   final LocationpickViewInitialParams initialParams;
   final LocationpickUseCase _useCase;
   Timer? _searchDebounce;
 
   LocationpickBloc(this.initialParams, this._useCase)
-      : super(LocationpickState(initialParams: initialParams)) {
+      : super(
+          LocationpickState(
+            initialParams: initialParams,
+            selectedLatitude:
+                initialParams.latitude ?? LocationpickState.karachiLatitude,
+            selectedLongitude:
+                initialParams.longitude ?? LocationpickState.karachiLongitude,
+          ),
+        ) {
     on<InitializeLocationpickEvent>(_initializeLocationpickAction);
     on<MapCameraMovedEvent>(_mapCameraMovedAction);
     on<MapCameraIdleEvent>(_mapCameraIdleAction);
@@ -121,24 +132,7 @@ class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
     if (event.query != state.searchQuery.trim()) return;
 
     try {
-      final locations = await locationFromAddress(event.query);
-      final suggestions = <LocationSuggestion>[];
-
-      for (final location in locations.take(5)) {
-        final address = await _addressFromCoordinates(
-          location.latitude,
-          location.longitude,
-        );
-
-        suggestions.add(
-          LocationSuggestion(
-            title: _titleFromAddress(address),
-            address: address,
-            latitude: location.latitude,
-            longitude: location.longitude,
-          ),
-        );
-      }
+      final suggestions = await _searchLocationSuggestions(event.query);
 
       if (event.query != state.searchQuery.trim()) return;
 
@@ -243,6 +237,107 @@ class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
   String _titleFromAddress(String address) {
     final title = address.split(',').first.trim();
     return title.isEmpty ? address : title;
+  }
+
+  Future<List<LocationSuggestion>> _searchLocationSuggestions(
+    String query,
+  ) async {
+    final searches = _localSearchQueries(query);
+    final suggestionsByKey = <String, LocationSuggestion>{};
+
+    for (final search in searches) {
+      final locations = await _safeLocationFromAddress(search);
+
+      for (final location in locations) {
+        final address = await _addressFromCoordinates(
+          location.latitude,
+          location.longitude,
+        );
+        final suggestion = LocationSuggestion(
+          title: _titleFromAddress(address),
+          address: address,
+          latitude: location.latitude,
+          longitude: location.longitude,
+        );
+
+        if (!_isPakistanResult(suggestion)) {
+          continue;
+        }
+
+        suggestionsByKey[_locationKey(location)] = suggestion;
+      }
+
+      if (suggestionsByKey.length >= 5) break;
+    }
+
+    final suggestions = suggestionsByKey.values.toList()
+      ..sort(
+        (a, b) => _suggestionScore(query, b).compareTo(
+          _suggestionScore(query, a),
+        ),
+      );
+
+    return suggestions.take(5).toList();
+  }
+
+  List<String> _localSearchQueries(String query) {
+    final normalizedQuery = query.toLowerCase();
+    final hasCity = normalizedQuery.contains(_defaultCity.toLowerCase());
+    final hasCountry = normalizedQuery.contains(_defaultCountry.toLowerCase());
+
+    if (hasCity || hasCountry) {
+      return [query];
+    }
+
+    return [
+      '$query, $_defaultCity, $_defaultCountry',
+      '$query, $_defaultCountry',
+      query,
+    ];
+  }
+
+  Future<List<Location>> _safeLocationFromAddress(String query) async {
+    try {
+      return locationFromAddress(query);
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  String _locationKey(Location location) {
+    return '${location.latitude.toStringAsFixed(5)},'
+        '${location.longitude.toStringAsFixed(5)}';
+  }
+
+  bool _isPakistanResult(LocationSuggestion suggestion) {
+    final address = suggestion.address.toLowerCase();
+    final inPakistanBounds = suggestion.latitude >= 23 &&
+        suggestion.latitude <= 38 &&
+        suggestion.longitude >= 60 &&
+        suggestion.longitude <= 78;
+
+    return address.contains('pakistan') || inPakistanBounds;
+  }
+
+  int _suggestionScore(String query, LocationSuggestion suggestion) {
+    final text = '${suggestion.title} ${suggestion.address}'.toLowerCase();
+    final normalizedQuery = query.toLowerCase();
+    var score = 0;
+
+    if (text.contains(normalizedQuery)) score += 6;
+    if (text.contains(_defaultCity.toLowerCase())) score += 5;
+    if (text.contains('sindh')) score += 3;
+    if (text.contains(_defaultCountry.toLowerCase())) score += 4;
+    if (_isNearKarachi(suggestion)) score += 4;
+
+    return score;
+  }
+
+  bool _isNearKarachi(LocationSuggestion suggestion) {
+    return suggestion.latitude >= 24.65 &&
+        suggestion.latitude <= 25.15 &&
+        suggestion.longitude >= 66.75 &&
+        suggestion.longitude <= 67.45;
   }
 
   @override

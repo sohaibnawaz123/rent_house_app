@@ -137,7 +137,7 @@
 //     switch (FocusManager.instance.highlightMode) {
 //       case FocusHighlightMode.touch:
 //         inTraditionalMode = false;
-//         // TODO(Ahmed): Remove decorative breaks and add lint to it [flutter>=v3.10.0].
+//         
 //         break;
 //       case FocusHighlightMode.traditional:
 //         inTraditionalMode = true;
@@ -626,7 +626,7 @@
 //         //Exclude BottomInset from maxHeight to avoid overlapping menu items
 //         //with keyboard when using searchable dropdown.
 //         //This will ensure menu is drawn in the actual available height.
-//         // TODO(Ahmed): use paddingOf/paddingOf [flutter>=v3.10.0].
+//         
 //         final MediaQueryData mediaQuery = MediaQuery.of(ctx);
 //         final BoxConstraints actualConstraints =
 //             constraints.copyWith(maxHeight: constraints.maxHeight - mediaQuery.viewInsets.bottom);
@@ -1486,12 +1486,10 @@
 //   bool get _enabled => widget.items != null && widget.items!.isNotEmpty && widget.onChanged != null;
 
 //   Orientation _getOrientation(BuildContext context) {
-//     // TODO(Ahmed): use maybeOrientationOf [flutter>=v3.10.0].
 //     Orientation? result = MediaQuery.maybeOf(context)?.orientation;
 //     if (result == null) {
 //       // If there's no MediaQuery, then use the window aspect to determine
 //       // orientation.
-//       // TODO(Ahmed): use View.of(context) and update the comment [flutter>=v3.10.0].
 //       // ignore: deprecated_member_use
 //       final Size size = WidgetsBinding.instance.window.physicalSize;
 //       result = size.width > size.height ? Orientation.landscape : Orientation.portrait;
@@ -1882,7 +1880,6 @@
 // /// floating point numbers.
 // //
 // // See also: //dev/benchmarks/microbenchmarks/lib/foundation/clamp.dart
-// // TODO(Ahmed): use clampDouble from Flutter [flutter>=v3.3.0].
 // double _clampDouble(double x, double min, double max) {
 //   assert(min <= max && !max.isNaN && !min.isNaN);
 //   if (x < min) {
