@@ -369,7 +369,7 @@ void getInstance(BuildContext context) {
       DashboardrootBloc,
       DashboardrootViewInitialParams,
       dynamic
-    >((params, _) => DashboardrootBloc(params, getIt()));
+    >((params, _) => DashboardrootBloc(params));
   }
 
   // <<<<<<<<<<<<<<<<<<<<<<<  Dashboardhome  >>>>>>>>>>>>>>>>>>>>>>>

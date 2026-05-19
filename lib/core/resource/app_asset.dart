@@ -37,4 +37,18 @@ class AppAsset {
   static const String location = '$illustrationPath/location.svg';
   static const String done = '$illustrationPath/done.svg';
   static const String delete = '$illustrationPath/delete.svg';
+
+  // dashboard icons
+  static const String home = '$iconPath/home.svg';
+  static const String explore = '$iconPath/explore.svg';
+  static const String favourite = '$iconPath/favourite.svg';
+  static const String booking = '$iconPath/booking.svg';
+  static const String profile = '$iconPath/Profile.svg';
+  // dashboard activeicons
+  static const String homeActive = '$iconPath/home_active.svg';
+  static const String exploreActive = '$iconPath/explore_active.svg';
+  static const String favouriteActive = '$iconPath/favourite_active.svg';
+  static const String bookingActive = '$iconPath/booking_active.svg';
+  static const String profileActive = '$iconPath/profile_active.svg';
+
 }

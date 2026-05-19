@@ -2,30 +2,44 @@ part of 'dashboardroot_bloc.dart';
 
 class DashboardrootState extends Equatable {
   final DashboardrootViewInitialParams initialParams;
-  final ApiResponse<BaseEntity<DashboardrootEntity>> dashboardrootResponse;
+  final List<NavItemEntity> navItems;
+  final NavItemEntity currentItems;
 
   const DashboardrootState({
     required this.initialParams,
-    this.dashboardrootResponse = const ApiResponse.init(),
+    required this.navItems,
+    required this.currentItems,
   });
 
-   DashboardrootState copyWith({
+  factory DashboardrootState.initail(
+    DashboardrootViewInitialParams initialParams,
+  ) {
+    return DashboardrootState(
+      initialParams: initialParams,
+      navItems: NavItemEntity.allItems,
+      currentItems: NavItemEntity.home,
+    );
+  }
+
+  DashboardrootState copyWith({
     DashboardrootViewInitialParams? initialParams,
-    ApiResponse<BaseEntity<DashboardrootEntity>>? dashboardrootResponse,
+    List<NavItemEntity>? navItems,
+    NavItemEntity? currentItems,
   }) {
-    DashboardrootState data =   DashboardrootState(
+    DashboardrootState data = DashboardrootState(
       initialParams: initialParams ?? this.initialParams,
-      dashboardrootResponse: dashboardrootResponse ?? this.dashboardrootResponse,
+      navItems: navItems ?? this.navItems,
+      currentItems: currentItems ?? this.currentItems,
     );
     Utils.logInfo(data.toString(), name: "Dashboardroot");
     return data;
   }
 
- @override
-  List<Object?> get props => [initialParams, dashboardrootResponse];
+  @override
+  List<Object?> get props => [initialParams, navItems, currentItems];
 
   @override
   String toString() {
-    return 'DashboardrootState(initialParams: $initialParams, dashboardrootResponse: ${dashboardrootResponse.toString()})';
+    return 'UserRootState(initialParams: $initialParams, navItems: $navItems, currentNavItem: $currentItems)';
   }
 }
