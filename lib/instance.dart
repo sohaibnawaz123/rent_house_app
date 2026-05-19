@@ -71,6 +71,54 @@ import 'package:taxi_app/modules/googlemap/domain/usecase/locationselection_use_
 import 'package:taxi_app/modules/googlemap/presentation/blocs/locationselection/locationselection_bloc.dart';
 import 'package:taxi_app/modules/googlemap/presentation/routes/locationselection_view_initial_params.dart';
 
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardroot_remote_data_source.dart';
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardroot_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/dashboard/data/rest_api/dashboardroot_rest_api_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/repository/dashboardroot_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/usecase/dashboardroot_use_case.dart';
+import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardroot/dashboardroot_bloc.dart';
+import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardroot_view_initial_params.dart';
+
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardhome_remote_data_source.dart';
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardhome_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/dashboard/data/rest_api/dashboardhome_rest_api_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/repository/dashboardhome_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/usecase/dashboardhome_use_case.dart';
+import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardhome/dashboardhome_bloc.dart';
+import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardhome_view_initial_params.dart';
+
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardexplore_remote_data_source.dart';
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardexplore_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/dashboard/data/rest_api/dashboardexplore_rest_api_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/repository/dashboardexplore_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/usecase/dashboardexplore_use_case.dart';
+import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardexplore/dashboardexplore_bloc.dart';
+import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardexplore_view_initial_params.dart';
+
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardfavourite_remote_data_source.dart';
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardfavourite_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/dashboard/data/rest_api/dashboardfavourite_rest_api_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/repository/dashboardfavourite_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/usecase/dashboardfavourite_use_case.dart';
+import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardfavourite/dashboardfavourite_bloc.dart';
+import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardfavourite_view_initial_params.dart';
+
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardbooking_remote_data_source.dart';
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardbooking_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/dashboard/data/rest_api/dashboardbooking_rest_api_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/repository/dashboardbooking_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/usecase/dashboardbooking_use_case.dart';
+import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardbooking/dashboardbooking_bloc.dart';
+import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardbooking_view_initial_params.dart';
+
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardprofile_remote_data_source.dart';
+import 'package:taxi_app/modules/dashboard/data/datasource/dashboardprofile_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/dashboard/data/rest_api/dashboardprofile_rest_api_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/repository/dashboardprofile_repo.dart';
+import 'package:taxi_app/modules/dashboard/domain/usecase/dashboardprofile_use_case.dart';
+import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardprofile/dashboardprofile_bloc.dart';
+import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardprofile_view_initial_params.dart';
+
 void getInstance(BuildContext context) {
   getIt = GetIt.instance;
 
@@ -295,5 +343,165 @@ void getInstance(BuildContext context) {
       LocationselectionViewInitialParams,
       dynamic
     >((params, _) => LocationselectionBloc(params, getIt()));
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Dashboardroot  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<DashboardrootRemoteDataSource>()) {
+    getIt.registerSingleton<DashboardrootRemoteDataSource>(
+      DashboardrootRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardrootRepo>()) {
+    getIt.registerSingleton<DashboardrootRepo>(
+      DashboardrootRestApiRepo(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardrootUseCase>()) {
+    getIt.registerSingleton<DashboardrootUseCase>(
+      DashboardrootUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardrootBloc>()) {
+    getIt.registerFactoryParam<
+      DashboardrootBloc,
+      DashboardrootViewInitialParams,
+      dynamic
+    >((params, _) => DashboardrootBloc(params, getIt()));
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Dashboardhome  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<DashboardhomeRemoteDataSource>()) {
+    getIt.registerSingleton<DashboardhomeRemoteDataSource>(
+      DashboardhomeRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardhomeRepo>()) {
+    getIt.registerSingleton<DashboardhomeRepo>(
+      DashboardhomeRestApiRepo(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardhomeUseCase>()) {
+    getIt.registerSingleton<DashboardhomeUseCase>(
+      DashboardhomeUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardhomeBloc>()) {
+    getIt.registerFactoryParam<
+      DashboardhomeBloc,
+      DashboardhomeViewInitialParams,
+      dynamic
+    >((params, _) => DashboardhomeBloc(params, getIt()));
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Dashboardexplore  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<DashboardexploreRemoteDataSource>()) {
+    getIt.registerSingleton<DashboardexploreRemoteDataSource>(
+      DashboardexploreRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardexploreRepo>()) {
+    getIt.registerSingleton<DashboardexploreRepo>(
+      DashboardexploreRestApiRepo(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardexploreUseCase>()) {
+    getIt.registerSingleton<DashboardexploreUseCase>(
+      DashboardexploreUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardexploreBloc>()) {
+    getIt.registerFactoryParam<
+      DashboardexploreBloc,
+      DashboardexploreViewInitialParams,
+      dynamic
+    >((params, _) => DashboardexploreBloc(params, getIt()));
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Dashboardfavourite  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<DashboardfavouriteRemoteDataSource>()) {
+    getIt.registerSingleton<DashboardfavouriteRemoteDataSource>(
+      DashboardfavouriteRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardfavouriteRepo>()) {
+    getIt.registerSingleton<DashboardfavouriteRepo>(
+      DashboardfavouriteRestApiRepo(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardfavouriteUseCase>()) {
+    getIt.registerSingleton<DashboardfavouriteUseCase>(
+      DashboardfavouriteUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardfavouriteBloc>()) {
+    getIt.registerFactoryParam<
+      DashboardfavouriteBloc,
+      DashboardfavouriteViewInitialParams,
+      dynamic
+    >((params, _) => DashboardfavouriteBloc(params, getIt()));
+  }
+  // <<<<<<<<<<<<<<<<<<<<<<<  Dashboardbooking  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<DashboardbookingRemoteDataSource>()) {
+    getIt.registerSingleton<DashboardbookingRemoteDataSource>(
+      DashboardbookingRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardbookingRepo>()) {
+    getIt.registerSingleton<DashboardbookingRepo>(
+      DashboardbookingRestApiRepo(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardbookingUseCase>()) {
+    getIt.registerSingleton<DashboardbookingUseCase>(
+      DashboardbookingUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardbookingBloc>()) {
+    getIt.registerFactoryParam<
+      DashboardbookingBloc,
+      DashboardbookingViewInitialParams,
+      dynamic
+    >((params, _) => DashboardbookingBloc(params, getIt()));
+  }
+  // <<<<<<<<<<<<<<<<<<<<<<<  Dashboardprofile  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<DashboardprofileRemoteDataSource>()) {
+    getIt.registerSingleton<DashboardprofileRemoteDataSource>(
+      DashboardprofileRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardprofileRepo>()) {
+    getIt.registerSingleton<DashboardprofileRepo>(
+      DashboardprofileRestApiRepo(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardprofileUseCase>()) {
+    getIt.registerSingleton<DashboardprofileUseCase>(
+      DashboardprofileUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<DashboardprofileBloc>()) {
+    getIt.registerFactoryParam<
+      DashboardprofileBloc,
+      DashboardprofileViewInitialParams,
+      dynamic
+    >((params, _) => DashboardprofileBloc(params, getIt()));
   }
 }
