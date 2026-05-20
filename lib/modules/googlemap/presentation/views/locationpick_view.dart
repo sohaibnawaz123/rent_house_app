@@ -12,8 +12,13 @@ import 'package:taxi_app/component/text_field/content_field.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
+import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/main.dart';
+import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardroot/dashboardroot_bloc.dart';
+import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardroot_view_initial_params.dart';
+import 'package:taxi_app/modules/dashboard/presentation/views/dashboardroot_view.dart';
 import 'package:taxi_app/modules/googlemap/presentation/blocs/locationpick/locationpick_bloc.dart';
 
 class LocationpickView extends StatefulWidget {
@@ -504,11 +509,18 @@ class LocationBottomCard extends StatelessWidget {
               buttonColor: AppColor.btnBg,
               isDisable: state.isResolvingAddress,
               onTap: () {
-                Navigator.of(context).pop({
-                  'address': state.selectedAddress,
-                  'latitude': state.selectedLatitude,
-                  'longitude': state.selectedLongitude,
-                });
+                context.pushPage(
+                  DashboardrootView(
+                    bloc: getIt<DashboardrootBloc>(
+                      param1: DashboardrootViewInitialParams(),
+                    ),
+                  ),
+                );
+                // Navigator.of(context).pop({
+                //   'address': state.selectedAddress,
+                //   'latitude': state.selectedLatitude,
+                //   'longitude': state.selectedLongitude,
+                // });
               },
             ),
           ],

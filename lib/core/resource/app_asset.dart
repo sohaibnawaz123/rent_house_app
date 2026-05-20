@@ -17,6 +17,7 @@ class AppAsset {
   static const String onboarding1 = '$imagePath/onboarding_one.png';
   static const String onboarding2 = '$imagePath/onboarding_two.png';
   static const String onboarding3 = '$imagePath/onboarding_three.png';
+  static const String building = '$imagePath/building.png';
 
   //icons
   static const String eye = '$iconPath/eye.svg';
@@ -28,6 +29,10 @@ class AppAsset {
   static const String phone = '$iconPath/phone.svg';
   static const String marker = '$iconPath/marker.svg';
   static const String locationIcon = '$iconPath/Location.svg';
+  static const String notification = '$iconPath/Notification.svg';
+  static const String chat = '$iconPath/Chat.svg';
+  static const String filter = '$iconPath/Filter.svg';
+  static const String search = '$iconPath/Search.svg';
 
   //illustration
   static const String success = '$illustrationPath/success.svg';

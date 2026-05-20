@@ -17,6 +17,7 @@ class AppColor {
   static const Color btnBg = Color(0xFF7F56D9);
 
   static const Color grey = Color(0xFFF5F5F5);
+  static const Color warning = Color(0xFFFDB022);
   static const Color highlight = Color(0xFFE9D7FE);
   static Color? get highlightdark => null;
 
