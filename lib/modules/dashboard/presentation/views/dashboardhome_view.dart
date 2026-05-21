@@ -10,6 +10,7 @@ import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardhome/dashboardhome_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
+import 'package:taxi_app/modules/dashboard/presentation/widget/near_by_card.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/recommended_property_card.dart';
 
 class DashboardhomeView extends StatefulWidget {
@@ -47,6 +48,8 @@ class _DashboardhomeViewState extends State<DashboardhomeView> {
             OfferCard(),
             20.heightBox,
             RecommendedLocations(),
+            20.heightBox,
+            NearBySection(),
           ],
         ),
       ),
@@ -302,6 +305,60 @@ class _RecommendedLocationsState extends State<RecommendedLocations> {
               return 10.widthBox;
             },
             itemCount: 5,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class NearBySection extends StatefulWidget {
+  const NearBySection({super.key});
+
+  @override
+  State<NearBySection> createState() => _NearBySectionState();
+}
+
+class _NearBySectionState extends State<NearBySection> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        //Heading
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Content(
+              data: 'Nearby',
+              textStyle: context.headingText.copyWith(
+                color: AppColor.primaryText,
+              ),
+              size: 18,
+            ),
+            Content(
+              data: 'See All',
+              textStyle: context.bodyText.copyWith(color: AppColor.primary),
+              size: 14,
+            ),
+          ],
+        ),
+        20.heightBox,
+        SizedBox(
+          height: 220,
+          child: GridView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 10,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // 2 rows
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 0.4, // controls card width
+            ),
+            itemBuilder: (context, index) {
+              return NearByCard();
+            },
           ),
         ),
       ],
