@@ -39,7 +39,13 @@ class _DashboardrootViewState extends State<DashboardrootView> {
   @override
   void initState() {
     super.initState();
-    _userHomeBloc = getIt(param1: const DashboardhomeViewInitialParams());
+    _userHomeBloc = getIt(
+      param1: DashboardhomeViewInitialParams(
+        address: widget.bloc.initialParams.address,
+        lat: widget.bloc.initialParams.lat,
+        lng: widget.bloc.initialParams.lng,
+      ),
+    );
     widget.bloc.add(const InitializeNavigationEvent());
   }
 

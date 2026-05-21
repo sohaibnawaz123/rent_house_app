@@ -512,7 +512,11 @@ class LocationBottomCard extends StatelessWidget {
                 context.pushPage(
                   DashboardrootView(
                     bloc: getIt<DashboardrootBloc>(
-                      param1: DashboardrootViewInitialParams(),
+                      param1: DashboardrootViewInitialParams(
+                        address: state.selectedAddress,
+                        lat: state.selectedLatitude,
+                        lng: state.selectedLongitude,
+                      ),
                     ),
                   ),
                 );

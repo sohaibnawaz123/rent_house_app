@@ -33,6 +33,7 @@ class AppColor {
   static const Color borderColor = Color(0xFFE5E7EB);
   static const Color disabledbtn = Color(0xFFD6BBFB);
   static const Color errorText = Color(0xFFF97066);
+  static const Color error = Color(0xFFF04438);
   static const Color success = Color(0xFF32D583);
 
   static const Gradient iconBgGradient = LinearGradient(

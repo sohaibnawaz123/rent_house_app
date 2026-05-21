@@ -6,6 +6,8 @@ import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 class IconList extends StatelessWidget {
   final String data;
   final double? size;
+  final bool isCenter;
+  final Color? color;
 
   final TextStyle? style;
   final Widget? icon;
@@ -20,6 +22,8 @@ class IconList extends StatelessWidget {
     this.isLeft = true,
     this.onTap,
     this.size = 12,
+    this.isCenter = true,
+    this.color,
   });
 
   @override
@@ -27,13 +31,22 @@ class IconList extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Row(
+        crossAxisAlignment: isCenter
+            ? CrossAxisAlignment.center
+            : CrossAxisAlignment.start,
         children: [
           if (isLeft) icon ?? SizedBox.shrink(),
-          Content(
-            data: data,
-            textStyle:
-                style ?? context.bodyText.copyWith(color: AppColor.primary),
-            size: size ?? 12,
+          Flexible(
+            fit: FlexFit.loose,
+            child: Content(
+              data: data,
+              textStyle:
+                  style ??
+                  context.bodyText.copyWith(color: color ?? AppColor.primary),
+              size: size ?? 12,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
           if (!isLeft) icon ?? SizedBox.shrink(),
         ],

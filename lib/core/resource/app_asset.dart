@@ -18,6 +18,9 @@ class AppAsset {
   static const String onboarding2 = '$imagePath/onboarding_two.png';
   static const String onboarding3 = '$imagePath/onboarding_three.png';
   static const String building = '$imagePath/building.png';
+  static const String propertyOne = '$imagePath/property1.png';
+  static const String propertyTwo = '$imagePath/property2.png';
+  // static const String fillHeart = '$imagePath/Heart.png';
 
   //icons
   static const String eye = '$iconPath/eye.svg';
@@ -33,6 +36,7 @@ class AppAsset {
   static const String chat = '$iconPath/Chat.svg';
   static const String filter = '$iconPath/Filter.svg';
   static const String search = '$iconPath/Search.svg';
+  static const String fillHeart = '$iconPath/fillHeart.svg';
 
   //illustration
   static const String success = '$illustrationPath/success.svg';

@@ -24,9 +24,9 @@ import 'package:taxi_app/modules/auth/presentation/views/forgetpassword_view.dar
 import 'package:taxi_app/modules/auth/presentation/views/register_view.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/auth_header.dart';
 import 'package:taxi_app/modules/auth/presentation/widget/checkbox_row.dart';
-import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardroot/dashboardroot_bloc.dart';
-import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardroot_view_initial_params.dart';
-import 'package:taxi_app/modules/dashboard/presentation/views/dashboardroot_view.dart';
+import 'package:taxi_app/modules/googlemap/presentation/blocs/locationselection/locationselection_bloc.dart';
+import 'package:taxi_app/modules/googlemap/presentation/routes/locationselection_view_initial_params.dart';
+import 'package:taxi_app/modules/googlemap/presentation/views/locationselection_view.dart';
 
 class LoginView extends StatefulWidget {
   final LoginBloc bloc;
@@ -121,9 +121,9 @@ class _LoginViewState extends State<LoginView> {
                 if (_formKey.currentState?.validate() ?? false) {
                   // Handle successful validation (login logic)
                   context.pushPage(
-                    DashboardrootView(
-                      bloc: getIt<DashboardrootBloc>(
-                        param1: DashboardrootViewInitialParams(),
+                    LocationselectionView(
+                      bloc: getIt<LocationselectionBloc>(
+                        param1: LocationselectionViewInitialParams(),
                       ),
                     ),
                   );

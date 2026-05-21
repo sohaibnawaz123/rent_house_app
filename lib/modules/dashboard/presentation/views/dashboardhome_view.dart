@@ -10,6 +10,7 @@ import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardhome/dashboardhome_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
+import 'package:taxi_app/modules/dashboard/presentation/widget/recommended_property_card.dart';
 
 class DashboardhomeView extends StatefulWidget {
   final DashboardhomeBloc bloc;
@@ -39,11 +40,13 @@ class _DashboardhomeViewState extends State<DashboardhomeView> {
         ),
         child: ListView(
           children: [
-            HomeHeader(),
+            HomeHeader(address: widget.bloc.initialParams.address),
             20.heightBox,
             SearchFeild(),
             20.heightBox,
             OfferCard(),
+            20.heightBox,
+            RecommendedLocations(),
           ],
         ),
       ),
@@ -52,7 +55,8 @@ class _DashboardhomeViewState extends State<DashboardhomeView> {
 }
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  final String? address;
+  const HomeHeader({super.key, this.address});
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +82,15 @@ class HomeHeader extends StatelessWidget {
                 ),
               ),
               IconList(
+                isCenter: false,
                 // isLeft: false,
-                data: 'Yogyakarta, Ind',
+                // ignore: dead_null_aware_expression
+                data: address ?? 'Yogyakarta, Ind',
                 style: context.lableText.copyWith(
                   fontWeight: AppFontWeight.semiBold,
                   color: AppColor.black,
                 ),
-                size: 16,
+                size: 14,
                 icon: AppImage.svg(
                   svgPath: AppAsset.marker,
                   svgColor: AppColor.btnBg,
@@ -237,7 +243,10 @@ class OfferCard extends StatelessWidget {
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: AppImage.asset(assetPath: AppAsset.building,size: 100,),
+                    child: AppImage.asset(
+                      assetPath: AppAsset.building,
+                      size: 100,
+                    ),
                   ),
                 ],
               ),
@@ -245,6 +254,57 @@ class OfferCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class RecommendedLocations extends StatefulWidget {
+  const RecommendedLocations({super.key});
+
+  @override
+  State<RecommendedLocations> createState() => _RecommendedLocationsState();
+}
+
+class _RecommendedLocationsState extends State<RecommendedLocations> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        //Heading
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Content(
+              data: 'Recommended',
+              textStyle: context.headingText.copyWith(
+                color: AppColor.primaryText,
+              ),
+              size: 18,
+            ),
+            Content(
+              data: 'See All',
+              textStyle: context.bodyText.copyWith(color: AppColor.primary),
+              size: 14,
+            ),
+          ],
+        ),
+        20.heightBox,
+        SizedBox(
+          height: 165,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              return RecommendedPropertyCard();
+            },
+            separatorBuilder: (context, index) {
+              return 10.widthBox;
+            },
+            itemCount: 5,
+          ),
+        ),
+      ],
     );
   }
 }
