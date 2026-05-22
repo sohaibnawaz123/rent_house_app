@@ -31,15 +31,21 @@ class _DashboardhomeViewState extends State<DashboardhomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    // print(bottomInset);
+    final bottomSpacing = bottomInset > 0 ? bottomInset + 40 : 110.0;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
+      // extendBody: false,
       backgroundColor: AppColor.white,
       body: Padding(
         padding: EdgeInsets.fromLTRB(
           context.pagePadding.left,
           context.pagePadding.top - 20,
           context.pagePadding.left,
-          context.pagePadding.bottom,
+          // context.pagePadding.bottom,0
+          0
         ),
         child: ListView(
           children: [
@@ -56,7 +62,7 @@ class _DashboardhomeViewState extends State<DashboardhomeView> {
             TopLocationSection(),
             20.heightBox,
             PopularPlaceSection(),
-            (40 + context.pagePadding.bottom).heightBox,
+            bottomSpacing.heightBox,
           ],
         ),
       ),
