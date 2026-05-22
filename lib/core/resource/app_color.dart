@@ -19,6 +19,7 @@ class AppColor {
   static const Color grey = Color(0xFFF5F5F5);
   static const Color warning = Color(0xFFFDB022);
   static const Color highlight = Color(0xFFE9D7FE);
+  static const Color lighthighlight = Color(0xFFF9F5FF);
   static Color? get highlightdark => null;
 
   // >>>>>>>>>>>>>>>>>>>>>>> Text <<<<<<<<<<<<<<<<<<<<<<<

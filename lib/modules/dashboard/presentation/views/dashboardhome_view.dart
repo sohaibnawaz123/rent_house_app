@@ -11,7 +11,9 @@ import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardhome/dashboardhome_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/near_by_card.dart';
+import 'package:taxi_app/modules/dashboard/presentation/widget/popular_place_card.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/recommended_property_card.dart';
+import 'package:taxi_app/modules/dashboard/presentation/widget/top_location_card.dart';
 
 class DashboardhomeView extends StatefulWidget {
   final DashboardhomeBloc bloc;
@@ -50,6 +52,11 @@ class _DashboardhomeViewState extends State<DashboardhomeView> {
             RecommendedLocations(),
             20.heightBox,
             NearBySection(),
+            20.heightBox,
+            TopLocationSection(),
+            20.heightBox,
+            PopularPlaceSection(),
+            (40 + context.pagePadding.bottom).heightBox,
           ],
         ),
       ),
@@ -346,20 +353,129 @@ class _NearBySectionState extends State<NearBySection> {
         ),
         20.heightBox,
         SizedBox(
-          height: 220,
+          height: 180,
           child: GridView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: 10,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, // 2 rows
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 0.4, // controls card width
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 5,
+              childAspectRatio: 0.37, // controls card width
             ),
             itemBuilder: (context, index) {
               return NearByCard();
             },
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class TopLocationSection extends StatefulWidget {
+  const TopLocationSection({super.key});
+
+  @override
+  State<TopLocationSection> createState() => _TopLocationSectionState();
+}
+
+class _TopLocationSectionState extends State<TopLocationSection> {
+  int selectedIndex = -1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        //Heading
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Content(
+              data: 'Top Locations',
+              textStyle: context.headingText.copyWith(
+                color: AppColor.primaryText,
+              ),
+              size: 18,
+            ),
+            Content(
+              data: 'See All',
+              textStyle: context.bodyText.copyWith(color: AppColor.primary),
+              size: 14,
+            ),
+          ],
+        ),
+        20.heightBox,
+        SizedBox(
+          height: 50,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              return TopLocationCard(
+                isSelected: selectedIndex == index,
+                onTap: () {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                },
+              );
+            },
+            separatorBuilder: (context, index) {
+              return 10.widthBox;
+            },
+            itemCount: 10,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class PopularPlaceSection extends StatelessWidget {
+  const PopularPlaceSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        //Heading
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Content(
+              data: 'Popular Places',
+              textStyle: context.headingText.copyWith(
+                color: AppColor.primaryText,
+              ),
+              size: 18,
+            ),
+            Content(
+              data: 'See All',
+              textStyle: context.bodyText.copyWith(color: AppColor.primary),
+              size: 14,
+            ),
+          ],
+        ),
+        20.heightBox,
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          itemBuilder: (context, index) {
+            return const PopularPlaceCard();
+          },
+          separatorBuilder: (context, index) {
+            return Divider(
+              thickness: 1,
+              height: 20,
+              color: AppColor.baseText.withValues(alpha: 0.2),
+            );
+          },
+          itemCount: 5,
         ),
       ],
     );

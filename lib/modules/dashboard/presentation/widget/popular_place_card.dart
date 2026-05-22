@@ -4,13 +4,18 @@ import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
-import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
 
-class NearByCard extends StatelessWidget {
-  const NearByCard({super.key});
+class PopularPlaceCard extends StatefulWidget {
+  const PopularPlaceCard({super.key});
 
+  @override
+  State<PopularPlaceCard> createState() => _PopularPlaceCardState();
+}
+
+class _PopularPlaceCardState extends State<PopularPlaceCard> {
+  bool isFavourite = false;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -25,30 +30,48 @@ class NearByCard extends StatelessWidget {
           Expanded(
             child: Column(
               spacing: 5,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Content(
-                  data: 'Ayana Homestay',
-                  textStyle: context.bodyText.copyWith(
-                    color: AppColor.primaryText,
-                    fontWeight: AppFontWeight.semiBold,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  size: 16,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Content(
+                        data: 'Takatea Homestay',
+                        textStyle: context.bodyText.copyWith(
+                          color: AppColor.primaryText,
+                          fontWeight: AppFontWeight.semiBold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isFavourite = !isFavourite;
+                        });
+                      },
+                      child: isFavourite
+                          ? AppImage.svg(svgPath: AppAsset.fillHeart, size: 24)
+                          : AppImage.svg(
+                              svgPath: AppAsset.favourite,
+                              size: 24,
+                              svgColor: AppColor.error,
+                            ),
+                    ),
+                  ],
                 ),
                 IconList(
-                  isLeft: true,
-                  data: 'Imogiri, Yogyakarta',
-                  color: AppColor.baseText,
+                  data: 'Jl. Tentara Pelajar No.47, RW.001',
                   icon: AppImage.svg(
                     svgPath: AppAsset.locationIcon,
-                    size: 16,
                     svgColor: AppColor.baseText,
+                    size: 16,
                   ),
+                  color: AppColor.baseText,
                 ),
-                5.heightBox,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
