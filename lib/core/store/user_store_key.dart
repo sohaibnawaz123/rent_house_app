@@ -4,4 +4,5 @@ class UserStoreKey {
   static String userData = "userData";
   static String rememberMe = "rememberME";
   static String businessUnit = "businessfsdfsdUnitK";
+  static String isOnboarding = "onBoardingDone";
 }

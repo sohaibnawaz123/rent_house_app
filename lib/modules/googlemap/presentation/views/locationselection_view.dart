@@ -12,6 +12,9 @@ import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/main.dart';
+import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardroot/dashboardroot_bloc.dart';
+import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardroot_view_initial_params.dart';
+import 'package:taxi_app/modules/dashboard/presentation/views/dashboardroot_view.dart';
 import 'package:taxi_app/modules/googlemap/presentation/blocs/locationpick/locationpick_bloc.dart';
 import 'package:taxi_app/modules/googlemap/presentation/blocs/locationselection/locationselection_bloc.dart';
 import 'package:taxi_app/modules/googlemap/presentation/routes/locationpick_view_initial_params.dart';
@@ -94,6 +97,19 @@ class _LocationselectionViewState extends State<LocationselectionView> {
               showactions: true,
               actions: [
                 AppButton(
+                  onTap: () {
+                    context.pushPage(
+                      DashboardrootView(
+                        bloc: getIt<DashboardrootBloc>(
+                          param1: DashboardrootViewInitialParams(
+                            address: 'Select the address for better results',
+                            lat: 0,
+                            lng: 0,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                   title: 'Skip',
                   buttonColor: AppColor.transparent,
                   // height: 40,

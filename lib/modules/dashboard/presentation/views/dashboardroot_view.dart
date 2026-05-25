@@ -102,6 +102,7 @@ class _BodyContent extends StatelessWidget {
               bloc: getIt<DashboardexploreBloc>(
                 param1: DashboardexploreViewInitialParams(),
               ),
+              title: state.currentTitle,
             ),
             DashboardfavouriteView(
               bloc: getIt<DashboardfavouriteBloc>(

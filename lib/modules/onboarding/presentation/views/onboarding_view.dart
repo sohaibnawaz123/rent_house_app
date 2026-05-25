@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taxi_app/component/button/app_button.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
+import 'package:taxi_app/core/store/store_preference.dart';
+import 'package:taxi_app/core/store/user_store_key.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/main.dart';
@@ -124,6 +126,10 @@ class _OnboardingViewState extends State<OnboardingView> {
                   title: isLastPage ? 'Let\'s Start' : 'Next',
                   onTap: () {
                     if (isLastPage) {
+                      StorePreference().write<bool>(
+                        UserStoreKey.isOnboarding,
+                        true,
+                      );
                       context.pushPage(
                         LoginView(
                           bloc: getIt<LoginBloc>(

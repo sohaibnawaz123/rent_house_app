@@ -17,6 +17,7 @@ class HeaderWidget extends StatelessWidget {
     this.titleColor,
     this.iconColor,
     this.actions,
+    this.onTap,
   });
   final String? title;
   final String? category;
@@ -26,6 +27,7 @@ class HeaderWidget extends StatelessWidget {
   final bool showactions;
   final bool haveBg;
   final List<Widget>? actions;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class HeaderWidget extends StatelessWidget {
               children: [
                 Content(
                   data: title ?? "",
-                  size: 24.sp,
+                  size: 20.sp,
                   textStyle: context.headingText.copyWith(
                     fontWeight: AppFontWeight.semiBold,
                     color: titleColor ?? AppColor.primaryText,
@@ -70,14 +72,14 @@ class HeaderWidget extends StatelessWidget {
                     top: 0,
                     bottom: 0,
                     child: GestureDetector(
-                      onTap: () => context.popPage(),
+                      onTap: () => onTap ?? context.popPage(),
                       child: Icon(
                         Icons.arrow_back_ios_new_rounded,
                         color: iconColor ?? AppColor.black,
+                        size: 18,
                       ),
                     ),
                   )
-              
                 : SizedBox.shrink(),
             showactions
                 ? Positioned(
@@ -91,7 +93,7 @@ class HeaderWidget extends StatelessWidget {
                       children: actions ?? [],
                     ),
                   )
-                :  SizedBox.shrink(),
+                : SizedBox.shrink(),
           ],
         ),
       ),

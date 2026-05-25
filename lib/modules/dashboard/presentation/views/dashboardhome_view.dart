@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taxi_app/component/image/app_network_image.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/component/text_field/content_field.dart';
@@ -8,7 +9,9 @@ import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardroot_entity.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardhome/dashboardhome_bloc.dart';
+import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardroot/dashboardroot_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/near_by_card.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/popular_place_card.dart';
@@ -45,7 +48,7 @@ class _DashboardhomeViewState extends State<DashboardhomeView> {
           context.pagePadding.top - 20,
           context.pagePadding.left,
           // context.pagePadding.bottom,0
-          0
+          0,
         ),
         child: ListView(
           children: [
@@ -101,7 +104,7 @@ class HomeHeader extends StatelessWidget {
                 isCenter: false,
                 // isLeft: false,
                 // ignore: dead_null_aware_expression
-                data: address ?? 'Yogyakarta, Ind',
+                data: address ?? 'Select the address or better places',
                 style: context.lableText.copyWith(
                   fontWeight: AppFontWeight.semiBold,
                   color: AppColor.black,
@@ -299,10 +302,20 @@ class _RecommendedLocationsState extends State<RecommendedLocations> {
               ),
               size: 18,
             ),
-            Content(
-              data: 'See All',
-              textStyle: context.bodyText.copyWith(color: AppColor.primary),
-              size: 14,
+            GestureDetector(
+              onTap: () {
+                context.read<DashboardrootBloc>().add(
+                  ChangeNavigationEvent(
+                    NavItemEntity.explore,
+                    title: 'Recommended',
+                  ),
+                );
+              },
+              child: Content(
+                data: 'See All',
+                textStyle: context.bodyText.copyWith(color: AppColor.primary),
+                size: 14,
+              ),
             ),
           ],
         ),

@@ -9,10 +9,11 @@ sealed class DashboardrootEvent extends Equatable {
 
 class ChangeNavigationEvent extends DashboardrootEvent {
   final NavItemEntity item;
+  final String? title;
 
-  const ChangeNavigationEvent(this.item);
+  const ChangeNavigationEvent(this.item, {this.title});
   @override
-  List<Object?> get props => [item];
+  List<Object?> get props => [item, title];
 }
 
 class InitializeNavigationEvent extends DashboardrootEvent {

@@ -20,7 +20,12 @@ class DashboardrootBloc extends Bloc<DashboardrootEvent, DashboardrootState> {
     ChangeNavigationEvent event,
     Emitter<DashboardrootState> emit,
   ) {
-    emit(state.copyWith(currentItems: event.item));
+    emit(
+      state.copyWith(
+        currentItems: event.item,
+        currentTitle: event.title ?? event.item.lable,
+      ),
+    );
   }
 
   void _onInitialize(
