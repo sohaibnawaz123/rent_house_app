@@ -363,10 +363,20 @@ class _NearBySectionState extends State<NearBySection> {
               ),
               size: 18,
             ),
-            Content(
-              data: 'See All',
-              textStyle: context.bodyText.copyWith(color: AppColor.primary),
-              size: 14,
+            GestureDetector(
+              onTap: () {
+                context.read<DashboardrootBloc>().add(
+                  ChangeNavigationEvent(
+                    NavItemEntity.explore,
+                    title: 'Nearby',
+                  ),
+                );
+              },
+              child: Content(
+                data: 'See All',
+                textStyle: context.bodyText.copyWith(color: AppColor.primary),
+                size: 14,
+              ),
             ),
           ],
         ),
@@ -419,10 +429,17 @@ class _TopLocationSectionState extends State<TopLocationSection> {
               ),
               size: 18,
             ),
-            Content(
-              data: 'See All',
-              textStyle: context.bodyText.copyWith(color: AppColor.primary),
-              size: 14,
+            GestureDetector(
+              onTap: () {
+                context.read<DashboardrootBloc>().add(
+                  ChangeNavigationEvent(NavItemEntity.explore, title: 'Top Locations'),
+                );
+              },
+              child: Content(
+                data: 'See All',
+                textStyle: context.bodyText.copyWith(color: AppColor.primary),
+                size: 14,
+              ),
             ),
           ],
         ),
@@ -472,10 +489,17 @@ class PopularPlaceSection extends StatelessWidget {
               ),
               size: 18,
             ),
-            Content(
-              data: 'See All',
-              textStyle: context.bodyText.copyWith(color: AppColor.primary),
-              size: 14,
+            GestureDetector(
+              onTap: () {
+                context.read<DashboardrootBloc>().add(
+                  ChangeNavigationEvent(NavItemEntity.explore, title: 'Popular Places'),
+                );
+              },
+              child: Content(
+                data: 'See All',
+                textStyle: context.bodyText.copyWith(color: AppColor.primary),
+                size: 14,
+              ),
             ),
           ],
         ),

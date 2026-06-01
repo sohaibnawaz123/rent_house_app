@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taxi_app/component/app_bar/custome_header.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
-import 'package:taxi_app/modules/dashboard/domain/entities/dashboardroot_entity.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardexplore/dashboardexplore_bloc.dart';
-import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardroot/dashboardroot_bloc.dart';
+import 'package:taxi_app/modules/dashboard/presentation/widget/popular_place_card.dart';
 
 class DashboardexploreView extends StatefulWidget {
   final DashboardexploreBloc bloc;
@@ -42,15 +40,40 @@ class _DashboardexploreViewState extends State<DashboardexploreView> {
         child: ListView(
           children: [
             HeaderWidget(
+              showBackButton: false,
               title: widget.title ?? 'Explore',
-              onTap: () => context.read<DashboardrootBloc>().add(
-                ChangeNavigationEvent(NavItemEntity.home),
-              ),
             ),
+            30.heightBox,
+
+            ExploreListingSection(),
             bottomSpacing.heightBox,
           ],
         ),
       ),
+    );
+  }
+}
+
+class ExploreListingSection extends StatelessWidget {
+  const ExploreListingSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
+      itemBuilder: (context, index) {
+        return const PopularPlaceCard();
+      },
+      separatorBuilder: (context, index) {
+        return Divider(
+          thickness: 1,
+          height: 20,
+          color: AppColor.baseText.withValues(alpha: 0.2),
+        );
+      },
+      itemCount: 15,
     );
   }
 }
