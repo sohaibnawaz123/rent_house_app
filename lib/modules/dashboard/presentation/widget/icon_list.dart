@@ -31,6 +31,7 @@ class IconList extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Row(
+        spacing: 10,
         crossAxisAlignment: isCenter
             ? CrossAxisAlignment.center
             : CrossAxisAlignment.start,

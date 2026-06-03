@@ -37,6 +37,7 @@ class AppAsset {
   static const String filter = '$iconPath/Filter.svg';
   static const String search = '$iconPath/Search.svg';
   static const String fillHeart = '$iconPath/fillHeart.svg';
+  static const String reviews = '$iconPath/review.svg';
 
   //illustration
   static const String success = '$illustrationPath/success.svg';

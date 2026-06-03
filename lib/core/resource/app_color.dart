@@ -36,6 +36,7 @@ class AppColor {
   static const Color errorText = Color(0xFFF97066);
   static const Color error = Color(0xFFF04438);
   static const Color success = Color(0xFF32D583);
+  static const Color greenShade = Color(0xFFD1FADF);
 
   static const Gradient iconBgGradient = LinearGradient(
     colors: [Color(0xff3BB3E4), Color(0xff268DE3)],
