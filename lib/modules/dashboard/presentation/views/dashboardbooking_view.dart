@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:taxi_app/component/app_bar/custome_header.dart';
 import 'package:taxi_app/component/image/app_network_image.dart';
+import 'package:taxi_app/component/shimmer/app_shimmer.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
@@ -15,6 +16,7 @@ import 'package:taxi_app/modules/dashboard/presentation/widget/custom_tab.dart';
 
 class DashboardbookingView extends StatefulWidget {
   final DashboardbookingBloc bloc;
+
   const DashboardbookingView({super.key, required this.bloc});
 
   @override
@@ -23,16 +25,13 @@ class DashboardbookingView extends StatefulWidget {
 
 class _DashboardbookingViewState extends State<DashboardbookingView> {
   int currentIndex = 0;
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    // print(bottomInset);
+
     final bottomSpacing = bottomInset > 0 ? bottomInset + 40 : 160.0;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: AppColor.white,
@@ -41,16 +40,17 @@ class _DashboardbookingViewState extends State<DashboardbookingView> {
           context.pagePadding.left,
           context.pagePadding.top,
           context.pagePadding.left,
-          // context.pagePadding.bottom,0
           0,
         ),
         child: Column(
           children: [
             HeaderWidget(showBackButton: false, title: 'Booking'),
+
             30.heightBox,
+
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: AppColor.baseText.withValues(alpha: 0.25),
                 borderRadius: BorderRadius.circular(5),
@@ -70,14 +70,15 @@ class _DashboardbookingViewState extends State<DashboardbookingView> {
                 }),
               ),
             ),
+
             20.heightBox,
+
             Expanded(
               child: BookingListingSection(
                 selectedIndex: currentIndex,
                 bottomSpacing: bottomSpacing,
               ),
             ),
-            // FavouriteListingSection(),
           ],
         ),
       ),
@@ -88,6 +89,7 @@ class _DashboardbookingViewState extends State<DashboardbookingView> {
 class BookingListingSection extends StatefulWidget {
   final int selectedIndex;
   final double bottomSpacing;
+
   const BookingListingSection({
     super.key,
     required this.selectedIndex,
@@ -99,46 +101,66 @@ class BookingListingSection extends StatefulWidget {
 }
 
 class _BookingListingSectionState extends State<BookingListingSection> {
-  bool showNotFound = true;
+  bool isLoading = true;
+
+  /// Change this according to API response
+  final bool hasBookings = false;
+
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _startDelay();
+    _startLoading();
   }
 
   @override
   void didUpdateWidget(covariant BookingListingSection oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // When tab changes → reset delay
     if (oldWidget.selectedIndex != widget.selectedIndex) {
-      setState(() {
-        showNotFound = true;
-      });
-      _startDelay();
+      _startLoading();
     }
   }
 
-  void _startDelay() {
-    Future.delayed(const Duration(seconds: 3), () {
+  void _startLoading() {
+    _timer?.cancel();
+
+    setState(() {
+      isLoading = true;
+    });
+
+    _timer = Timer(const Duration(seconds: 3), () {
       if (mounted) {
         setState(() {
-          showNotFound = false;
+          isLoading = false;
         });
       }
     });
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (showNotFound) {
-      return const Center(
-        // 👈 better UI
-        child: NotFoundSection(),
+    /// Loading State
+    if (isLoading) {
+      return ListView.separated(
+        itemBuilder: (content, index) {
+          return AppShimmer.card(height: 100);
+        },
+        separatorBuilder: (context, index) {
+          return 10.heightBox;
+        },
+        itemCount: 10,
       );
     }
 
+    /// List State
     return ListView.separated(
       padding: EdgeInsets.only(bottom: widget.bottomSpacing),
       itemBuilder: (context, index) {
@@ -168,13 +190,8 @@ class NotFoundSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    // print(bottomInset);
-    final bottomSpacing = bottomInset > 0 ? bottomInset + 40 : 160.0;
     return Column(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      // crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
           child: AppImage.svg(
@@ -182,18 +199,20 @@ class NotFoundSection extends StatelessWidget {
             size: MediaQuery.of(context).size.width,
           ),
         ),
+
         Content(
           data: 'You have no upcoming booking',
           textStyle: context.headingText,
           size: 22,
         ),
+
         20.heightBox,
+
         Content(
-          data: 'are you looking fo a completed or cancelled booking ?',
+          data: 'Are you looking for a completed or cancelled booking?',
           textStyle: context.bodyText,
           alignment: TextAlign.center,
         ),
-        bottomSpacing.heightBox
       ],
     );
   }

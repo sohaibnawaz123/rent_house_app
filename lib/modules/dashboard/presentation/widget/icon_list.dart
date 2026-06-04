@@ -8,7 +8,7 @@ class IconList extends StatelessWidget {
   final double? size;
   final bool isCenter;
   final Color? color;
-
+  final FontWeight? weight;
   final TextStyle? style;
   final Widget? icon;
   final bool isLeft;
@@ -23,7 +23,7 @@ class IconList extends StatelessWidget {
     this.onTap,
     this.size = 12,
     this.isCenter = true,
-    this.color,
+    this.color, this.weight,
   });
 
   @override

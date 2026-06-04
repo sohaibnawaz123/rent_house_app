@@ -38,6 +38,11 @@ class AppAsset {
   static const String search = '$iconPath/Search.svg';
   static const String fillHeart = '$iconPath/fillHeart.svg';
   static const String reviews = '$iconPath/review.svg';
+  static const String camera = '$iconPath/Camera.svg';
+  static const String about = '$iconPath/info-square.svg';
+  static const String setting = '$iconPath/Setting.svg';
+  static const String wallet = '$iconPath/Wallet.svg';
+  static const String recentView = '$iconPath/time-square.svg';
 
   //illustration
   static const String success = '$illustrationPath/success.svg';
