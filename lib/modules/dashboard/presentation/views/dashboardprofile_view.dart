@@ -50,10 +50,10 @@ class _DashboardprofileViewState extends State<DashboardprofileView> {
             HeaderWidget(
               title: 'Profile',
               showactions: true,
-              actions: AppButton(
-                // isResponsiveHeight: true,
+              actions: AppButton.iconButton(
+                isResponsiveHeight: true,
                 isResponsiveWidth: true,
-                title: 'Logout',
+                iconPath: AppAsset.logout,
                 onTap: () => StorePreference().delete(UserStoreKey.isLogin),
               ),
             ),

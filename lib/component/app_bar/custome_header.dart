@@ -19,6 +19,7 @@ class HeaderWidget extends StatelessWidget {
     this.actions,
     this.onTap,
   });
+
   final String? title;
   final String? category;
   final Color? titleColor;
@@ -37,58 +38,65 @@ class HeaderWidget extends StatelessWidget {
         padding: EdgeInsets.only(
           top: MediaQuery.of(context).viewInsets.top + 10,
         ),
-        child: Stack(
-          alignment: Alignment.center,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Centered title and category
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Content(
-                  data: title ?? "",
-                  size: 20.sp,
-                  textStyle: context.headingText.copyWith(
-                    fontWeight: AppFontWeight.semiBold,
-                    color: titleColor ?? AppColor.primaryText,
-                  ),
-                ),
-                if (category != null) ...[
-                  Content(
-                    data: category ?? "",
-                    size: 16.sp,
-                    textStyle: context.bodyText.copyWith(
-                      fontWeight: AppFontWeight.regular,
-                      color: AppColor.secondaryText,
-                    ),
-                  ),
-                ],
-              ],
+            SizedBox(
+              width: 48,
+              child: showBackButton
+                  ? Align(
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        onTap: () {
+                          if (onTap != null) {
+                            onTap!();
+                          } else {
+                            context.popPage();
+                          }
+                        },
+                        child: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: iconColor ?? AppColor.black,
+                          size: 18,
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
-            // Back button aligned left
-            showBackButton
-                ? Positioned(
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: GestureDetector(
-                      onTap: () => onTap ?? context.popPage(),
-                      child: Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color: iconColor ?? AppColor.black,
-                        size: 18,
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Content(
+                      data: title ?? '',
+                      size: 20.sp,
+                      textStyle: context.headingText.copyWith(
+                        fontWeight: AppFontWeight.semiBold,
+                        color: titleColor ?? AppColor.primaryText,
                       ),
                     ),
-                  )
-                : SizedBox.shrink(),
-            showactions
-                ? Positioned(
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: actions ?? SizedBox.shrink(),
-                  )
-                : SizedBox.shrink(),
+                    if (category != null)
+                      Content(
+                        data: category ?? '',
+                        size: 16.sp,
+                        textStyle: context.bodyText.copyWith(
+                          fontWeight: AppFontWeight.regular,
+                          color: AppColor.secondaryText,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            if (showactions)
+              Align(
+                alignment: Alignment.centerRight,
+                child: actions ?? const SizedBox.shrink(),
+              )
+            else
+              const SizedBox(width: 48),
           ],
         ),
       ),
