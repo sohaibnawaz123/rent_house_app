@@ -1,12 +1,17 @@
+import 'package:taxi_app/modules/googlemap/domain/entities/locationpick_entity.dart';
+
 class DashboardrootViewInitialParams {
-  final String address;
-  final double lat;
-  final double lng;
-  const DashboardrootViewInitialParams({required this.address, required this.lat, required this.lng});
+  final LocationpickEntity location;
+
+  const DashboardrootViewInitialParams({required this.location});
+
+  String get address => location.addressLine;
+  double get lat => location.lat;
+  double get lng => location.lon;
 
   // factory DashboardrootViewInitialParams.fromUri(Uri uri) {
   //   return DashboardrootViewInitialParams(address: '', lat: null, lng: null
-      
+
   //   );
   // }
 }

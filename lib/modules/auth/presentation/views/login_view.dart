@@ -8,6 +8,8 @@ import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/component/text_field/label_text_field.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
+import 'package:taxi_app/core/store/store_preference.dart';
+import 'package:taxi_app/core/store/user_store_key.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
@@ -126,6 +128,11 @@ class _LoginViewState extends State<LoginView> {
                         param1: LocationselectionViewInitialParams(),
                       ),
                     ),
+                  );
+
+                  StorePreference().write<bool>(
+                    UserStoreKey.isLogin,
+                    true,
                   );
                 }
               },

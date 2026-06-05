@@ -15,6 +15,7 @@ import 'package:taxi_app/main.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardroot/dashboardroot_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardroot_view_initial_params.dart';
 import 'package:taxi_app/modules/dashboard/presentation/views/dashboardroot_view.dart';
+import 'package:taxi_app/modules/googlemap/domain/entities/locationpick_entity.dart';
 import 'package:taxi_app/modules/googlemap/presentation/blocs/locationpick/locationpick_bloc.dart';
 import 'package:taxi_app/modules/googlemap/presentation/blocs/locationselection/locationselection_bloc.dart';
 import 'package:taxi_app/modules/googlemap/presentation/routes/locationpick_view_initial_params.dart';
@@ -98,13 +99,22 @@ class _LocationselectionViewState extends State<LocationselectionView> {
               actions: [
                 AppButton(
                   onTap: () {
-                    context.pushPage(
+                    context.pushReplacementPage(
                       DashboardrootView(
                         bloc: getIt<DashboardrootBloc>(
-                          param1: DashboardrootViewInitialParams(
-                            address: 'Select the address for better results',
-                            lat: 0,
-                            lng: 0,
+                          param1: const DashboardrootViewInitialParams(
+                            location: LocationpickEntity(
+                              lat: 0,
+                              lon: 0,
+                              city: '',
+                              state: '',
+                              country: '',
+                              zipCode: '',
+                              addressLine:
+                                  'Select the address for better results',
+                              countryCode: '',
+                              provinceCode: '',
+                            ),
                           ),
                         ),
                       ),

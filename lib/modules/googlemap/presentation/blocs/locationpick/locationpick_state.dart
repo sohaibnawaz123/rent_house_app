@@ -23,9 +23,7 @@ class LocationpickState extends Equatable {
 
   final LocationpickViewInitialParams initialParams;
   final ApiResponse<BaseEntity<LocationpickEntity>> locationpickResponse;
-  final double selectedLatitude;
-  final double selectedLongitude;
-  final String selectedAddress;
+  final LocationpickEntity selectedLocation;
   final String searchQuery;
   final List<LocationSuggestion> suggestions;
   final bool isResolvingAddress;
@@ -35,9 +33,17 @@ class LocationpickState extends Equatable {
   const LocationpickState({
     required this.initialParams,
     this.locationpickResponse = const ApiResponse.init(),
-    this.selectedLatitude = karachiLatitude,
-    this.selectedLongitude = karachiLongitude,
-    this.selectedAddress = 'Move the map to choose your pickup location',
+    this.selectedLocation = const LocationpickEntity(
+      lat: karachiLatitude,
+      lon: karachiLongitude,
+      city: 'Karachi',
+      state: 'Sindh',
+      country: 'Pakistan',
+      zipCode: '',
+      addressLine: 'Move the map to choose your pickup location',
+      countryCode: 'PK',
+      provinceCode: 'Sindh',
+    ),
     this.searchQuery = '',
     this.suggestions = const [],
     this.isResolvingAddress = false,
@@ -48,9 +54,7 @@ class LocationpickState extends Equatable {
   LocationpickState copyWith({
     LocationpickViewInitialParams? initialParams,
     ApiResponse<BaseEntity<LocationpickEntity>>? locationpickResponse,
-    double? selectedLatitude,
-    double? selectedLongitude,
-    String? selectedAddress,
+    LocationpickEntity? selectedLocation,
     String? searchQuery,
     List<LocationSuggestion>? suggestions,
     bool? isResolvingAddress,
@@ -60,9 +64,7 @@ class LocationpickState extends Equatable {
     LocationpickState data = LocationpickState(
       initialParams: initialParams ?? this.initialParams,
       locationpickResponse: locationpickResponse ?? this.locationpickResponse,
-      selectedLatitude: selectedLatitude ?? this.selectedLatitude,
-      selectedLongitude: selectedLongitude ?? this.selectedLongitude,
-      selectedAddress: selectedAddress ?? this.selectedAddress,
+      selectedLocation: selectedLocation ?? this.selectedLocation,
       searchQuery: searchQuery ?? this.searchQuery,
       suggestions: suggestions ?? this.suggestions,
       isResolvingAddress: isResolvingAddress ?? this.isResolvingAddress,
@@ -75,20 +77,18 @@ class LocationpickState extends Equatable {
 
   @override
   List<Object?> get props => [
-        initialParams,
-        locationpickResponse,
-        selectedLatitude,
-        selectedLongitude,
-        selectedAddress,
-        searchQuery,
-        suggestions,
-        isResolvingAddress,
-        isSearching,
-        selectedPlaceVersion,
-      ];
+    initialParams,
+    locationpickResponse,
+    selectedLocation,
+    searchQuery,
+    suggestions,
+    isResolvingAddress,
+    isSearching,
+    selectedPlaceVersion,
+  ];
 
   @override
   String toString() {
-    return 'LocationpickState(initialParams: $initialParams, locationpickResponse: ${locationpickResponse.toString()}, selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude, selectedAddress: $selectedAddress, searchQuery: $searchQuery, suggestions: ${suggestions.length}, isResolvingAddress: $isResolvingAddress, isSearching: $isSearching, selectedPlaceVersion: $selectedPlaceVersion)';
+    return 'LocationpickState(initialParams: $initialParams, locationpickResponse: ${locationpickResponse.toString()}, selectedLocation: $selectedLocation, searchQuery: $searchQuery, suggestions: ${suggestions.length}, isResolvingAddress: $isResolvingAddress, isSearching: $isSearching, selectedPlaceVersion: $selectedPlaceVersion)';
   }
 }

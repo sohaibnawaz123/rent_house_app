@@ -111,9 +111,10 @@ class _GoogleMapBackgroundState extends State<GoogleMapBackground> {
       listenWhen: (previous, current) =>
           previous.selectedPlaceVersion != current.selectedPlaceVersion,
       listener: (context, state) {
+        final selectedLocation = state.selectedLocation;
         _mapController?.animateCamera(
           CameraUpdate.newLatLng(
-            LatLng(state.selectedLatitude, state.selectedLongitude),
+            LatLng(selectedLocation.lat, selectedLocation.lon),
           ),
         );
       },
@@ -124,12 +125,13 @@ class _GoogleMapBackgroundState extends State<GoogleMapBackground> {
 
           return BlocBuilder<LocationpickBloc, LocationpickState>(
             buildWhen: (previous, current) =>
-                previous.selectedLatitude != current.selectedLatitude ||
-                previous.selectedLongitude != current.selectedLongitude,
+                previous.selectedLocation.lat != current.selectedLocation.lat ||
+                previous.selectedLocation.lon != current.selectedLocation.lon,
             builder: (context, state) {
+              final selectedLocation = state.selectedLocation;
               final selectedPosition = LatLng(
-                state.selectedLatitude,
-                state.selectedLongitude,
+                selectedLocation.lat,
+                selectedLocation.lon,
               );
 
               return GoogleMap(
@@ -407,11 +409,10 @@ class LocationBottomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LocationpickBloc, LocationpickState>(
       buildWhen: (previous, current) =>
-          previous.selectedAddress != current.selectedAddress ||
-          previous.isResolvingAddress != current.isResolvingAddress ||
-          previous.selectedLatitude != current.selectedLatitude ||
-          previous.selectedLongitude != current.selectedLongitude,
+          previous.selectedLocation != current.selectedLocation ||
+          previous.isResolvingAddress != current.isResolvingAddress,
       builder: (context, state) {
+        final selectedLocation = state.selectedLocation;
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -479,7 +480,7 @@ class LocationBottomCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Content(
-                              data: state.selectedAddress,
+                              data: selectedLocation.addressLine,
                               maxLines: 3,
                               textStyle: context.bodyText.copyWith(
                                 color: AppColor.primaryText,
@@ -489,7 +490,7 @@ class LocationBottomCard extends StatelessWidget {
                             8.heightBox,
                             Content(
                               data:
-                                  '${state.selectedLatitude.toStringAsFixed(5)}, ${state.selectedLongitude.toStringAsFixed(5)}',
+                                  '${selectedLocation.lat.toStringAsFixed(5)}, ${selectedLocation.lon.toStringAsFixed(5)}',
                               textStyle: context.bodyText.copyWith(
                                 color: AppColor.baseText,
                                 fontSize: 12,
@@ -513,17 +514,15 @@ class LocationBottomCard extends StatelessWidget {
                   DashboardrootView(
                     bloc: getIt<DashboardrootBloc>(
                       param1: DashboardrootViewInitialParams(
-                        address: state.selectedAddress,
-                        lat: state.selectedLatitude,
-                        lng: state.selectedLongitude,
+                        location: selectedLocation,
                       ),
                     ),
                   ),
                 );
                 // Navigator.of(context).pop({
-                //   'address': state.selectedAddress,
-                //   'latitude': state.selectedLatitude,
-                //   'longitude': state.selectedLongitude,
+                //   'address': selectedLocation.addressLine,
+                //   'latitude': selectedLocation.lat,
+                //   'longitude': selectedLocation.lon,
                 // });
               },
             ),

@@ -9,7 +9,7 @@ import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardprofile/dashboardprofile_bloc.dart';
-import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
+// import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/setting_list_tile.dart';
 
 class DashboardprofileView extends StatefulWidget {
