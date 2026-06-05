@@ -96,43 +96,41 @@ class _LocationselectionViewState extends State<LocationselectionView> {
           children: [
             HeaderWidget(
               showactions: true,
-              actions: [
-                AppButton(
-                  onTap: () {
-                    context.pushReplacementPage(
-                      DashboardrootView(
-                        bloc: getIt<DashboardrootBloc>(
-                          param1: const DashboardrootViewInitialParams(
-                            location: LocationpickEntity(
-                              lat: 0,
-                              lon: 0,
-                              city: '',
-                              state: '',
-                              country: '',
-                              zipCode: '',
-                              addressLine:
-                                  'Select the address for better results',
-                              countryCode: '',
-                              provinceCode: '',
-                            ),
+              actions: AppButton(
+                onTap: () {
+                  context.pushReplacementPage(
+                    DashboardrootView(
+                      bloc: getIt<DashboardrootBloc>(
+                        param1: const DashboardrootViewInitialParams(
+                          location: LocationpickEntity(
+                            lat: 0,
+                            lon: 0,
+                            city: '',
+                            state: '',
+                            country: '',
+                            zipCode: '',
+                            addressLine:
+                                'Select the address for better results',
+                            countryCode: '',
+                            provinceCode: '',
                           ),
                         ),
                       ),
-                    );
-                  },
-                  title: 'Skip',
-                  buttonColor: AppColor.transparent,
-                  // height: 40,
-                  // isResponsiveHeight: true,
-                  isResponsiveWidth: true,
-                  borderColor: AppColor.borderColor,
-                  radius: 20,
-                  fontColor: AppColor.baseText,
-                  fontSize: 14,
-                  borderWidth: 1.5,
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                ),
-              ],
+                    ),
+                  );
+                },
+                title: 'Skip',
+                buttonColor: AppColor.transparent,
+                // height: 40,
+                // isResponsiveHeight: true,
+                isResponsiveWidth: true,
+                borderColor: AppColor.borderColor,
+                radius: 20,
+                fontColor: AppColor.baseText,
+                fontSize: 14,
+                borderWidth: 1.5,
+                padding: EdgeInsets.symmetric(horizontal: 15),
+              ),
             ),
             SizedBox(
               child: AppImage.svg(

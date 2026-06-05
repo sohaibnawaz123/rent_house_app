@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:taxi_app/component/app_bar/custome_header.dart';
+import 'package:taxi_app/component/button/app_button.dart';
 import 'package:taxi_app/component/image/app_network_image.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
+import 'package:taxi_app/core/store/store_preference.dart';
+import 'package:taxi_app/core/store/user_store_key.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
@@ -44,7 +47,16 @@ class _DashboardprofileViewState extends State<DashboardprofileView> {
         ),
         child: ListView(
           children: [
-            HeaderWidget(title: 'Profile'),
+            HeaderWidget(
+              title: 'Profile',
+              showactions: true,
+              actions: AppButton(
+                // isResponsiveHeight: true,
+                isResponsiveWidth: true,
+                title: 'Logout',
+                onTap: () => StorePreference().delete(UserStoreKey.isLogin),
+              ),
+            ),
             30.heightBox,
             ProfileHeader(),
             30.heightBox,

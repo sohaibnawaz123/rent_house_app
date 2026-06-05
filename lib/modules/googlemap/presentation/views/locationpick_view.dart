@@ -11,6 +11,8 @@ import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/component/text_field/content_field.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
+import 'package:taxi_app/core/store/store_preference.dart';
+import 'package:taxi_app/core/store/user_store_key.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
@@ -518,6 +520,11 @@ class LocationBottomCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                );
+
+                StorePreference().write<Map<String, dynamic>>(
+                  UserStoreKey.location,
+                  state.selectedLocation.toJson(),
                 );
                 // Navigator.of(context).pop({
                 //   'address': selectedLocation.addressLine,

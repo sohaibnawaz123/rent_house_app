@@ -26,7 +26,7 @@ class HeaderWidget extends StatelessWidget {
   final bool showBackButton;
   final bool showactions;
   final bool haveBg;
-  final List<Widget>? actions;
+  final Widget? actions;
   final void Function()? onTap;
 
   @override
@@ -86,12 +86,7 @@ class HeaderWidget extends StatelessWidget {
                     right: 0,
                     top: 0,
                     bottom: 0,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      spacing: 5.w,
-                      children: actions ?? [],
-                    ),
+                    child: actions ?? SizedBox.shrink(),
                   )
                 : SizedBox.shrink(),
           ],

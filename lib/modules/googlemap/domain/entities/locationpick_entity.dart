@@ -23,6 +23,38 @@ class LocationpickEntity extends Equatable {
     required this.provinceCode,
   });
 
+  factory LocationpickEntity.fromJson(Map<String, dynamic> json) {
+    return LocationpickEntity(
+      lat: _toDouble(json['lat']),
+      lon: _toDouble(json['lon']),
+      city: json['city'] as String? ?? '',
+      state: json['state'] as String? ?? '',
+      country: json['country'] as String? ?? '',
+      zipCode: json['zipCode'] as String? ?? '',
+      addressLine: json['addressLine'] as String? ?? '',
+      countryCode: json['countryCode'] as String? ?? '',
+      provinceCode: json['provinceCode'] as String? ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'lat': lat,
+    'lon': lon,
+    'city': city,
+    'state': state,
+    'country': country,
+    'zipCode': zipCode,
+    'addressLine': addressLine,
+    'countryCode': countryCode,
+    'provinceCode': provinceCode,
+  };
+
+  static double _toDouble(dynamic value) {
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
+
   LocationpickEntity copyWith({
     double? lat,
     double? lon,
