@@ -119,6 +119,46 @@ import 'package:taxi_app/modules/dashboard/domain/usecase/dashboardprofile_use_c
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardprofile/dashboardprofile_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardprofile_view_initial_params.dart';
 
+import 'package:taxi_app/modules/setting/data/datasource/editprofile_remote_data_source.dart';
+import 'package:taxi_app/modules/setting/data/datasource/editprofile_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/setting/data/rest_api/editprofile_rest_api_repo.dart';
+import 'package:taxi_app/modules/setting/domain/repository/editprofile_repo.dart';
+import 'package:taxi_app/modules/setting/domain/usecase/editprofile_use_case.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/editprofile/editprofile_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/editprofile_view_initial_params.dart';
+
+import 'package:taxi_app/modules/setting/data/datasource/payment_remote_data_source.dart';
+import 'package:taxi_app/modules/setting/data/datasource/payment_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/setting/data/rest_api/payment_rest_api_repo.dart';
+import 'package:taxi_app/modules/setting/domain/repository/payment_repo.dart';
+import 'package:taxi_app/modules/setting/domain/usecase/payment_use_case.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/payment/payment_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/payment_view_initial_params.dart';
+
+import 'package:taxi_app/modules/setting/data/datasource/notification_remote_data_source.dart';
+import 'package:taxi_app/modules/setting/data/datasource/notification_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/setting/data/rest_api/notification_rest_api_repo.dart';
+import 'package:taxi_app/modules/setting/domain/repository/notification_repo.dart';
+import 'package:taxi_app/modules/setting/domain/usecase/notification_use_case.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/notification/notification_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/notification_view_initial_params.dart';
+
+import 'package:taxi_app/modules/setting/data/datasource/recent_remote_data_source.dart';
+import 'package:taxi_app/modules/setting/data/datasource/recent_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/setting/data/rest_api/recent_rest_api_repo.dart';
+import 'package:taxi_app/modules/setting/domain/repository/recent_repo.dart';
+import 'package:taxi_app/modules/setting/domain/usecase/recent_use_case.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/recent/recent_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/recent_view_initial_params.dart';
+
+import 'package:taxi_app/modules/setting/data/datasource/about_remote_data_source.dart';
+import 'package:taxi_app/modules/setting/data/datasource/about_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/setting/data/rest_api/about_rest_api_repo.dart';
+import 'package:taxi_app/modules/setting/domain/repository/about_repo.dart';
+import 'package:taxi_app/modules/setting/domain/usecase/about_use_case.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/about/about_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/about_view_initial_params.dart';
+
 void getInstance(BuildContext context) {
   getIt = GetIt.instance;
 
@@ -503,5 +543,114 @@ void getInstance(BuildContext context) {
       DashboardprofileViewInitialParams,
       dynamic
     >((params, _) => DashboardprofileBloc(params, getIt()));
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Editprofile  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<EditprofileRemoteDataSource>()) {
+    getIt.registerSingleton<EditprofileRemoteDataSource>(
+      EditprofileRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<EditprofileRepo>()) {
+    getIt.registerSingleton<EditprofileRepo>(EditprofileRestApiRepo(getIt()));
+  }
+
+  if (!getIt.isRegistered<EditprofileUseCase>()) {
+    getIt.registerSingleton<EditprofileUseCase>(EditprofileUseCase(getIt()));
+  }
+
+  if (!getIt.isRegistered<EditprofileBloc>()) {
+    getIt.registerFactoryParam<
+      EditprofileBloc,
+      EditprofileViewInitialParams,
+      dynamic
+    >((params, _) => EditprofileBloc(params, getIt()));
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Payment  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<PaymentRemoteDataSource>()) {
+    getIt.registerSingleton<PaymentRemoteDataSource>(
+      PaymentRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<PaymentRepo>()) {
+    getIt.registerSingleton<PaymentRepo>(PaymentRestApiRepo(getIt()));
+  }
+
+  if (!getIt.isRegistered<PaymentUseCase>()) {
+    getIt.registerSingleton<PaymentUseCase>(PaymentUseCase(getIt()));
+  }
+
+  if (!getIt.isRegistered<PaymentBloc>()) {
+    getIt.registerFactoryParam<PaymentBloc, PaymentViewInitialParams, dynamic>(
+      (params, _) => PaymentBloc(params, getIt()),
+    );
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Notification  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<NotificationRemoteDataSource>()) {
+    getIt.registerSingleton<NotificationRemoteDataSource>(
+      NotificationRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<NotificationRepo>()) {
+    getIt.registerSingleton<NotificationRepo>(NotificationRestApiRepo(getIt()));
+  }
+
+  if (!getIt.isRegistered<NotificationUseCase>()) {
+    getIt.registerSingleton<NotificationUseCase>(NotificationUseCase(getIt()));
+  }
+
+  if (!getIt.isRegistered<NotificationBloc>()) {
+    getIt.registerFactoryParam<
+      NotificationBloc,
+      NotificationViewInitialParams,
+      dynamic
+    >((params, _) => NotificationBloc(params, getIt()));
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Recent  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<RecentRemoteDataSource>()) {
+    getIt.registerSingleton<RecentRemoteDataSource>(
+      RecentRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<RecentRepo>()) {
+    getIt.registerSingleton<RecentRepo>(RecentRestApiRepo(getIt()));
+  }
+
+  if (!getIt.isRegistered<RecentUseCase>()) {
+    getIt.registerSingleton<RecentUseCase>(RecentUseCase(getIt()));
+  }
+
+  if (!getIt.isRegistered<RecentBloc>()) {
+    getIt.registerFactoryParam<RecentBloc, RecentViewInitialParams, dynamic>(
+      (params, _) => RecentBloc(params, getIt()),
+    );
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  About  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<AboutRemoteDataSource>()) {
+    getIt.registerSingleton<AboutRemoteDataSource>(
+      AboutRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<AboutRepo>()) {
+    getIt.registerSingleton<AboutRepo>(AboutRestApiRepo(getIt()));
+  }
+
+  if (!getIt.isRegistered<AboutUseCase>()) {
+    getIt.registerSingleton<AboutUseCase>(AboutUseCase(getIt()));
+  }
+
+  if (!getIt.isRegistered<AboutBloc>()) {
+    getIt.registerFactoryParam<AboutBloc, AboutViewInitialParams, dynamic>(
+      (params, _) => AboutBloc(params, getIt()),
+    );
   }
 }

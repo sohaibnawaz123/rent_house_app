@@ -14,4 +14,9 @@ class AppUrl {
   static String dashboardfavouriteUrl = '';
   static String dashboardbookingUrl = '';
   static String dashboardprofileUrl = '';
+  static String editprofileUrl = '';
+  static String paymentUrl = '';
+  static String recentUrl = '';
+  static String notificationUrl = '';
+  static String aboutUrl = '';
 }
