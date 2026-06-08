@@ -19,4 +19,5 @@ class AppUrl {
   static String recentUrl = '';
   static String notificationUrl = '';
   static String aboutUrl = '';
+  static String propertydetailUrl = '';
 }

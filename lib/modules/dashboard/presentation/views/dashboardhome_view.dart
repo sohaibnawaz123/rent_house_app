@@ -7,8 +7,13 @@ import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
+import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/main.dart';
+import 'package:taxi_app/modules/activity/presentation/blocs/propertydetail/propertydetail_bloc.dart';
+import 'package:taxi_app/modules/activity/presentation/routes/propertydetail_view_initial_params.dart';
+import 'package:taxi_app/modules/activity/presentation/views/propertydetail_view.dart';
 import 'package:taxi_app/modules/dashboard/domain/entities/dashboardroot_entity.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardhome/dashboardhome_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardroot/dashboardroot_bloc.dart';
@@ -325,7 +330,15 @@ class _RecommendedLocationsState extends State<RecommendedLocations> {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              return RecommendedPropertyCard();
+              return RecommendedPropertyCard(
+                onTap: () => context.pushPage(
+                  PropertydetailView(
+                    bloc: getIt<PropertydetailBloc>(
+                      param1: PropertydetailViewInitialParams(),
+                    ),
+                  ),
+                ),
+              );
             },
             separatorBuilder: (context, index) {
               return 10.widthBox;
@@ -366,10 +379,7 @@ class _NearBySectionState extends State<NearBySection> {
             GestureDetector(
               onTap: () {
                 context.read<DashboardrootBloc>().add(
-                  ChangeNavigationEvent(
-                    NavItemEntity.explore,
-                    title: 'Nearby',
-                  ),
+                  ChangeNavigationEvent(NavItemEntity.explore, title: 'Nearby'),
                 );
               },
               child: Content(
@@ -432,7 +442,10 @@ class _TopLocationSectionState extends State<TopLocationSection> {
             GestureDetector(
               onTap: () {
                 context.read<DashboardrootBloc>().add(
-                  ChangeNavigationEvent(NavItemEntity.explore, title: 'Top Locations'),
+                  ChangeNavigationEvent(
+                    NavItemEntity.explore,
+                    title: 'Top Locations',
+                  ),
                 );
               },
               child: Content(
@@ -492,7 +505,10 @@ class PopularPlaceSection extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 context.read<DashboardrootBloc>().add(
-                  ChangeNavigationEvent(NavItemEntity.explore, title: 'Popular Places'),
+                  ChangeNavigationEvent(
+                    NavItemEntity.explore,
+                    title: 'Popular Places',
+                  ),
                 );
               },
               child: Content(

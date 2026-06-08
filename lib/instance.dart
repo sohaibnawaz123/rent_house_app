@@ -159,6 +159,13 @@ import 'package:taxi_app/modules/setting/domain/usecase/about_use_case.dart';
 import 'package:taxi_app/modules/setting/presentation/blocs/about/about_bloc.dart';
 import 'package:taxi_app/modules/setting/presentation/routes/about_view_initial_params.dart';
 
+import 'package:taxi_app/modules/activity/data/datasource/propertydetail_remote_data_source.dart';
+import 'package:taxi_app/modules/activity/data/datasource/propertydetail_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/activity/data/rest_api/propertydetail_rest_api_repo.dart';
+import 'package:taxi_app/modules/activity/domain/repository/propertydetail_repo.dart';
+import 'package:taxi_app/modules/activity/domain/usecase/propertydetail_use_case.dart';
+import 'package:taxi_app/modules/activity/presentation/blocs/propertydetail/propertydetail_bloc.dart';
+import 'package:taxi_app/modules/activity/presentation/routes/propertydetail_view_initial_params.dart';
 void getInstance(BuildContext context) {
   getIt = GetIt.instance;
 
@@ -653,4 +660,32 @@ void getInstance(BuildContext context) {
       (params, _) => AboutBloc(params, getIt()),
     );
   }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Propertydetail  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<PropertydetailRemoteDataSource>()) {
+    getIt.registerSingleton<PropertydetailRemoteDataSource>(
+      PropertydetailRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<PropertydetailRepo>()) {
+    getIt.registerSingleton<PropertydetailRepo>(
+      PropertydetailRestApiRepo(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<PropertydetailUseCase>()) {
+    getIt.registerSingleton<PropertydetailUseCase>(
+      PropertydetailUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<PropertydetailBloc>()) {
+    getIt.registerFactoryParam<
+      PropertydetailBloc,
+      PropertydetailViewInitialParams,
+      dynamic
+    >((params, _) => PropertydetailBloc(params, getIt()));
+  }
+
 }
