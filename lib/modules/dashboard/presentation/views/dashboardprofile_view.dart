@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taxi_app/component/app_bar/custome_header.dart';
 import 'package:taxi_app/component/button/app_button.dart';
 import 'package:taxi_app/component/image/app_network_image.dart';
@@ -9,11 +12,29 @@ import 'package:taxi_app/core/store/store_preference.dart';
 import 'package:taxi_app/core/store/user_store_key.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
+import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/main.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardprofile/dashboardprofile_bloc.dart';
+import 'package:taxi_app/modules/dashboard/presentation/widget/profile_image_widget.dart';
 // import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/setting_list_tile.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/about/about_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/editprofile/editprofile_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/notification/notification_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/payment/payment_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/recent/recent_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/about_view_initial_params.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/editprofile_view_initial_params.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/notification_view_initial_params.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/payment_view_initial_params.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/recent_view_initial_params.dart';
+import 'package:taxi_app/modules/setting/presentation/views/about_view.dart';
+import 'package:taxi_app/modules/setting/presentation/views/editprofile_view.dart';
+import 'package:taxi_app/modules/setting/presentation/views/notification_view.dart';
+import 'package:taxi_app/modules/setting/presentation/views/payment_view.dart';
+import 'package:taxi_app/modules/setting/presentation/views/recent_view.dart';
 
 class DashboardprofileView extends StatefulWidget {
   final DashboardprofileBloc bloc;
@@ -58,22 +79,79 @@ class _DashboardprofileViewState extends State<DashboardprofileView> {
               ),
             ),
             30.heightBox,
-            ProfileHeader(),
+            BlocBuilder<DashboardprofileBloc, DashboardprofileState>(
+              bloc: widget.bloc,
+              builder: (context, state) {
+                return ProfileHeader(
+                  onTap: () => widget.bloc.add(PickImageFromGallery()),
+                  imageFile: state.image, // ✅ THIS FIXES YOUR ISSUE
+                  // imageUrl: state.dashboardprofileResponse.data?.data.,
+                );
+              },
+            ),
             30.heightBox,
             Divider(
               thickness: 1,
               color: AppColor.baseText.withValues(alpha: 0.5),
             ),
             30.heightBox,
-            SettingListTile(title: 'Setting', icon: AppAsset.setting),
+            SettingListTile(
+              title: 'Setting',
+              icon: AppAsset.setting,
+              onTap: () => context.pushPage(
+                EditprofileView(
+                  bloc: getIt<EditprofileBloc>(
+                    param1: EditprofileViewInitialParams(
+                      fullname: 'Sohaib Nawaz',
+                      userName: 'sohaibnawaz02',
+                      email: 'sohaibnawaz@gmail.com',
+                    ),
+                  ),
+                ),
+              ),
+            ),
             10.heightBox,
-            SettingListTile(title: 'Payment', icon: AppAsset.wallet),
+            SettingListTile(
+              title: 'Payment',
+              icon: AppAsset.wallet,
+              onTap: () => context.pushPage(
+                PaymentView(
+                  bloc: getIt<PaymentBloc>(param1: PaymentViewInitialParams()),
+                ),
+              ),
+            ),
             10.heightBox,
-            SettingListTile(title: 'Notification', icon: AppAsset.notification),
+            SettingListTile(
+              title: 'Notification',
+              icon: AppAsset.notification,
+              onTap: () => context.pushPage(
+                NotificationView(
+                  bloc: getIt<NotificationBloc>(
+                    param1: NotificationViewInitialParams(),
+                  ),
+                ),
+              ),
+            ),
             10.heightBox,
-            SettingListTile(title: 'Recent Viewed', icon: AppAsset.recentView),
+            SettingListTile(
+              title: 'Recent Viewed',
+              icon: AppAsset.recentView,
+              onTap: () => context.pushPage(
+                RecentView(
+                  bloc: getIt<RecentBloc>(param1: RecentViewInitialParams()),
+                ),
+              ),
+            ),
             10.heightBox,
-            SettingListTile(title: 'About', icon: AppAsset.about),
+            SettingListTile(
+              title: 'About',
+              icon: AppAsset.about,
+              onTap: () => context.pushPage(
+                AboutView(
+                  bloc: getIt<AboutBloc>(param1: AboutViewInitialParams()),
+                ),
+              ),
+            ),
             10.heightBox,
             bottomSpacing.heightBox,
           ],
@@ -84,56 +162,23 @@ class _DashboardprofileViewState extends State<DashboardprofileView> {
 }
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key});
+  final void Function()? onTap;
+  final File? imageFile; // ✅ CHANGE THIS
+  final String? imageUrl; // optional (from API)
+
+  const ProfileHeader({super.key, this.onTap, this.imageFile, this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
       children: [
-        AvaterWidget(),
+        AvaterWidget(
+          onTap: onTap,
+          fileImage: imageFile, // ✅ LOCAL
+          imageUrl: imageUrl, // ✅ NETWORK
+        ),
         10.heightBox,
-        Content(
-          data: 'Sohaib Nawaz',
-          textStyle: context.bodyText.copyWith(
-            fontWeight: AppFontWeight.semiBold,
-            color: AppColor.primaryText,
-          ),
-          size: 22,
-        ),
-        5.heightBox,
-        Content(
-          data: 'Sohaibnawaz2000@gmail.com',
-          textStyle: context.bodyText.copyWith(
-            fontWeight: AppFontWeight.medium,
-            color: AppColor.primaryText,
-          ),
-          size: 14,
-        ),
-      ],
-    );
-  }
-}
-
-class AvaterWidget extends StatelessWidget {
-  const AvaterWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: AlignmentGeometry.center,
-      children: [
-        CircleAvatar(radius: 48, backgroundColor: AppColor.highlight),
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: CircleAvatar(
-            radius: 16,
-            backgroundColor: AppColor.btnBg,
-            child: AppImage.svg(svgPath: AppAsset.camera, size: 16),
-          ),
-        ),
+        // your text...
       ],
     );
   }

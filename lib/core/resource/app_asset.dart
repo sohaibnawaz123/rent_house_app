@@ -44,6 +44,7 @@ class AppAsset {
   static const String wallet = '$iconPath/Wallet.svg';
   static const String recentView = '$iconPath/time-square.svg';
   static const String logout = '$iconPath/logout.svg';
+  static const String clander = '$iconPath/calendar.svg';
 
   //illustration
   static const String success = '$illustrationPath/success.svg';

@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:taxi_app/core/network/api_response.dart';
 import 'package:taxi_app/core/utils/utils.dart';
 import 'package:taxi_app/modules/app/domain/entitties/base_entity.dart';
@@ -12,12 +15,14 @@ part 'dashboardprofile_event.dart';
 part 'dashboardprofile_state.dart';
 
 class DashboardprofileBloc extends Bloc<DashboardprofileEvent, DashboardprofileState> {
+  final ImagePicker _picker = ImagePicker();
   final DashboardprofileViewInitialParams initialParams;
   final DashboardprofileUseCase _useCase;
 
   DashboardprofileBloc(this.initialParams, this._useCase)
       : super(DashboardprofileState(initialParams: initialParams)) {
     on<LoadDashboardprofileEvent>(_loadDashboardprofileAction);
+    on<PickImageFromGallery>(_onPickImage);
   }
 
   Future<void> _loadDashboardprofileAction(
@@ -32,5 +37,25 @@ class DashboardprofileBloc extends Bloc<DashboardprofileEvent, DashboardprofileS
         emit(state.copyWith(dashboardprofileResponse: ApiResponse.completed(r)));
       },
     ));
+  }
+
+ Future<void> _onPickImage(
+    PickImageFromGallery event,
+    Emitter<DashboardprofileState> emit,
+  ) async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
+
+      if (pickedFile != null) {
+        emit(state.copyWith(image: File(pickedFile.path)));
+      }
+      // If user cancels → do nothing OR keep old state
+    } catch (e) {
+      // Optional: log error
+      print(e.toString());
+    }
   }
 }
