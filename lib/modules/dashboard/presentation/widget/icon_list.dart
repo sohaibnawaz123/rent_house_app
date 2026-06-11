@@ -23,7 +23,8 @@ class IconList extends StatelessWidget {
     this.onTap,
     this.size = 12,
     this.isCenter = true,
-    this.color, this.weight,
+    this.color,
+    this.weight,
   });
 
   @override
@@ -31,12 +32,12 @@ class IconList extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Row(
-        spacing: 10,
+        
         crossAxisAlignment: isCenter
             ? CrossAxisAlignment.center
             : CrossAxisAlignment.start,
         children: [
-          if (isLeft) icon ?? SizedBox.shrink(),
+          if (isLeft && icon != null) icon!,
           Flexible(
             fit: FlexFit.loose,
             child: Content(
@@ -47,9 +48,10 @@ class IconList extends StatelessWidget {
               size: size ?? 12,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
+              alignment: TextAlign.start,
             ),
           ),
-          if (!isLeft) icon ?? SizedBox.shrink(),
+          if (!isLeft && icon != null) icon!,
         ],
       ),
     );

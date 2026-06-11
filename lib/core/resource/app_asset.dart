@@ -47,6 +47,9 @@ class AppAsset {
   static const String clander = '$iconPath/calendar.svg';
   static const String share = '$iconPath/share.svg';
   static const String forward = '$iconPath/forward.svg';
+  static const String area = '$iconPath/area.svg';
+  static const String bath = '$iconPath/bath.svg';
+  static const String bed = '$iconPath/bed.svg';
 
   //illustration
   static const String success = '$illustrationPath/success.svg';
