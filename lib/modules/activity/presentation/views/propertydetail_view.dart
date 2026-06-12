@@ -11,7 +11,10 @@ import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/modules/activity/presentation/blocs/propertydetail/propertydetail_bloc.dart';
+import 'package:taxi_app/modules/activity/presentation/widget/expanded_text.dart';
+import 'package:taxi_app/modules/activity/presentation/widget/location_card.dart';
 import 'package:taxi_app/modules/activity/presentation/widget/propert_detail_card.dart';
+import 'package:taxi_app/modules/activity/presentation/widget/review_card.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
 import 'package:taxi_app/modules/onboarding/presentation/widget/pagination.dart';
 
@@ -51,7 +54,7 @@ class _PropertydetailViewState extends State<PropertydetailView> {
           context.pagePadding.left,
           context.pagePadding.top - 20,
           context.pagePadding.left,
-          // context.pagePadding.bottom,0
+          // context.pagePadding.bottom,
           0,
         ),
         child: ListView(
@@ -91,9 +94,28 @@ class _PropertydetailViewState extends State<PropertydetailView> {
             PropertyDetails(),
             20.heightBox,
             Description(),
-            bottomSpacing.heightBox,
+            20.heightBox,
+            AgentCard(),
+            20.heightBox,
+            LocationFasilities(),
+            20.heightBox,
+            ReviewSection(),
+
+            // bottomSpacing.heightBox,
           ],
         ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.fromLTRB(
+          context.pagePadding.left,
+          // context.pagePadding.top - 2,0,
+          20,
+          context.pagePadding.left,
+          context.pagePadding.bottom,
+
+          // 0
+        ),
+        child: AppButton(title: 'Rent Now'),
       ),
     );
   }
@@ -183,8 +205,8 @@ class PropertyDetails extends StatelessWidget {
           size: 18,
         ),
         GridView.builder(
+          physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             childAspectRatio: 2,
             crossAxisCount: 3,
@@ -209,27 +231,6 @@ class Description extends StatefulWidget {
 class _DescriptionState extends State<Description> {
   static const String _description =
       'Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s, when an unknown printer took when an unknown printer took a type.Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s, when an unknown printer took when an unknown printer took a type.';
-
-  bool readMore = false;
-  late final TapGestureRecognizer _readMoreRecognizer;
-
-  @override
-  void initState() {
-    super.initState();
-    _readMoreRecognizer = TapGestureRecognizer()
-      ..onTap = () {
-        setState(() {
-          readMore = !readMore;
-        });
-      };
-  }
-
-  @override
-  void dispose() {
-    _readMoreRecognizer.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final descriptionStyle = context.bodyText.copyWith(
@@ -251,74 +252,222 @@ class _DescriptionState extends State<Description> {
           ),
           size: 18,
         ),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final linkText = readMore ? ' Read less' : ' Read more';
-            final visibleDescription = readMore
-                ? _description
-                : _truncatedDescription(
-                    maxWidth: constraints.maxWidth,
-                    textStyle: descriptionStyle,
-                    linkStyle: descriptionStyle.copyWith(color: AppColor.btnBg),
-                    textScaler: MediaQuery.textScalerOf(context),
-                  );
-
-            return RichText(
-              text: TextSpan(
-                text: visibleDescription,
-                style: descriptionStyle,
-                children: [
-                  TextSpan(
-                    text: linkText,
-                    style: descriptionStyle.copyWith(color: AppColor.btnBg),
-                    recognizer: _readMoreRecognizer,
-                  ),
-                ],
-              ),
-            );
-          },
+        ReadMoreText(
+          text: _description,
+          style: descriptionStyle,
+          actionStyle: descriptionStyle.copyWith(color: AppColor.primary),
         ),
       ],
     );
   }
+}
 
-  String _truncatedDescription({
-    required double maxWidth,
-    required TextStyle textStyle,
-    required TextStyle linkStyle,
-    required TextScaler textScaler,
-  }) {
-    const readMoreText = ' Read more';
-    const dots = '.....';
+class AgentCard extends StatelessWidget {
+  const AgentCard({super.key});
 
-    var low = 0;
-    var high = _description.length;
-    var result = _description;
-
-    while (low <= high) {
-      final mid = (low + high) ~/ 2;
-      final candidate = '${_description.substring(0, mid).trimRight()}$dots';
-
-      final painter = TextPainter(
-        maxLines: 3,
-        textDirection: TextDirection.ltr,
-        textScaler: textScaler,
-        text: TextSpan(
-          text: candidate,
-          style: textStyle,
-          children: [TextSpan(text: readMoreText, style: linkStyle)],
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 20,
+      children: [
+        Content(
+          data: 'Agent',
+          textStyle: context.headingText.copyWith(
+            fontWeight: AppFontWeight.semiBold,
+          ),
+          size: 18,
         ),
-      )..layout(maxWidth: maxWidth);
+        Row(
+          spacing: 10,
+          children: [
+            CircleAvatar(radius: 24, backgroundColor: AppColor.highlight),
+            Expanded(
+              child: Column(
+                spacing: 5,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Content(
+                    data: 'Esther Howard',
+                    textStyle: context.headingText.copyWith(
+                      fontWeight: AppFontWeight.semiBold,
+                    ),
+                    size: 16,
+                  ),
+                  Content(
+                    data: 'Real Estate Agent',
+                    textStyle: context.bodyText.copyWith(
+                      fontWeight: AppFontWeight.medium,
+                    ),
+                    size: 12,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Row(
+                spacing: 10,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AppButton.iconButton(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    iconPath: AppAsset.phone,
+                    isResponsiveHeight: true,
+                    isResponsiveWidth: true,
+                    fontColor: AppColor.btnBg,
+                    buttonColor: AppColor.transparent,
+                  ),
+                  AppButton.iconButton(
+                    iconPath: AppAsset.chat,
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    // padding: EdgeInsets.all(0),
+                    isResponsiveHeight: true,
+                    isResponsiveWidth: true,
+                    fontColor: AppColor.btnBg,
+                    buttonColor: AppColor.transparent,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
 
-      if (painter.didExceedMaxLines) {
-        high = mid - 1;
-      } else {
-        result = candidate;
-        low = mid + 1;
-      }
-    }
+class LocationFasilities extends StatelessWidget {
+  const LocationFasilities({super.key});
 
-    return result;
+  @override
+  Widget build(BuildContext context) {
+    final List<String> fasilities = [
+      'Hospital',
+      'Gas stations',
+      'Mall',
+      'Mosque',
+    ];
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 20,
+      children: [
+        Content(
+          data: 'Location & Public Fasilities',
+          textStyle: context.headingText.copyWith(
+            fontWeight: AppFontWeight.semiBold,
+          ),
+          size: 18,
+        ),
+
+        SizedBox(
+          height: 40,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (content, index) {
+              return Container(
+                alignment: Alignment.center,
+                height: 50,
+                width: 100,
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: AppColor.highlight,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Content(
+                  data: fasilities[index],
+                  textStyle: context.headingText.copyWith(
+                    fontWeight: AppFontWeight.semiBold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  size: 14,
+                ),
+              );
+            },
+            separatorBuilder: (ctx, index) {
+              return 5.widthBox;
+            },
+            itemCount: fasilities.length,
+          ),
+        ),
+        MapCard(),
+      ],
+    );
+  }
+}
+
+class ReviewSection extends StatelessWidget {
+  const ReviewSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<PropertyReviewEntity> reviews = [
+      PropertyReviewEntity(
+        name: 'Sohaib Nawaz',
+        review:
+            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s,  ',
+        rateing: 4.5,
+      ),
+      PropertyReviewEntity(
+        name: 'Hassan',
+        review:
+            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s,  ',
+        rateing: 4,
+      ),
+      PropertyReviewEntity(
+        name: 'Syed Ebad',
+        review:
+            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s,  ',
+        rateing: 3,
+      ),
+    ];
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 20,
+      children: [
+        //Heading
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Content(
+              data: 'Location & Public Fasilities',
+              textStyle: context.headingText.copyWith(
+                fontWeight: AppFontWeight.semiBold,
+              ),
+              size: 18,
+            ),
+            GestureDetector(
+              child: Content(
+                data: 'See All',
+                textStyle: context.bodyText.copyWith(color: AppColor.primary),
+                size: 14,
+              ),
+            ),
+          ],
+        ),
+
+        SizedBox(
+          height: 100,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (content, index) {
+              return ReviewCard(reviews: reviews[index]);
+            },
+            separatorBuilder: (ctx, index) {
+              return 5.widthBox;
+            },
+            itemCount: reviews.length,
+          ),
+        ),
+      ],
+    );
   }
 }
 
