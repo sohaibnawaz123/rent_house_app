@@ -4,19 +4,27 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 
-
 class Utils {
   static logSuccess(String msg, {String? name}) {
     // if
-    log('\x1B[32m$msg\x1B[0m', name: name != null ? '\x1B[32m$name\x1B[0m' : "");
+    log(
+      '\x1B[32m$msg\x1B[0m',
+      name: name != null ? '\x1B[32m$name\x1B[0m' : "",
+    );
   }
 
   static logError(String msg, {String? name}) {
-    log('\x1B[31m$msg\x1B[0m', name: name != null ? '\x1B[31m$name\x1B[0m' : "");
+    log(
+      '\x1B[31m$msg\x1B[0m',
+      name: name != null ? '\x1B[31m$name\x1B[0m' : "",
+    );
   }
 
   static logInfo(String msg, {String? name}) {
-    log('\x1B[37m$msg\x1B[0m', name: name != null ? '\x1B[37m$name\x1B[0m' : "");
+    log(
+      '\x1B[37m$msg\x1B[0m',
+      name: name != null ? '\x1B[37m$name\x1B[0m' : "",
+    );
   }
 
   static toastMessage(String message, BuildContext? context) {
@@ -29,7 +37,10 @@ class Utils {
         child: Container(
           // constraints: BoxConstraints(maxWidth: 1.sh * 0.8),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          decoration: BoxDecoration(color: AppColor.black, borderRadius: BorderRadius.circular(24)),
+          decoration: BoxDecoration(
+            color: AppColor.success,
+            borderRadius: BorderRadius.circular(24),
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -43,7 +54,7 @@ class Utils {
                   message,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style:  TextStyle(color: AppColor.white),
+                  style: TextStyle(color: AppColor.black),
                 ),
               ),
             ],
@@ -66,7 +77,10 @@ class Utils {
         child: Container(
           // constraints: BoxConstraints(maxWidth: 1 * 0.8),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          decoration: BoxDecoration(color: AppColor.black, borderRadius: BorderRadius.circular(24)),
+          decoration: BoxDecoration(
+            color: AppColor.error,
+            borderRadius: BorderRadius.circular(24),
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -80,7 +94,7 @@ class Utils {
                   message,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style:  TextStyle(color: AppColor.white),
+                  style: TextStyle(color: AppColor.white),
                 ),
               ),
             ],

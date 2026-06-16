@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:taxi_app/component/image_picker/image_picker.dart';
 import 'package:taxi_app/core/network/api_response.dart';
 import 'package:taxi_app/core/utils/utils.dart';
 import 'package:taxi_app/modules/app/domain/entitties/base_entity.dart';
@@ -14,48 +15,60 @@ import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardprofile_
 part 'dashboardprofile_event.dart';
 part 'dashboardprofile_state.dart';
 
-class DashboardprofileBloc extends Bloc<DashboardprofileEvent, DashboardprofileState> {
+class DashboardprofileBloc
+    extends Bloc<DashboardprofileEvent, DashboardprofileState> {
   final ImagePicker _picker = ImagePicker();
   final DashboardprofileViewInitialParams initialParams;
   final DashboardprofileUseCase _useCase;
 
   DashboardprofileBloc(this.initialParams, this._useCase)
-      : super(DashboardprofileState(initialParams: initialParams)) {
+    : super(DashboardprofileState(initialParams: initialParams)) {
     on<LoadDashboardprofileEvent>(_loadDashboardprofileAction);
     on<PickImageFromGallery>(_onPickImage);
   }
 
   Future<void> _loadDashboardprofileAction(
-      LoadDashboardprofileEvent event, Emitter<DashboardprofileState> emit) async {
+    LoadDashboardprofileEvent event,
+    Emitter<DashboardprofileState> emit,
+  ) async {
     emit(state.copyWith(dashboardprofileResponse: ApiResponse.loading()));
-    
-    await _useCase.execute(event.param).then((value) => value.fold(
-      (l) {
-        emit(state.copyWith(dashboardprofileResponse: ApiResponse.error(l.error)));
-      }, 
-      (r) {
-        emit(state.copyWith(dashboardprofileResponse: ApiResponse.completed(r)));
-      },
-    ));
+
+    await _useCase
+        .execute(event.param)
+        .then(
+          (value) => value.fold(
+            (l) {
+              emit(
+                state.copyWith(
+                  dashboardprofileResponse: ApiResponse.error(l.error),
+                ),
+              );
+            },
+            (r) {
+              emit(
+                state.copyWith(
+                  dashboardprofileResponse: ApiResponse.completed(r),
+                ),
+              );
+            },
+          ),
+        );
   }
 
- Future<void> _onPickImage(
+  Future<void> _onPickImage(
     PickImageFromGallery event,
     Emitter<DashboardprofileState> emit,
   ) async {
     try {
-      final XFile? pickedFile = await _picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 80,
-      );
+      File? pickedFile = await AppImagePicker.pickFromGallery();
 
       if (pickedFile != null) {
-        emit(state.copyWith(image: File(pickedFile.path)));
+        emit(state.copyWith(image: pickedFile));
       }
       // If user cancels → do nothing OR keep old state
     } catch (e) {
       // Optional: log error
-      print(e.toString());
+      Utils.logError(e.toString());
     }
   }
 }
