@@ -4,17 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taxi_app/component/app_bar/custome_header.dart';
 import 'package:taxi_app/component/button/app_button.dart';
-import 'package:taxi_app/component/image/app_network_image.dart';
-import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/store/store_preference.dart';
 import 'package:taxi_app/core/store/user_store_key.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
-import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
-import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/main.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardprofile/dashboardprofile_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/profile_image_widget.dart';
@@ -69,6 +65,7 @@ class _DashboardprofileViewState extends State<DashboardprofileView> {
         child: ListView(
           children: [
             HeaderWidget(
+              showBackButton: false,
               title: 'Profile',
               showactions: true,
               actions: AppButton.iconButton(

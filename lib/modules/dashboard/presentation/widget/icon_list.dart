@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
+import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 
 class IconList extends StatelessWidget {
   final String data;
   final double? size;
+  final double space;
   final bool isCenter;
   final Color? color;
   final FontWeight? weight;
@@ -22,6 +24,7 @@ class IconList extends StatelessWidget {
     this.isLeft = true,
     this.onTap,
     this.size = 12,
+    this.space = 5,
     this.isCenter = true,
     this.color,
     this.weight,
@@ -32,12 +35,12 @@ class IconList extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Row(
-        
         crossAxisAlignment: isCenter
             ? CrossAxisAlignment.center
             : CrossAxisAlignment.start,
         children: [
           if (isLeft && icon != null) icon!,
+          if (isLeft && icon != null) space.widthBox,
           Flexible(
             fit: FlexFit.loose,
             child: Content(
@@ -51,6 +54,7 @@ class IconList extends StatelessWidget {
               alignment: TextAlign.start,
             ),
           ),
+          if (!isLeft && icon != null) space.widthBox,
           if (!isLeft && icon != null) icon!,
         ],
       ),
