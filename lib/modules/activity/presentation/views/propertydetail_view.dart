@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:taxi_app/component/app_bar/custome_header.dart';
+import 'package:taxi_app/component/bottom_sheet/app_bottom_sheet.dart';
 import 'package:taxi_app/component/button/app_button.dart';
 import 'package:taxi_app/component/image/app_network_image.dart';
 import 'package:taxi_app/component/text/content.dart';
@@ -15,6 +16,7 @@ import 'package:taxi_app/modules/activity/presentation/widget/expanded_text.dart
 import 'package:taxi_app/modules/activity/presentation/widget/location_card.dart';
 import 'package:taxi_app/modules/activity/presentation/widget/propert_detail_card.dart';
 import 'package:taxi_app/modules/activity/presentation/widget/review_card.dart';
+import 'package:taxi_app/modules/activity/presentation/widget/share_bottom_sheet.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
 import 'package:taxi_app/modules/onboarding/presentation/widget/pagination.dart';
 
@@ -40,6 +42,9 @@ class _PropertydetailViewState extends State<PropertydetailView> {
     AppAsset.propertyOne,
     AppAsset.propertyTwo,
   ];
+  void _openBottomSheet() {
+    appBottomSheet(context, ShareBottomSheet());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +73,7 @@ class _PropertydetailViewState extends State<PropertydetailView> {
                 spacing: 10,
                 children: [
                   AppButton.iconButton(
+                    onTap: () => _openBottomSheet(),
                     buttonColor: AppColor.transparent,
                     padding: EdgeInsets.all(0),
                     iconPath: AppAsset.share,
@@ -394,7 +400,20 @@ class LocationFasilities extends StatelessWidget {
             itemCount: fasilities.length,
           ),
         ),
-        MapCard(),
+        Container(
+          margin: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.black.withValues(alpha: 0.15),
+                offset: Offset(0, 5),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+          child: MapCard(),
+        ),
       ],
     );
   }

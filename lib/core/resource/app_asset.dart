@@ -50,6 +50,12 @@ class AppAsset {
   static const String area = '$iconPath/area.svg';
   static const String bath = '$iconPath/bath.svg';
   static const String bed = '$iconPath/bed.svg';
+  static const String facebook = '$iconPath/facebook.svg';
+  static const String instagram = '$iconPath/insta.svg';
+  static const String linkedin = '$iconPath/linkedin.svg';
+  static const String pinterest = '$iconPath/pintrest.svg';
+  static const String twitter = '$iconPath/twitter.svg';
+  static const String whatsapp = '$iconPath/whatapp.svg';
 
   //illustration
   static const String success = '$illustrationPath/success.svg';

@@ -26,15 +26,10 @@ class _MapCardState extends State<MapCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 200,
+
       // margin: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4),
-        ],
-      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: Stack(
