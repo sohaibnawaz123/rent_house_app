@@ -6,7 +6,6 @@ import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/main.dart';
-import 'package:taxi_app/modules/dashboard/presentation/widget/custom_tab.dart';
 import 'package:taxi_app/modules/setting/presentation/blocs/payment/payment_bloc.dart';
 import 'package:taxi_app/modules/setting/presentation/blocs/paymentcard/paymentcard_bloc.dart';
 import 'package:taxi_app/modules/setting/presentation/routes/paymentcard_view_initial_params.dart';
@@ -30,7 +29,7 @@ class _PaymentViewState extends State<PaymentView> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> data = ["transcation", "Cards"];
+    // final List<String> data = ["transcation", "Cards"];
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: AppColor.base,

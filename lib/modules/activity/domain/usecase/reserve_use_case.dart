@@ -5,7 +5,6 @@ import 'package:taxi_app/modules/activity/domain/failures/reserve_failure.dart';
 import 'package:taxi_app/modules/activity/domain/params/reserve_param.dart';
 import 'package:taxi_app/modules/activity/domain/repository/reserve_repo.dart';
 import 'package:taxi_app/modules/activity/presentation/validator/reserve_validator.dart';
-import 'package:taxi_app/modules/activity/domain/failures/reserve_failure.dart';
 
 class ReserveUseCase {
   final ReserveValidator validator;

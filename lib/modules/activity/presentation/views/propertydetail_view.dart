@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:taxi_app/component/app_bar/custome_header.dart';
 import 'package:taxi_app/component/bottom_sheet/app_bottom_sheet.dart';

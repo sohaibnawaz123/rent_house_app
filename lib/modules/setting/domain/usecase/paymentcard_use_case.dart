@@ -5,7 +5,6 @@ import 'package:taxi_app/modules/setting/domain/failures/paymentcard_failure.dar
 import 'package:taxi_app/modules/setting/domain/params/paymentcard_param.dart';
 import 'package:taxi_app/modules/setting/domain/repository/paymentcard_repo.dart';
 import 'package:taxi_app/modules/setting/presentation/validator/paymentcard_validator.dart';
-import 'package:taxi_app/modules/setting/domain/failures/paymentcard_failure.dart';
 
 class PaymentcardUseCase {
   final PaymentcardValidator validator;

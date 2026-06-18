@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:taxi_app/component/app_bar/custome_header.dart';
 import 'package:taxi_app/component/button/app_button.dart';
@@ -74,9 +76,9 @@ class _EditprofileViewState extends State<EditprofileView> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    // print(bottomInset);
-    final bottomSpacing = bottomInset > 0 ? bottomInset + 40 : 110.0;
+    // final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    // // print(bottomInset);
+    // final bottomSpacing = bottomInset > 0 ? bottomInset + 40 : 110.0;
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: AppColor.base,

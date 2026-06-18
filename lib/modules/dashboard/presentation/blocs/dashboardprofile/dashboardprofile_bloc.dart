@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:taxi_app/component/image_picker/image_picker.dart';
 import 'package:taxi_app/core/network/api_response.dart';
 import 'package:taxi_app/core/utils/utils.dart';
@@ -17,7 +16,7 @@ part 'dashboardprofile_state.dart';
 
 class DashboardprofileBloc
     extends Bloc<DashboardprofileEvent, DashboardprofileState> {
-  final ImagePicker _picker = ImagePicker();
+  // final ImagePicker _picker = ImagePicker();
   final DashboardprofileViewInitialParams initialParams;
   final DashboardprofileUseCase _useCase;
 
