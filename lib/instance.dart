@@ -166,6 +166,25 @@ import 'package:taxi_app/modules/activity/domain/repository/propertydetail_repo.
 import 'package:taxi_app/modules/activity/domain/usecase/propertydetail_use_case.dart';
 import 'package:taxi_app/modules/activity/presentation/blocs/propertydetail/propertydetail_bloc.dart';
 import 'package:taxi_app/modules/activity/presentation/routes/propertydetail_view_initial_params.dart';
+
+import 'package:taxi_app/modules/setting/data/datasource/paymentcard_remote_data_source.dart';
+import 'package:taxi_app/modules/setting/data/datasource/paymentcard_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/setting/data/rest_api/paymentcard_rest_api_repo.dart';
+import 'package:taxi_app/modules/setting/domain/repository/paymentcard_repo.dart';
+import 'package:taxi_app/modules/setting/domain/usecase/paymentcard_use_case.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/paymentcard/paymentcard_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/paymentcard_view_initial_params.dart';
+import 'package:taxi_app/modules/setting/presentation/validator/paymentcard_validator.dart';
+
+import 'package:taxi_app/modules/activity/data/datasource/reserve_remote_data_source.dart';
+import 'package:taxi_app/modules/activity/data/datasource/reserve_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/activity/data/rest_api/reserve_rest_api_repo.dart';
+import 'package:taxi_app/modules/activity/domain/repository/reserve_repo.dart';
+import 'package:taxi_app/modules/activity/domain/usecase/reserve_use_case.dart';
+import 'package:taxi_app/modules/activity/presentation/blocs/reserve/reserve_bloc.dart';
+import 'package:taxi_app/modules/activity/presentation/routes/reserve_view_initial_params.dart';
+import 'package:taxi_app/modules/activity/presentation/validator/reserve_validator.dart';
+
 void getInstance(BuildContext context) {
   getIt = GetIt.instance;
 
@@ -688,4 +707,57 @@ void getInstance(BuildContext context) {
     >((params, _) => PropertydetailBloc(params, getIt()));
   }
 
+  // <<<<<<<<<<<<<<<<<<<<<<<  Paymentcard  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<PaymentcardRemoteDataSource>()) {
+    getIt.registerSingleton<PaymentcardRemoteDataSource>(
+      PaymentcardRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<PaymentcardValidator>()) {
+    getIt.registerSingleton<PaymentcardValidator>(PaymentcardValidator());
+  }
+
+  if (!getIt.isRegistered<PaymentcardRepo>()) {
+    getIt.registerSingleton<PaymentcardRepo>(PaymentcardRestApiRepo(getIt()));
+  }
+
+  if (!getIt.isRegistered<PaymentcardUseCase>()) {
+    getIt.registerSingleton<PaymentcardUseCase>(
+      PaymentcardUseCase(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<PaymentcardBloc>()) {
+    getIt.registerFactoryParam<
+      PaymentcardBloc,
+      PaymentcardViewInitialParams,
+      dynamic
+    >((params, _) => PaymentcardBloc(params, getIt()));
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Reserve  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<ReserveRemoteDataSource>()) {
+    getIt.registerSingleton<ReserveRemoteDataSource>(
+      ReserveRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<ReserveValidator>()) {
+    getIt.registerSingleton<ReserveValidator>(ReserveValidator());
+  }
+
+  if (!getIt.isRegistered<ReserveRepo>()) {
+    getIt.registerSingleton<ReserveRepo>(ReserveRestApiRepo(getIt()));
+  }
+
+  if (!getIt.isRegistered<ReserveUseCase>()) {
+    getIt.registerSingleton<ReserveUseCase>(ReserveUseCase(getIt(), getIt()));
+  }
+
+  if (!getIt.isRegistered<ReserveBloc>()) {
+    getIt.registerFactoryParam<ReserveBloc, ReserveViewInitialParams, dynamic>(
+      (params, _) => ReserveBloc(params, getIt()),
+    );
+  }
 }

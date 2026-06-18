@@ -9,9 +9,14 @@ import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
+import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/main.dart';
 import 'package:taxi_app/modules/activity/presentation/blocs/propertydetail/propertydetail_bloc.dart';
+import 'package:taxi_app/modules/activity/presentation/blocs/reserve/reserve_bloc.dart';
+import 'package:taxi_app/modules/activity/presentation/routes/reserve_view_initial_params.dart';
+import 'package:taxi_app/modules/activity/presentation/views/reserve_view.dart';
 import 'package:taxi_app/modules/activity/presentation/widget/expanded_text.dart';
 import 'package:taxi_app/modules/activity/presentation/widget/location_card.dart';
 import 'package:taxi_app/modules/activity/presentation/widget/propert_detail_card.dart';
@@ -43,7 +48,7 @@ class _PropertydetailViewState extends State<PropertydetailView> {
     AppAsset.propertyTwo,
   ];
   void _openBottomSheet() {
-    appBottomSheet(context, ShareBottomSheet(),title: 'Share to');
+    appBottomSheet(context, ShareBottomSheet(), title: 'Share to');
   }
 
   @override
@@ -121,7 +126,14 @@ class _PropertydetailViewState extends State<PropertydetailView> {
 
           // 0
         ),
-        child: AppButton(title: 'Rent Now'),
+        child: AppButton(
+          title: 'Rent Now',
+          onTap: () => context.pushPage(
+            ReserveView(
+              bloc: getIt<ReserveBloc>(param1: ReserveViewInitialParams()),
+            ),
+          ),
+        ),
       ),
     );
   }

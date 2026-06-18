@@ -3,9 +3,14 @@ import 'package:taxi_app/component/app_bar/custome_header.dart';
 import 'package:taxi_app/component/button/app_button.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
+import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
+import 'package:taxi_app/main.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/custom_tab.dart';
 import 'package:taxi_app/modules/setting/presentation/blocs/payment/payment_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/blocs/paymentcard/paymentcard_bloc.dart';
+import 'package:taxi_app/modules/setting/presentation/routes/paymentcard_view_initial_params.dart';
+import 'package:taxi_app/modules/setting/presentation/views/paymentcard_view.dart';
 import 'package:taxi_app/modules/setting/presentation/widgets/card_widget.dart';
 
 class PaymentView extends StatefulWidget {
@@ -80,7 +85,16 @@ class _PaymentViewState extends State<PaymentView> {
 
           // 0
         ),
-        child: AppButton(title: 'Add New Card'),
+        child: AppButton(
+          title: 'Add New Card',
+          onTap: () => context.pushPage(
+            PaymentcardView(
+              bloc: getIt<PaymentcardBloc>(
+                param1: PaymentcardViewInitialParams(),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

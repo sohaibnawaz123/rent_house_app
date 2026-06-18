@@ -20,4 +20,6 @@ class AppUrl {
   static String notificationUrl = '';
   static String aboutUrl = '';
   static String propertydetailUrl = '';
+  static String paymentcardUrl = '';
+  static String reserveUrl = '';
 }

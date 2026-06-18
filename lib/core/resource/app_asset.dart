@@ -56,6 +56,7 @@ class AppAsset {
   static const String pinterest = '$iconPath/pintrest.svg';
   static const String twitter = '$iconPath/twitter.svg';
   static const String whatsapp = '$iconPath/whatapp.svg';
+  static const String calendar = '$iconPath/calendar.svg';
 
   //illustration
   static const String success = '$illustrationPath/success.svg';
