@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
+import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_padding.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 
@@ -24,13 +25,14 @@ Future<T?> appBottomSheet<T>(
 
     backgroundColor: AppColor.base,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
     builder: (context) => Padding(
       padding: EdgeInsets.only(
         left: context.sheetPadding.left,
         right: context.sheetPadding.right,
         top: context.sheetPadding.top,
+        // bottom: context.pagePadding.bottom
       ),
       child: ConstrainedBox(
         constraints: isMaxHeight
@@ -42,19 +44,19 @@ Future<T?> appBottomSheet<T>(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: 40.w,
+                width: 60.w,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: AppColor.highlight,
+                  color: AppColor.primary,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ).paddingOnly(bottom: 25.h),
               if (title != null)
                 Content(
                   data: title.toUpperCase(),
-                  size: 28,
+                  size: 24,
                   alignment: TextAlign.center,
-                  textStyle: context.titleText,
+                  textStyle: context.titleText.copyWith(fontWeight: AppFontWeight.semiBold),
                 ).paddingOnly(bottom: 18.h),
               if (subTitle != null)
                 Content(

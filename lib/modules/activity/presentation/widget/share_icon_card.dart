@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:taxi_app/component/image/app_network_image.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
+import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 
 class ShareIconCardEntity {
@@ -21,11 +22,11 @@ class ShareIconCard extends StatelessWidget {
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: AppColor.primary.withValues(alpha: 0.5),
+        color: AppColor.highlight,
         boxShadow: [
           BoxShadow(
             offset: Offset(0, 5),
-            color: AppColor.btnBg.withValues(alpha: 0.15),
+            color: AppColor.black.withValues(alpha: 0.15),
             blurRadius: 5,
           ),
         ],
@@ -34,12 +35,15 @@ class ShareIconCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
-        spacing: 15,
+        spacing: 10,
         children: [
-          AppImage.svg(svgPath: entity.iconName, size: 24),
+          CircleAvatar(
+            radius: 24,
+            backgroundColor: AppColor.white,
+            child: AppImage.svg(svgPath: entity.iconName, size: 28,svgColor: AppColor.btnBg,)),
           Content(
             data: entity.name,
-            textStyle: context.bodyText.copyWith(color: AppColor.black),
+            textStyle: context.bodyText.copyWith(color: AppColor.btnBg,fontWeight: AppFontWeight.semiBold),
             size: 14,
           ),
         ],

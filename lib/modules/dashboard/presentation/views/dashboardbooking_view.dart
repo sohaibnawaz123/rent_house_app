@@ -64,7 +64,7 @@ class _DashboardbookingViewState extends State<DashboardbookingView> {
                         currentIndex = index;
                       });
                     },
-                    data: BookingStatus.values[index],
+                    data: BookingStatus.values[index].name,
                     isSelected: currentIndex == index,
                   );
                 }),

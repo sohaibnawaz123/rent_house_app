@@ -43,14 +43,14 @@ class _PropertydetailViewState extends State<PropertydetailView> {
     AppAsset.propertyTwo,
   ];
   void _openBottomSheet() {
-    appBottomSheet(context, ShareBottomSheet());
+    appBottomSheet(context, ShareBottomSheet(),title: 'Share to');
   }
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    // final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     // print(bottomInset);
-    final bottomSpacing = bottomInset > 0 ? bottomInset + 40 : 110.0;
+    // final bottomSpacing = bottomInset > 0 ? bottomInset + 40 : 110.0;
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: AppColor.base,
