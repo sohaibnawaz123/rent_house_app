@@ -5,8 +5,6 @@ import 'package:taxi_app/modules/activity/domain/failures/bookingreviews_failure
 import 'package:taxi_app/modules/activity/domain/params/bookingreviews_param.dart';
 import 'package:taxi_app/modules/activity/domain/repository/bookingreviews_repo.dart';
 import 'package:taxi_app/modules/activity/presentation/validator/bookingreviews_validator.dart';
-import 'package:taxi_app/modules/activity/domain/failures/bookingreviews_failure.dart';
-
 class BookingreviewsUseCase {
   final BookingreviewsValidator validator;
   final BookingreviewsRepo _repo;
