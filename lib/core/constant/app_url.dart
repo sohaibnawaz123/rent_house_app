@@ -22,4 +22,5 @@ class AppUrl {
   static String propertydetailUrl = '';
   static String paymentcardUrl = '';
   static String reserveUrl = '';
+  static String bookingreviewsUrl = '';
 }

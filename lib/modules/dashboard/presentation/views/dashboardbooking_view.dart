@@ -8,8 +8,13 @@ import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
+import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/main.dart';
+import 'package:taxi_app/modules/activity/presentation/blocs/bookingreviews/bookingreviews_bloc.dart';
+import 'package:taxi_app/modules/activity/presentation/routes/bookingreviews_view_initial_params.dart';
+import 'package:taxi_app/modules/activity/presentation/views/bookingreviews_view.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardbooking/dashboardbooking_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/booking_card.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/custom_tab.dart';
@@ -166,6 +171,13 @@ class _BookingListingSectionState extends State<BookingListingSection> {
       itemBuilder: (context, index) {
         return BookingCard(
           bookingStatus: BookingStatus.values[widget.selectedIndex],
+          onReviewTap: () => context.pushPage(
+            BookingreviewsView(
+              bloc: getIt<BookingreviewsBloc>(
+                param1: BookingreviewsViewInitialParams(),
+              ),
+            ),
+          ),
           bookedStatus: widget.selectedIndex == 1
               ? BookedStatus.completed
               : widget.selectedIndex == 2

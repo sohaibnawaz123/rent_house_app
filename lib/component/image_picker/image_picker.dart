@@ -24,6 +24,20 @@ class AppImagePicker {
     }
   }
 
+  /// Pick up to 5 images from gallery
+  static Future<List<File>> pickFiveFromGallery({int imageQuality = 80}) async {
+    try {
+      final List<XFile> pickedFiles = await _picker.pickMultiImage(
+        imageQuality: imageQuality,
+        limit: 5,
+      );
+
+      return pickedFiles.map((file) => File(file.path)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
   /// Pick image from camera
   static Future<File?> pickFromCamera({int imageQuality = 80}) async {
     try {

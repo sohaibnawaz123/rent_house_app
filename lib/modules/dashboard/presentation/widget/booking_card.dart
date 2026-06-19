@@ -15,10 +15,16 @@ enum BookedStatus { waitingpayment, checkin, completed, cancelled }
 class BookingCard extends StatelessWidget {
   final BookingStatus bookingStatus;
   final BookedStatus? bookedStatus;
+  final void Function()? onReviewTap;
+  final void Function()? onCallTap;
+  final bool showStatus;
   const BookingCard({
     super.key,
     this.bookingStatus = BookingStatus.upcoming,
     this.bookedStatus = BookedStatus.waitingpayment,
+    this.onReviewTap,
+    this.onCallTap,
+    this.showStatus = true,
   });
 
   @override
@@ -80,27 +86,29 @@ class BookingCard extends StatelessWidget {
                           size: 14,
                         ),
                       ),
-                      10.widthBox,
-                      Flexible(
-                        fit: FlexFit.loose,
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: getColor().withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Content(
-                            data: bookedStatus?.name ?? "Not Found",
-                            textStyle: context.bodyText.copyWith(
-                              color: getColor().withValues(alpha: 0.7),
-                              fontWeight: AppFontWeight.semiBold,
+                      if (showStatus) ...[
+                        10.widthBox,
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: getColor().withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            size: 12,
+                            child: Content(
+                              data: bookedStatus?.name ?? "Not Found",
+                              textStyle: context.bodyText.copyWith(
+                                color: getColor().withValues(alpha: 0.7),
+                                fontWeight: AppFontWeight.semiBold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              size: 12,
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ],
@@ -119,6 +127,7 @@ class BookingCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: IconList(
+              onTap: onReviewTap,
               data: 'Write review',
               icon: AppImage.svg(svgPath: AppAsset.reviews, size: 24),
               color: AppColor.baseText,
@@ -132,7 +141,7 @@ class BookingCard extends StatelessWidget {
           ),
           // 2.heightBox,
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: IconList(
               data: 'Call Agent',
               icon: AppImage.svg(svgPath: AppAsset.phone, size: 24),
@@ -151,6 +160,7 @@ class BookingCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: IconList(
+              onTap: onCallTap,
               data: 'Call Agent',
               icon: AppImage.svg(svgPath: AppAsset.phone, size: 24),
               color: AppColor.baseText,

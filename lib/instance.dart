@@ -185,6 +185,14 @@ import 'package:taxi_app/modules/activity/presentation/blocs/reserve/reserve_blo
 import 'package:taxi_app/modules/activity/presentation/routes/reserve_view_initial_params.dart';
 import 'package:taxi_app/modules/activity/presentation/validator/reserve_validator.dart';
 
+import 'package:taxi_app/modules/activity/data/datasource/bookingreviews_remote_data_source.dart';
+import 'package:taxi_app/modules/activity/data/datasource/bookingreviews_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/activity/data/rest_api/bookingreviews_rest_api_repo.dart';
+import 'package:taxi_app/modules/activity/domain/repository/bookingreviews_repo.dart';
+import 'package:taxi_app/modules/activity/domain/usecase/bookingreviews_use_case.dart';
+import 'package:taxi_app/modules/activity/presentation/blocs/bookingreviews/bookingreviews_bloc.dart';
+import 'package:taxi_app/modules/activity/presentation/routes/bookingreviews_view_initial_params.dart';
+import 'package:taxi_app/modules/activity/presentation/validator/bookingreviews_validator.dart';
 void getInstance(BuildContext context) {
   getIt = GetIt.instance;
 
@@ -760,4 +768,36 @@ void getInstance(BuildContext context) {
       (params, _) => ReserveBloc(params, getIt()),
     );
   }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Bookingreviews  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<BookingreviewsRemoteDataSource>()) {
+    getIt.registerSingleton<BookingreviewsRemoteDataSource>(
+      BookingreviewsRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<BookingreviewsValidator>()) {
+    getIt.registerSingleton<BookingreviewsValidator>(BookingreviewsValidator());
+  }
+
+  if (!getIt.isRegistered<BookingreviewsRepo>()) {
+    getIt.registerSingleton<BookingreviewsRepo>(
+      BookingreviewsRestApiRepo(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<BookingreviewsUseCase>()) {
+    getIt.registerSingleton<BookingreviewsUseCase>(
+      BookingreviewsUseCase(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<BookingreviewsBloc>()) {
+    getIt.registerFactoryParam<
+      BookingreviewsBloc,
+      BookingreviewsViewInitialParams,
+      dynamic
+    >((params, _) => BookingreviewsBloc(params, getIt()));
+  }
+
 }
