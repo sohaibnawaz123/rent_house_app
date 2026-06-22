@@ -1,16 +1,22 @@
 import 'package:taxi_app/modules/auth/data/model/request/register_request_model/register_request_model.dart';
 
 class RegisterParam {
-  final String token;
+  final String username;
   final String email;
+  final String password;
+  final String role;
 
   const RegisterParam({
-    required this.token,
     required this.email,
+    required this.username,
+    required this.password,
+    required this.role,
   });
 
   RegisterRequestModel toModel() => RegisterRequestModel(
-        token: token,
-        email: email,
-      );
+    email: email,
+    username: username,
+    password: password,
+    role: role,
+  );
 }

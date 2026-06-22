@@ -1,16 +1,16 @@
 import 'package:taxi_app/modules/auth/data/model/request/login_request_model/login_request_model.dart';
 
 class LoginParam {
-  final String token;
   final String email;
+  final String password;
 
   const LoginParam({
-    required this.token,
+    required this.password,
     required this.email,
   });
 
   LoginRequestModel toModel() => LoginRequestModel(
-        token: token,
+        password: password,
         email: email,
       );
 }

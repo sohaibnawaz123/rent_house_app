@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 
-
 appDialog(BuildContext context, Widget widget) {
   showDialog(
     context: context,
@@ -19,7 +18,9 @@ appDialog(BuildContext context, Widget widget) {
         insetPadding: EdgeInsets.zero,
         titlePadding: EdgeInsets.zero,
         content: Container(
+          width: MediaQuery.of(context).size.width - 20,
           padding: EdgeInsets.all(10),
+          // margin: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: AppColor.white,

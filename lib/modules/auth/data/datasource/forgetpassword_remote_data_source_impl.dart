@@ -37,8 +37,8 @@ class ForgetpasswordRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<ForgetpasswordModel>.fromJson(
-                      response.data,
-                          ForgetpasswordModel.fromJson,
+                      response as Map<String, dynamic>,
+                      ForgetpasswordModel.fromJson,
                     ),
                   );
                 } catch (e) {

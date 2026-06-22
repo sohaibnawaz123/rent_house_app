@@ -1,33 +1,30 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:taxi_app/modules/auth/domain/entities/register_entities/user_entity.dart';
 
-class LoginEntity extends Equatable {
+class RegisterEntity extends Equatable {
   final UserEntity? user;
   final String? accessToken;
   final String? refreshToken;
 
-  const LoginEntity({this.user, this.accessToken, this.refreshToken});
+  const RegisterEntity({this.user, this.accessToken, this.refreshToken});
 
   @override
   List<Object?> get props => [user, accessToken, refreshToken];
 }
-
-
-// class LoginEntity {
+// class RegisterEntity {
 //   final String userMessage;
 //   final bool status;
 
-//   LoginEntity({
+//   RegisterEntity({
 //     required this.userMessage,
 //     required this.status,
 //   });
 
-//   LoginEntity copyWith({
+//   RegisterEntity copyWith({
 //     String? userMessage,
 //     bool? status,
 //   }) {
-//     return LoginEntity(
+//     return RegisterEntity(
 //       userMessage: userMessage ?? this.userMessage,
 //       status: status ?? this.status,
 //     );

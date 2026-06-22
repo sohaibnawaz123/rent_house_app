@@ -25,7 +25,7 @@ class RegisterRemoteDataSourceImpl
           .post(
             AppUrl.registerUrl,
              data.toModel().toJson(),
-            ApiHeader.json(),
+            ApiHeader.contentTypeText(),
         // authType: AuthType.cookie,
 
           )
@@ -36,8 +36,8 @@ class RegisterRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<RegisterModel>.fromJson(
-                      response.data,
-                          RegisterModel.fromJson,
+                      response as Map<String, dynamic>,
+                      RegisterModel.fromJson,
                     ),
                   );
                 } catch (e) {

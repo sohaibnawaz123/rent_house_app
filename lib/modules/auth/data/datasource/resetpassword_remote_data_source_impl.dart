@@ -36,8 +36,8 @@ class ResetpasswordRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<ResetpasswordModel>.fromJson(
-                      response.data,
-                          ResetpasswordModel.fromJson,
+                      response as Map<String, dynamic>,
+                      ResetpasswordModel.fromJson,
                     ),
                   );
                 } catch (e) {

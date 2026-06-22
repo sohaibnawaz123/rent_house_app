@@ -21,7 +21,7 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
           .post(
             AppUrl.loginUrl,
             data.toModel().toJson(),
-            ApiHeader.json(),
+            ApiHeader.contentTypeText(),
 
             // authType: AuthType.cookie,
           )
@@ -32,7 +32,7 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
               try {
                 return right(
                   BaseJson<LoginModel>.fromJson(
-                    response.data,
+                    response as Map<String, dynamic>,
                     LoginModel.fromJson,
                   ),
                 );

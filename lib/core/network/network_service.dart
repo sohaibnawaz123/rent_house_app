@@ -294,7 +294,9 @@ class NetworkService extends Network {
   NetworkFailure? _handleError(http.Response response) {
     final status = response.statusCode;
     final body = response.body.isNotEmpty ? jsonDecode(response.body) : {};
-    Utils.logError(body.toString(), name: 'Network HandleError');
+    if (status != 200 && status != 201 && status != 202) {
+      Utils.logError(body.toString(), name: 'Network HandleError');
+    }
 
     String? message() =>
         (body is Map && body.containsKey('message')) ? body['message'] : null;

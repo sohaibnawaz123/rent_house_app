@@ -36,8 +36,8 @@ class OtpverificationRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<OtpverificationModel>.fromJson(
-                      response.data,
-                          OtpverificationModel.fromJson,
+                      response as Map<String, dynamic>,
+                      OtpverificationModel.fromJson,
                     ),
                   );
                 } catch (e) {

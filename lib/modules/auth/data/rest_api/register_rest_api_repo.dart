@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:taxi_app/core/failures/repo_failure.dart';
 import 'package:taxi_app/modules/app/domain/entitties/base_entity.dart';
 import 'package:taxi_app/modules/auth/data/datasource/register_remote_data_source.dart';
-import 'package:taxi_app/modules/auth/domain/entities/register_entity.dart';
+import 'package:taxi_app/modules/auth/domain/entities/register_entities/register_entity.dart';
 import 'package:taxi_app/modules/auth/domain/params/register_param.dart';
 import 'package:taxi_app/modules/auth/domain/repository/register_repo.dart';
 
