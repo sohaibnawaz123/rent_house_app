@@ -2,37 +2,45 @@ import 'package:taxi_app/modules/app/domain/entitties/base_entity.dart';
 
 
 class BaseJson<T> {
-  final bool? success;
   final String? message;
   final T? data;
+  final String? curser;
 
-  BaseJson({this.success, this.message, this.data});
+  BaseJson({this.message, this.data, this.curser});
 
   factory BaseJson.fromJson(
     Map<String, dynamic> json,
     T Function(Map<String, dynamic>) fromDataJson,
   ) {
-    return BaseJson(
-      success: json['success'] as bool?,
+    return BaseJson<T>(
       message: json['message'] as String?,
       data: json['data'] == null
           ? null
           : fromDataJson(json['data'] as Map<String, dynamic>),
+
+      // Supports multiple API naming conventions
+      curser:
+          json['curser'] as String? ??
+          json['cursor'] as String? ??
+          json['nextCursor'] as String?,
     );
   }
 
-  Map<String, dynamic> toJson(Map<String, dynamic> Function(T?) toDataJson) => {
-    'success': success,
+  Map<String, dynamic> toJson(
+    Map<String, dynamic> Function(T? data) toDataJson,
+  ) => {
     'message': message,
     'data': toDataJson(data),
+
+    // Send as nextCursor to API
+    if (curser != null) 'nextCursor': curser,
   };
 
-  // ✅ FIXED DOMAIN MAPPER
-  BaseEntity<R> toDomain<R>(R Function(T?) toDataDomain) {
+  BaseEntity<R> toDomain<R>(R Function(T? data) toDataDomain) {
     return BaseEntity<R>(
-      // success: success ?? false,
       message: message ?? '',
       data: toDataDomain(data),
+      nextCursor: curser ?? '',
     );
   }
 }

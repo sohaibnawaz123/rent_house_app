@@ -1,10 +1,11 @@
-import 'pagination_entity.dart';
+// import 'pagination_entity.dart';
 
 class BaseEntity<T> {
-  final T data;
   final String message;
+  final T data;
+  final String? nextCursor;
 
-  BaseEntity({required this.data, required this.message});
+  BaseEntity({required this.message, required this.data, this.nextCursor});
 }
 
 // class BaseEntity<T> {
