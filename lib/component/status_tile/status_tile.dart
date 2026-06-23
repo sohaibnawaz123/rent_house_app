@@ -27,6 +27,7 @@ class StatusTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tileBackgroundColor = backgroundColor ?? AppColor.white;
     IconData iconAsset;
     Color iconBgColor;
     switch (type) {
@@ -48,7 +49,7 @@ class StatusTile extends StatelessWidget {
       // margin: !isButton ? EdgeInsets.zero : context.buttonMarginTopBottom,
       padding: EdgeInsets.all(10.w),
       decoration: BoxDecoration(
-        color: backgroundColor!.withValues(alpha: 0.1),
+        color: tileBackgroundColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(

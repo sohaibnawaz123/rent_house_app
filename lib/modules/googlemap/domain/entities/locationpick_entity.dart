@@ -1,94 +1,93 @@
 import 'package:equatable/equatable.dart';
 
 class LocationpickEntity extends Equatable {
-  final double lat;
-  final double lon;
-  final String city;
-  final String state;
-  final String country;
-  final String zipCode;
-  final String addressLine;
-  final String countryCode;
-  final String provinceCode;
+  final int? id;
+  final int? userId;
+  final double? lat;
+  final double? lon;
+  final String? city;
+  final String? state;
+  final String? country;
+  final String? zipcode;
+  final String? addressline;
+  final String? countrycode;
+  final String? provincecode;
+  final String? createdAt;
+  final String? updatedAt;
 
   const LocationpickEntity({
-    required this.lat,
-    required this.lon,
-    required this.city,
-    required this.state,
-    required this.country,
-    required this.zipCode,
-    required this.addressLine,
-    required this.countryCode,
-    required this.provinceCode,
+    this.id,
+    this.userId,
+    this.lat,
+    this.lon,
+    this.city,
+    this.state,
+    this.country,
+    this.zipcode,
+    this.addressline,
+    this.countrycode,
+    this.provincecode,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory LocationpickEntity.fromJson(Map<String, dynamic> json) {
     return LocationpickEntity(
+      id: json['id'] as int?,
+      userId: json['user_id'] as int?,
       lat: _toDouble(json['lat']),
       lon: _toDouble(json['lon']),
-      city: json['city'] as String? ?? '',
-      state: json['state'] as String? ?? '',
-      country: json['country'] as String? ?? '',
-      zipCode: json['zipCode'] as String? ?? '',
-      addressLine: json['addressLine'] as String? ?? '',
-      countryCode: json['countryCode'] as String? ?? '',
-      provinceCode: json['provinceCode'] as String? ?? '',
+      city: json['city'] as String?,
+      state: json['state'] as String?,
+      country: json['country'] as String?,
+      zipcode: json['zipcode'] as String?,
+      addressline: json['addressline'] as String?,
+      countrycode: json['countrycode'] as String?,
+      provincecode: json['provincecode'] as String?,
+      createdAt: json['createdAt'] as String?,
+      updatedAt: json['updatedAt'] as String?,
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'lat': lat,
-    'lon': lon,
-    'city': city,
-    'state': state,
-    'country': country,
-    'zipCode': zipCode,
-    'addressLine': addressLine,
-    'countryCode': countryCode,
-    'provinceCode': provinceCode,
-  };
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'user_id': userId,
+      'lat': lat,
+      'lon': lon,
+      'city': city,
+      'state': state,
+      'country': country,
+      'zipcode': zipcode,
+      'addressline': addressline,
+      'countrycode': countrycode,
+      'provincecode': provincecode,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
+  }
 
-  static double _toDouble(dynamic value) {
+  static double? _toDouble(dynamic value) {
+    if (value == null) return null;
     if (value is num) return value.toDouble();
-    if (value is String) return double.tryParse(value) ?? 0.0;
-    return 0.0;
-  }
-
-  LocationpickEntity copyWith({
-    double? lat,
-    double? lon,
-    String? city,
-    String? state,
-    String? country,
-    String? zipCode,
-    String? addressLine,
-    String? countryCode,
-    String? provinceCode,
-  }) {
-    return LocationpickEntity(
-      lat: lat ?? this.lat,
-      lon: lon ?? this.lon,
-      city: city ?? this.city,
-      state: state ?? this.state,
-      country: country ?? this.country,
-      zipCode: zipCode ?? this.zipCode,
-      addressLine: addressLine ?? this.addressLine,
-      countryCode: countryCode ?? this.countryCode,
-      provinceCode: provinceCode ?? this.provinceCode,
-    );
+    if (value is String) return double.tryParse(value);
+    return null;
   }
 
   @override
   List<Object?> get props => [
+    id,
+    userId,
     lat,
     lon,
     city,
     state,
     country,
-    zipCode,
-    addressLine,
-    countryCode,
-    provinceCode,
+    zipcode,
+    addressline,
+    countrycode,
+    provincecode,
+    createdAt,
+    updatedAt,
   ];
 }

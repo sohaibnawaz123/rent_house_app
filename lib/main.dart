@@ -12,7 +12,7 @@ import 'package:taxi_app/modules/auth/presentation/views/login_view.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardroot/dashboardroot_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardroot_view_initial_params.dart';
 import 'package:taxi_app/modules/dashboard/presentation/views/dashboardroot_view.dart';
-import 'package:taxi_app/modules/googlemap/domain/entities/locationpick_entity.dart';
+import 'package:taxi_app/modules/googlemap/data/model/response/locationpick_model/locationpick_model.dart';
 import 'package:taxi_app/modules/onboarding/presentation/blocs/onboarding/onboarding_bloc.dart';
 import 'package:taxi_app/modules/onboarding/presentation/routes/onboarding_view_initial_params.dart';
 import 'package:taxi_app/modules/onboarding/presentation/views/onboarding_view.dart';
@@ -45,22 +45,22 @@ class _MyAppState extends State<MyApp> {
     _appBloc = AppBloc()..add(const ReadLocalUserEvent());
   }
 
-  LocationpickEntity get _defaultLocation => const LocationpickEntity(
+  LocationpickModel get _defaultLocation => const LocationpickModel(
     lat: 0.0,
     lon: 0.0,
     city: '',
     state: '',
     country: '',
-    zipCode: '',
-    addressLine: '',
-    countryCode: '',
-    provinceCode: '',
+    zipcode: '',
+    addressline: '',
+    countrycode: '',
+    provincecode: '',
   );
 
-  LocationpickEntity get _storedLocation {
+  LocationpickModel get _storedLocation {
     return StorePreference()
         .read<Map<String, dynamic>>(UserStoreKey.location)
-        .map(LocationpickEntity.fromJson)
+        .map(LocationpickModel.fromJson)
         .getOrElse((_) => _defaultLocation);
   }
 

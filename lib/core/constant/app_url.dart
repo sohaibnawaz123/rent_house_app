@@ -7,7 +7,7 @@ class AppUrl {
   static String otpverificationUrl = '';
   static String resetpasswordUrl = '';
   static String locationselectionUrl = '';
-  static String locationpickUrl = '';
+  static String locationpickUrl = '$baseUrl/address/create';
   static String dashboardrootUrl = '';
   static String dashboardhomeUrl = '';
   static String dashboardexploreUrl = '';

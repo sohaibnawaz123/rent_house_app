@@ -7,8 +7,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:taxi_app/component/app_bar/custome_header.dart';
 import 'package:taxi_app/component/button/app_button.dart';
 import 'package:taxi_app/component/image/app_network_image.dart';
+import 'package:taxi_app/component/status_tile/status_tile.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/component/text_field/content_field.dart';
+import 'package:taxi_app/core/network/api_status.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/store/store_preference.dart';
@@ -16,11 +18,14 @@ import 'package:taxi_app/core/store/user_store_key.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
+import 'package:taxi_app/core/utils/extension/app_snackBar.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/main.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardroot/dashboardroot_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardroot_view_initial_params.dart';
 import 'package:taxi_app/modules/dashboard/presentation/views/dashboardroot_view.dart';
+import 'package:taxi_app/modules/googlemap/data/model/response/locationpick_model/locationpick_model.dart';
+import 'package:taxi_app/modules/googlemap/domain/params/locationpick_param.dart';
 import 'package:taxi_app/modules/googlemap/presentation/blocs/locationpick/locationpick_bloc.dart';
 
 class LocationpickView extends StatefulWidget {
@@ -46,22 +51,84 @@ class _LocationpickViewState extends State<LocationpickView> {
         extendBodyBehindAppBar: true,
         extendBody: false,
         backgroundColor: AppColor.base,
-        body: Stack(
-          children: [
-            const GoogleMapBackground(),
-            Positioned(
-              top: context.pagePadding.top,
-              left: context.pagePadding.left,
-              right: context.pagePadding.left,
-              child: const LocationSearchHeader(),
-            ),
-            Positioned(
-              bottom: context.pagePadding.bottom,
-              left: context.pagePadding.left,
-              right: context.pagePadding.left,
-              child: const LocationBottomCard(),
-            ),
-          ],
+        body: BlocConsumer<LocationpickBloc, LocationpickState>(
+          listener: (context, state) {
+            if (state.locationpickResponse.status == ApiStatus.completed) {
+              final selectedLocation = state.selectedLocation;
+
+              StorePreference().write<Map<String, dynamic>>(
+                UserStoreKey.location,
+                selectedLocation.toJson(),
+              );
+
+              context.pushFadeReplacementPage(
+                DashboardrootView(
+                  bloc: getIt<DashboardrootBloc>(
+                    param1: DashboardrootViewInitialParams(
+                      location: selectedLocation,
+                    ),
+                  ),
+                ),
+              );
+            }
+            if (state.locationpickResponse.status == ApiStatus.error) {
+              context.showSnackbar(
+                message: state.locationpickResponse.message ?? "Error",
+                type: StatusTileType.error,
+              );
+            }
+          },
+          builder: (context, state) {
+            return Stack(
+              children: [
+                const GoogleMapBackground(),
+                Positioned(
+                  top: context.pagePadding.top,
+                  left: context.pagePadding.left,
+                  right: context.pagePadding.left,
+                  child: const LocationSearchHeader(),
+                ),
+                Positioned(
+                  bottom: context.pagePadding.bottom,
+                  left: context.pagePadding.left,
+                  right: context.pagePadding.left,
+                  child: LocationBottomCard(
+                    isLoading:
+                        state.locationpickResponse.status == ApiStatus.loading,
+                    onTap: (selectedLocation) {
+                      final lat = selectedLocation.lat;
+                      final lon = selectedLocation.lon;
+
+                      if (lat == null || lon == null) {
+                        context.showSnackbar(
+                          message: 'Lat and lon is required',
+                          backgroundColor: AppColor.error,
+                          type: StatusTileType.error,
+                        );
+                        return;
+                      }
+
+                      widget.bloc.add(
+                        LoadLocationpickEvent(
+                          LocationpickParam(
+                            lat: lat,
+                            lon: lon,
+                            city: selectedLocation.city,
+                            state: selectedLocation.state,
+                            country: selectedLocation.country,
+                            zipcode: selectedLocation.zipcode,
+                            addressline: selectedLocation.addressline,
+                            countrycode: selectedLocation.countrycode,
+                            provincecode: selectedLocation.provincecode,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -116,7 +183,7 @@ class _GoogleMapBackgroundState extends State<GoogleMapBackground> {
         final selectedLocation = state.selectedLocation;
         _mapController?.animateCamera(
           CameraUpdate.newLatLng(
-            LatLng(selectedLocation.lat, selectedLocation.lon),
+            LatLng(selectedLocation.lat ?? 0.0, selectedLocation.lon ?? 0.0),
           ),
         );
       },
@@ -132,8 +199,8 @@ class _GoogleMapBackgroundState extends State<GoogleMapBackground> {
             builder: (context, state) {
               final selectedLocation = state.selectedLocation;
               final selectedPosition = LatLng(
-                selectedLocation.lat,
-                selectedLocation.lon,
+                selectedLocation.lat ?? 0.0,
+                selectedLocation.lon ?? 0.0,
               );
 
               return GoogleMap(
@@ -405,7 +472,9 @@ class LocationSuggestionsPanel extends StatelessWidget {
 }
 
 class LocationBottomCard extends StatelessWidget {
-  const LocationBottomCard({super.key});
+  final void Function(LocationpickModel selectedLocation)? onTap;
+  final bool isLoading;
+  const LocationBottomCard({super.key, this.onTap, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -482,7 +551,7 @@ class LocationBottomCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Content(
-                              data: selectedLocation.addressLine,
+                              data: selectedLocation.addressline ?? "",
                               maxLines: 3,
                               textStyle: context.bodyText.copyWith(
                                 color: AppColor.primaryText,
@@ -492,7 +561,7 @@ class LocationBottomCard extends StatelessWidget {
                             8.heightBox,
                             Content(
                               data:
-                                  '${selectedLocation.lat.toStringAsFixed(5)}, ${selectedLocation.lon.toStringAsFixed(5)}',
+                                  '${selectedLocation.lat?.toStringAsFixed(5)}, ${selectedLocation.lon?.toStringAsFixed(5)}',
                               textStyle: context.bodyText.copyWith(
                                 color: AppColor.baseText,
                                 fontSize: 12,
@@ -508,30 +577,28 @@ class LocationBottomCard extends StatelessWidget {
             ),
             16.heightBox,
             AppButton(
+              isLoading: isLoading,
               title: 'Choose location',
               buttonColor: AppColor.btnBg,
               isDisable: state.isResolvingAddress,
-              onTap: () {
-                context.pushPage(
-                  DashboardrootView(
-                    bloc: getIt<DashboardrootBloc>(
-                      param1: DashboardrootViewInitialParams(
-                        location: selectedLocation,
-                      ),
-                    ),
-                  ),
-                );
+              onTap: () => onTap?.call(selectedLocation),
+              // onTap: () {
 
-                StorePreference().write<Map<String, dynamic>>(
-                  UserStoreKey.location,
-                  state.selectedLocation.toJson(),
-                );
-                // Navigator.of(context).pop({
-                //   'address': selectedLocation.addressLine,
-                //   'latitude': selectedLocation.lat,
-                //   'longitude': selectedLocation.lon,
-                // });
-              },
+              //   // context.pushPage(
+              //   //   DashboardrootView(
+              //   //     bloc: getIt<DashboardrootBloc>(
+              //   //       param1: DashboardrootViewInitialParams(
+              //   //         location: selectedLocation,
+              //   //       ),
+              //   //     ),
+              //   //   ),
+              //   // );
+
+              //   // StorePreference().write<Map<String, dynamic>>(
+              //   //   UserStoreKey.location,
+              //   //   state.selectedLocation.toJson(),
+              //   // );
+              // },
             ),
           ],
         );

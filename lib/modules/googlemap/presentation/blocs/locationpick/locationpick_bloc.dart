@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:taxi_app/core/network/api_response.dart';
 import 'package:taxi_app/core/utils/utils.dart';
 import 'package:taxi_app/modules/app/domain/entitties/base_entity.dart';
+import 'package:taxi_app/modules/googlemap/data/model/response/locationpick_model/locationpick_model.dart';
 import 'package:taxi_app/modules/googlemap/domain/entities/locationpick_entity.dart';
 import 'package:taxi_app/modules/googlemap/domain/params/locationpick_param.dart';
 import 'package:taxi_app/modules/googlemap/domain/usecase/locationpick_use_case.dart';
@@ -29,16 +30,16 @@ class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
     : super(
         LocationpickState(
           initialParams: initialParams,
-          selectedLocation: LocationpickEntity(
+          selectedLocation: LocationpickModel(
             lat: initialParams.latitude ?? LocationpickState.karachiLatitude,
             lon: initialParams.longitude ?? LocationpickState.karachiLongitude,
             city: _defaultCity,
             state: 'Sindh',
             country: _defaultCountry,
-            zipCode: '',
-            addressLine: 'Move the map to choose your pickup location',
-            countryCode: 'PK',
-            provinceCode: 'Sindh',
+            zipcode: '',
+            addressline: 'Move the map to choose your pickup location',
+            countrycode: 'PK',
+            provincecode: 'Sindh',
           ),
         ),
       ) {
@@ -58,8 +59,8 @@ class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
   ) async {
     emit(state.copyWith(isResolvingAddress: true));
     final location = await _locationFromCoordinates(
-      state.selectedLocation.lat,
-      state.selectedLocation.lon,
+      state.selectedLocation.lat ?? 0.0,
+      state.selectedLocation.lon ?? 0.0,
     );
     emit(state.copyWith(selectedLocation: location, isResolvingAddress: false));
   }
@@ -69,8 +70,8 @@ class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
     Emitter<LocationpickState> emit,
   ) {
     final samePoint =
-        (state.selectedLocation.lat - event.latitude).abs() < 0.00002 &&
-        (state.selectedLocation.lon - event.longitude).abs() < 0.00002;
+        (state.selectedLocation.lat! - event.latitude).abs() < 0.00002 &&
+        (state.selectedLocation.lon! - event.longitude).abs() < 0.00002;
 
     if (samePoint) return;
 
@@ -91,7 +92,7 @@ class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
   ) async {
     final latitude = state.selectedLocation.lat;
     final longitude = state.selectedLocation.lon;
-    final location = await _locationFromCoordinates(latitude, longitude);
+    final location = await _locationFromCoordinates(latitude ?? 0.0, longitude??0.0);
 
     if (latitude != state.selectedLocation.lat ||
         longitude != state.selectedLocation.lon) {
@@ -150,16 +151,16 @@ class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
   ) {
     emit(
       state.copyWith(
-        selectedLocation: LocationpickEntity(
+        selectedLocation: LocationpickModel(
           lat: event.suggestion.latitude,
           lon: event.suggestion.longitude,
           city: '',
           state: '',
           country: _defaultCountry,
-          zipCode: '',
-          addressLine: event.suggestion.address,
-          countryCode: 'PK',
-          provinceCode: '',
+          zipcode: '',
+          addressline: event.suggestion.address,
+          countrycode: 'PK',
+          provincecode: '',
         ),
         searchQuery: event.suggestion.address,
         suggestions: const [],
@@ -210,7 +211,7 @@ class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
         );
   }
 
-  Future<LocationpickEntity> _locationFromCoordinates(
+  Future<LocationpickModel> _locationFromCoordinates(
     double latitude,
     double longitude,
   ) async {
@@ -232,7 +233,7 @@ class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
       final address = parts.join(', ');
       final addressLine = address.isEmpty ? '$latitude, $longitude' : address;
 
-      return LocationpickEntity(
+      return LocationpickModel(
         lat: latitude,
         lon: longitude,
         city: _firstNotEmpty([
@@ -242,27 +243,27 @@ class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
         ]),
         state: placemark.administrativeArea ?? '',
         country: placemark.country ?? '',
-        zipCode: placemark.postalCode ?? '',
-        addressLine: addressLine,
-        countryCode: placemark.isoCountryCode ?? '',
-        provinceCode: placemark.administrativeArea ?? '',
+        zipcode: placemark.postalCode ?? '',
+        addressline: addressLine,
+        countrycode: placemark.isoCountryCode ?? '',
+        provincecode: placemark.administrativeArea ?? '',
       );
     } catch (_) {
       return _fallbackLocation(latitude, longitude);
     }
   }
 
-  LocationpickEntity _fallbackLocation(double latitude, double longitude) {
-    return LocationpickEntity(
+  LocationpickModel _fallbackLocation(double latitude, double longitude) {
+    return LocationpickModel(
       lat: latitude,
       lon: longitude,
       city: '',
       state: '',
       country: '',
-      zipCode: '',
-      addressLine: '$latitude, $longitude',
-      countryCode: '',
-      provinceCode: '',
+      zipcode: '',
+      addressline: '$latitude, $longitude',
+      countrycode: '',
+      provincecode: '',
     );
   }
 
@@ -301,8 +302,8 @@ class LocationpickBloc extends Bloc<LocationpickEvent, LocationpickState> {
           location.longitude,
         );
         final suggestion = LocationSuggestion(
-          title: _titleFromAddress(entity.addressLine),
-          address: entity.addressLine,
+          title: _titleFromAddress(entity.addressline??""),
+          address: entity.addressline??"",
           latitude: location.latitude,
           longitude: location.longitude,
         );

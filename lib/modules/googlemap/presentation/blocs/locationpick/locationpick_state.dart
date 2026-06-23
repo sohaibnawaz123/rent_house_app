@@ -23,7 +23,7 @@ class LocationpickState extends Equatable {
 
   final LocationpickViewInitialParams initialParams;
   final ApiResponse<BaseEntity<LocationpickEntity>> locationpickResponse;
-  final LocationpickEntity selectedLocation;
+  final LocationpickModel selectedLocation;
   final String searchQuery;
   final List<LocationSuggestion> suggestions;
   final bool isResolvingAddress;
@@ -33,16 +33,16 @@ class LocationpickState extends Equatable {
   const LocationpickState({
     required this.initialParams,
     this.locationpickResponse = const ApiResponse.init(),
-    this.selectedLocation = const LocationpickEntity(
+    this.selectedLocation = const LocationpickModel(
       lat: karachiLatitude,
       lon: karachiLongitude,
       city: 'Karachi',
       state: 'Sindh',
       country: 'Pakistan',
-      zipCode: '',
-      addressLine: 'Move the map to choose your pickup location',
-      countryCode: 'PK',
-      provinceCode: 'Sindh',
+      zipcode: "",
+      addressline: "",
+      countrycode: "",
+      provincecode: ""
     ),
     this.searchQuery = '',
     this.suggestions = const [],
@@ -54,7 +54,7 @@ class LocationpickState extends Equatable {
   LocationpickState copyWith({
     LocationpickViewInitialParams? initialParams,
     ApiResponse<BaseEntity<LocationpickEntity>>? locationpickResponse,
-    LocationpickEntity? selectedLocation,
+    LocationpickModel? selectedLocation,
     String? searchQuery,
     List<LocationSuggestion>? suggestions,
     bool? isResolvingAddress,

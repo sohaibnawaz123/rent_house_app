@@ -7,10 +7,10 @@ class LocationpickRequestModel extends LocationpickParam {
     super.city,
     super.state,
     super.country,
-    super.zipCode,
-    super.addressLine,
-    super.countryCode,
-    super.provinceCode,
+    super.zipcode,
+    super.addressline,
+    super.countrycode,
+    super.provincecode,
   });
 
   Map<String, dynamic> toJson() => {
@@ -19,9 +19,9 @@ class LocationpickRequestModel extends LocationpickParam {
     "city": city ?? "",
     "state": state ?? "",
     "country": country ?? "",
-    "zip_code": zipCode ?? "",
-    "address_line": addressLine ?? "",
-    "country_code": countryCode ?? "",
-    "province_code": provinceCode ?? "",
+    "zipcode": zipcode ?? "",
+    "addressline": addressline ?? "",
+    "countrycode": countrycode ?? "",
+    "provincecode": provincecode ?? "",
   };
 }

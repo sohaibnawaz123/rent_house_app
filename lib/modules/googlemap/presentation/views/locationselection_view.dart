@@ -15,7 +15,7 @@ import 'package:taxi_app/main.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardroot/dashboardroot_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardroot_view_initial_params.dart';
 import 'package:taxi_app/modules/dashboard/presentation/views/dashboardroot_view.dart';
-import 'package:taxi_app/modules/googlemap/domain/entities/locationpick_entity.dart';
+import 'package:taxi_app/modules/googlemap/data/model/response/locationpick_model/locationpick_model.dart';
 import 'package:taxi_app/modules/googlemap/presentation/blocs/locationpick/locationpick_bloc.dart';
 import 'package:taxi_app/modules/googlemap/presentation/blocs/locationselection/locationselection_bloc.dart';
 import 'package:taxi_app/modules/googlemap/presentation/routes/locationpick_view_initial_params.dart';
@@ -102,17 +102,17 @@ class _LocationselectionViewState extends State<LocationselectionView> {
                     DashboardrootView(
                       bloc: getIt<DashboardrootBloc>(
                         param1: const DashboardrootViewInitialParams(
-                          location: LocationpickEntity(
+                          location: LocationpickModel(
                             lat: 0,
                             lon: 0,
                             city: '',
                             state: '',
                             country: '',
-                            zipCode: '',
-                            addressLine:
+                            zipcode: '',
+                            addressline:
                                 'Select the address for better results',
-                            countryCode: '',
-                            provinceCode: '',
+                            countrycode: '',
+                            provincecode: '',
                           ),
                         ),
                       ),
@@ -129,7 +129,7 @@ class _LocationselectionViewState extends State<LocationselectionView> {
                 fontColor: AppColor.baseText,
                 fontSize: 14,
                 borderWidth: 1.5,
-                padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               ),
             ),
             SizedBox(
