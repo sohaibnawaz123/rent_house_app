@@ -6,12 +6,11 @@ import 'package:taxi_app/component/app_bar/custome_header.dart';
 import 'package:taxi_app/component/button/app_button.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
-import 'package:taxi_app/core/store/store_preference.dart';
-import 'package:taxi_app/core/store/user_store_key.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/main.dart';
+import 'package:taxi_app/modules/app/presentation/bloc/app_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardprofile/dashboardprofile_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/profile_image_widget.dart';
 // import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
@@ -72,7 +71,9 @@ class _DashboardprofileViewState extends State<DashboardprofileView> {
                 isResponsiveHeight: true,
                 isResponsiveWidth: true,
                 iconPath: AppAsset.logout,
-                onTap: () => StorePreference().delete(UserStoreKey.isLogin),
+                onTap: () => context.read<AppBloc>().add(
+                  const DeleteUserEvent(),
+                ),
               ),
             ),
             30.heightBox,

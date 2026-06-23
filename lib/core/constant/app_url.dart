@@ -1,5 +1,5 @@
 class AppUrl {
-  static String baseUrl = 'http://192.168.137.55:3000/api/v1';
+  static String baseUrl = 'https://wannabe-herbs-scavenger.ngrok-free.dev/api/v1';
   static String onboardingUrl = '';
   static String loginUrl = '$baseUrl/auth/login';
   static String registerUrl = '$baseUrl/auth/signup';

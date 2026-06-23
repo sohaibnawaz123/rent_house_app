@@ -1,49 +1,55 @@
-// part of 'app_bloc.dart';
+part of 'app_bloc.dart';
 
-// @immutable
-// class AppState {
-//   final AuthUserDataEntity user;
-//   final CredentialsEntity credentials;
-//   final LovEntity lovData;
-//   final ApiResponse<BaseEntity<LovEntity>> lovResponse;
-//   final String fcm;
-//   // final SocketResponse<io.Socket>? socket;
-//   final SocketStatus? socketStatus;
+class AppState extends Equatable {
+  final bool isInitialized;
+  final bool isLoggedIn;
+  final AppUserEntity user;
+  final String accessToken;
+  final String refreshToken;
+  final CredentialsEntity credentials;
 
-//   const AppState({
-//     required this.user,
-//     required this.credentials,
-//     required this.lovData,
-//     this.lovResponse = const ApiResponse.init(),
-//     this.fcm = 'abc',
-//     // this.socket,
-//     this.socketStatus,
-//   });
+  const AppState({
+    required this.isInitialized,
+    required this.isLoggedIn,
+    required this.user,
+    required this.accessToken,
+    required this.refreshToken,
+    required this.credentials,
+  });
 
-//   AppState copyWith({
-//     AuthUserDataEntity? user,
-//     CredentialsEntity? credentials,
-//     LovEntity? lovData,
-//     ApiResponse<BaseEntity<LovEntity>>? lovResponse,
-//     String? fcm,
-//     SocketResponse<io.Socket>? socket,
-//     SocketStatus? socketStatus,
-//   }) {
-//     AppState data = AppState(
-//       user: user ?? this.user,
-//       credentials: credentials ?? this.credentials,
-//       lovData: lovData ?? this.lovData,
-//       lovResponse: lovResponse ?? this.lovResponse,
-//       fcm: fcm ?? this.fcm,
-//       // socket: socket ?? this.socket,
-//       socketStatus: socketStatus ?? this.socketStatus,
-//     );
-//     Utils.logInfo(data.toString(), name: "App State");
-//     return data;
-//   }
+  const AppState.initial()
+    : isInitialized = false,
+      isLoggedIn = false,
+      user = const AppUserEntity.empty(),
+      accessToken = '',
+      refreshToken = '',
+      credentials = const CredentialsEntity.empty();
 
-//   @override
-//   String toString() {
-//     return 'AppState(${user.toString()}, credential: ${credentials.toString()}, lovResponse: ${lovResponse.toString()}, lovData: ${lovData.toString()}, fcm: ${fcm.toString()}, socketStatus: ${socketStatus.toString()})';
-//   }
-// }
+  AppState copyWith({
+    bool? isInitialized,
+    bool? isLoggedIn,
+    AppUserEntity? user,
+    String? accessToken,
+    String? refreshToken,
+    CredentialsEntity? credentials,
+  }) {
+    return AppState(
+      isInitialized: isInitialized ?? this.isInitialized,
+      isLoggedIn: isLoggedIn ?? this.isLoggedIn,
+      user: user ?? this.user,
+      accessToken: accessToken ?? this.accessToken,
+      refreshToken: refreshToken ?? this.refreshToken,
+      credentials: credentials ?? this.credentials,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    isInitialized,
+    isLoggedIn,
+    user,
+    accessToken,
+    refreshToken,
+    credentials,
+  ];
+}

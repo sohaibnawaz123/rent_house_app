@@ -18,6 +18,8 @@ import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_snackBar.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/core/validator/validator.dart';
+import 'package:taxi_app/modules/app/domain/entitties/user_entity.dart';
+import 'package:taxi_app/modules/app/presentation/bloc/app_bloc.dart';
 import 'package:taxi_app/main.dart';
 import 'package:taxi_app/modules/auth/domain/params/login_param.dart';
 import 'package:taxi_app/modules/auth/presentation/blocs/forgetpassword/forgetpassword_bloc.dart';
@@ -46,6 +48,23 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isRemember = false;
+  bool _didLoadRememberedCredentials = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didLoadRememberedCredentials) return;
+
+    final credentials = context.read<AppBloc>().state.credentials;
+    if (!credentials.isEmpty) {
+      _emailController.text = credentials.email;
+      _passwordController.text = credentials.password;
+      isRemember = true;
+    }
+
+    _didLoadRememberedCredentials = true;
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -69,6 +88,25 @@ class _LoginViewState extends State<LoginView> {
           bloc: widget.bloc,
           listener: (context, state) {
             if (state.loginResponse.status == ApiStatus.completed) {
+              final loginData = state.loginResponse.data?.data;
+
+              if (loginData != null) {
+                context.read<AppBloc>().add(WriteLocalUserEvent(loginData));
+
+                if (isRemember) {
+                  context.read<AppBloc>().add(
+                    WriteCredentialsEvent(
+                      CredentialsEntity(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      ),
+                    ),
+                  );
+                } else {
+                  context.read<AppBloc>().add(const DeleteCredentialsEvent());
+                }
+              }
+
               context.pushPage(
                 LocationselectionView(
                   bloc: getIt<LocationselectionBloc>(
@@ -163,15 +201,6 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       );
                       // Handle successful validation (login logic)
-                      // context.pushPage(
-                      //   LocationselectionView(
-                      //     bloc: getIt<LocationselectionBloc>(
-                      //       param1: LocationselectionViewInitialParams(),
-                      //     ),
-                      //   ),
-                      // );
-
-                      // StorePreference().write<bool>(UserStoreKey.isLogin, true);
                     }
                   },
                 ),

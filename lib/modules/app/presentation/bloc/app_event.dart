@@ -1,68 +1,55 @@
-// part of 'app_bloc.dart';
+part of 'app_bloc.dart';
 
-// @immutable
-// sealed class AppEvent {}
+sealed class AppEvent extends Equatable {
+  const AppEvent();
 
-// class ReadLocalUserEvent extends AppEvent {}
+  @override
+  List<Object?> get props => [];
+}
 
-// class WriteLocalUserEvent extends AppEvent {
-//   final AuthUserDataEntity data;
-//   WriteLocalUserEvent(this.data);
-// }
+class ReadLocalUserEvent extends AppEvent {
+  const ReadLocalUserEvent();
+}
 
-// class UpdateLocalUserTokenEvent extends AppEvent {
-//   final TokenRefreshDataEntity data;
-//   UpdateLocalUserTokenEvent(this.data);
-// }
+class WriteLocalUserEvent extends AppEvent {
+  final LoginEntity data;
 
-// class WriteCredentialsEvent extends AppEvent {
-//   final CredentialsEntity data;
-//   WriteCredentialsEvent(this.data);
-// }
+  const WriteLocalUserEvent(this.data);
 
-// class ReadCredentialsEvent extends AppEvent {
-//   ReadCredentialsEvent();
-// }
+  @override
+  List<Object?> get props => [data];
+}
 
-// class DeleteUserEvent extends AppEvent {
-//   final String key = UserStoreKey.user;
-//   DeleteUserEvent();
-// }
+class UpdateLocalUserTokenEvent extends AppEvent {
+  final String accessToken;
+  final String refreshToken;
 
-// class DeleteLovEvent extends AppEvent {
-//   final String key = UserStoreKey.lov;
-//   DeleteLovEvent();
-// }
+  const UpdateLocalUserTokenEvent({
+    required this.accessToken,
+    required this.refreshToken,
+  });
 
-// class DeleteCredentialsEvent extends AppEvent {
-//   final String key = UserStoreKey.credentials;
-//   DeleteCredentialsEvent();
-// }
+  @override
+  List<Object?> get props => [accessToken, refreshToken];
+}
 
-// class GetLovEvent extends AppEvent {
-//   final LovGetEntity data;
-//   GetLovEvent(this.data);
-// }
+class DeleteUserEvent extends AppEvent {
+  const DeleteUserEvent();
+}
 
-// class ReadLocalLovEvent extends AppEvent {}
+class WriteCredentialsEvent extends AppEvent {
+  final CredentialsEntity data;
 
-// class GetFcmEvent extends AppEvent {}
+  const WriteCredentialsEvent(this.data);
 
-// class ConnectSocketEvent extends AppEvent {
-//   final SocketConnectionEntity data;
-//   ConnectSocketEvent(this.data);
-// }
+  @override
+  List<Object?> get props => [data];
+}
 
-// class SocketConnectivityEvent extends AppEvent {
-//   final SocketStatus data;
-//   SocketConnectivityEvent(this.data);
-// }
+class ReadCredentialsEvent extends AppEvent {
+  const ReadCredentialsEvent();
+}
 
-// class NewMessageEvent extends AppEvent {
-//   final Either<LovFailure, dynamic> data;
-//   NewMessageEvent(this.data);
-// }
-
-// class SocketDisconnectEvent extends AppEvent {
-//   SocketDisconnectEvent();
-// }
+class DeleteCredentialsEvent extends AppEvent {
+  const DeleteCredentialsEvent();
+}
