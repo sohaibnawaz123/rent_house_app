@@ -1,12 +1,12 @@
+import 'package:taxi_app/modules/app/data/models/pagination_json.dart';
 import 'package:taxi_app/modules/app/domain/entitties/base_entity.dart';
-
 
 class BaseJson<T> {
   final String? message;
   final T? data;
-  final String? curser;
+  final PaginationJson? pagination;
 
-  BaseJson({this.message, this.data, this.curser});
+  BaseJson({this.message, this.data, this.pagination});
 
   factory BaseJson.fromJson(
     Map<String, dynamic> json,
@@ -19,10 +19,9 @@ class BaseJson<T> {
           : fromDataJson(json['data'] as Map<String, dynamic>),
 
       // Supports multiple API naming conventions
-      curser:
-          json['curser'] as String? ??
-          json['cursor'] as String? ??
-          json['nextCursor'] as String?,
+      pagination: json['pagination'] == null
+          ? null
+          : PaginationJson.fromJson(json['pagination'] as Map<String, dynamic>),
     );
   }
 
@@ -31,16 +30,14 @@ class BaseJson<T> {
   ) => {
     'message': message,
     'data': toDataJson(data),
-
-    // Send as nextCursor to API
-    if (curser != null) 'nextCursor': curser,
+    if (pagination != null) 'pagination': pagination!.toJson(),
   };
 
   BaseEntity<R> toDomain<R>(R Function(T? data) toDataDomain) {
     return BaseEntity<R>(
       message: message ?? '',
       data: toDataDomain(data),
-      nextCursor: curser ?? '',
+      pagination: pagination?.toDomain(),
     );
   }
 }

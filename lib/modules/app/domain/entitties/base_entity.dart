@@ -1,11 +1,11 @@
-// import 'pagination_entity.dart';
+import 'package:taxi_app/modules/app/domain/entitties/pagination_entity.dart';
 
 class BaseEntity<T> {
   final String message;
   final T data;
-  final String? nextCursor;
+  final PaginationEntity? pagination;
 
-  BaseEntity({required this.message, required this.data, this.nextCursor});
+  BaseEntity({required this.message, required this.data, this.pagination});
 }
 
 // class BaseEntity<T> {
