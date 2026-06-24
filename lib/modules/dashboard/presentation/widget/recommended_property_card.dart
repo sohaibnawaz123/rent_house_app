@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_null_aware_operator
+
 import 'package:flutter/material.dart';
 import 'package:taxi_app/component/image/app_network_image.dart';
 import 'package:taxi_app/component/text/content.dart';
@@ -5,11 +7,17 @@ import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entities/property_entity.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
 
 class RecommendedPropertyCard extends StatefulWidget {
+  final PropertyEntity propertyData;
   final void Function()? onTap;
-  const RecommendedPropertyCard({super.key, this.onTap});
+  const RecommendedPropertyCard({
+    super.key,
+    this.onTap,
+    required this.propertyData,
+  });
 
   @override
   State<RecommendedPropertyCard> createState() =>
@@ -20,6 +28,7 @@ class _RecommendedPropertyCardState extends State<RecommendedPropertyCard> {
   bool isFavourite = false;
   @override
   Widget build(BuildContext context) {
+    final data = widget.propertyData;
     return GestureDetector(
       onTap: widget.onTap,
       child: ClipRRect(
@@ -30,10 +39,15 @@ class _RecommendedPropertyCardState extends State<RecommendedPropertyCard> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              AppImage.asset(
-                assetPath: AppAsset.propertyOne,
-                size: double.infinity,
-              ),
+              data.image.isNotEmpty
+                  ? AppImage.network(
+                      imageUrl: data.image,
+                      size: double.infinity,
+                    )
+                  : AppImage.asset(
+                      assetPath: AppAsset.propertyOne,
+                      size: double.infinity,
+                    ),
               Container(
                 padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
@@ -50,7 +64,13 @@ class _RecommendedPropertyCardState extends State<RecommendedPropertyCard> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Align(alignment: Alignment.topRight, child: _priceCard()),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: _priceCard(
+                        data.price.toString(),
+                        data.pricePeriod,
+                      ),
+                    ),
                     Row(
                       children: [
                         Expanded(
@@ -60,7 +80,7 @@ class _RecommendedPropertyCardState extends State<RecommendedPropertyCard> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Content(
-                                data: 'Ayana Homestay',
+                                data: data?.name ?? "",
                                 textStyle: context.bodyText.copyWith(
                                   color: AppColor.white,
                                   fontWeight: AppFontWeight.semiBold,
@@ -70,7 +90,8 @@ class _RecommendedPropertyCardState extends State<RecommendedPropertyCard> {
                                 size: 14,
                               ),
                               IconList(
-                                data: 'Imogiri, Yogyakarta',
+                                isCenter: false,
+                                data: data.address?.addressline ?? "",
                                 color: AppColor.white,
                                 icon: AppImage.svg(
                                   svgPath: AppAsset.locationIcon,
@@ -114,7 +135,7 @@ class _RecommendedPropertyCardState extends State<RecommendedPropertyCard> {
     );
   }
 
-  Widget _priceCard() {
+  Widget _priceCard(String price, String period) {
     return Container(
       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
@@ -123,14 +144,14 @@ class _RecommendedPropertyCardState extends State<RecommendedPropertyCard> {
       ),
       child: RichText(
         text: TextSpan(
-          text: '\$ 30',
+          text: '\$ $price',
           style: context.bodyText.copyWith(
             color: AppColor.primary,
             fontWeight: AppFontWeight.semiBold,
           ),
           children: [
             TextSpan(
-              text: '/ Monthly',
+              text: '/ $period',
               style: TextStyle(fontSize: 12, color: AppColor.baseText),
             ),
           ],

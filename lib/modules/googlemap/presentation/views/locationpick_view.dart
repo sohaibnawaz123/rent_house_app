@@ -61,6 +61,11 @@ class _LocationpickViewState extends State<LocationpickView> {
                 selectedLocation.toJson(),
               );
 
+              if (widget.bloc.initialParams.isPop == true) {
+                context.popPage(selectedLocation);
+                return;
+              }
+
               context.pushFadeReplacementPage(
                 DashboardrootView(
                   bloc: getIt<DashboardrootBloc>(

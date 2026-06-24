@@ -8,8 +8,9 @@ class AppUrl {
   static String resetpasswordUrl = '';
   static String locationselectionUrl = '';
   static String locationpickUrl = '$baseUrl/address/create';
+  static String locationgetUrl = '$baseUrl/address/get';
   static String dashboardrootUrl = '';
-  static String dashboardhomeUrl = '';
+  static String dashboardhomeUrl = '$baseUrl/propertymanagement/home';
   static String dashboardexploreUrl = '';
   static String dashboardfavouriteUrl = '';
   static String dashboardbookingUrl = '';

@@ -6,10 +6,12 @@ import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entities/property_entity.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
 
 class NearByCard extends StatelessWidget {
-  const NearByCard({super.key});
+  final PropertyEntity? data;
+  const NearByCard({super.key, this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,9 @@ class NearByCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: AppImage.asset(assetPath: AppAsset.propertyTwo, size: 80),
+            child: data!.image.isNotEmpty
+                ? AppImage.network(size: 80, imageUrl: data!.image)
+                : AppImage.asset(assetPath: AppAsset.propertyTwo, size: 80),
           ),
           Expanded(
             child: Column(
@@ -29,7 +33,7 @@ class NearByCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Content(
-                  data: 'Ayana Homestay',
+                  data: data?.name ??"",
                   textStyle: context.bodyText.copyWith(
                     color: AppColor.primaryText,
                     fontWeight: AppFontWeight.semiBold,
@@ -40,7 +44,7 @@ class NearByCard extends StatelessWidget {
                 ),
                 IconList(
                   isLeft: true,
-                  data: 'Imogiri, Yogyakarta',
+                  data: data?.address?.addressline ?? 'Imogiri, Yogyakarta',
                   color: AppColor.baseText,
                   icon: AppImage.svg(
                     svgPath: AppAsset.locationIcon,
@@ -53,7 +57,7 @@ class NearByCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Content(
-                      data: '\$320/month',
+                      data: '\$${data?.price}/${data?.pricePeriod}',
                       textStyle: context.bodyText.copyWith(
                         color: AppColor.primaryText,
                         fontWeight: AppFontWeight.semiBold,

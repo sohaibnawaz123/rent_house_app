@@ -1,9 +1,11 @@
 class LocationselectionViewInitialParams {
-  const LocationselectionViewInitialParams();
+  final bool isPop;
+
+  const LocationselectionViewInitialParams({this.isPop = false});
 
   factory LocationselectionViewInitialParams.fromUri(Uri uri) {
     return LocationselectionViewInitialParams(
-      // Parse the URI parameters as needed
+      isPop: bool.tryParse(uri.queryParameters['isPop'] ?? '') ?? false,
     );
   }
 }

@@ -5,10 +5,12 @@ import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entities/property_entity.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
 
 class PopularPlaceCard extends StatefulWidget {
-  const PopularPlaceCard({super.key});
+  final PropertyEntity? propertyData;
+  const PopularPlaceCard({super.key, this.propertyData});
 
   @override
   State<PopularPlaceCard> createState() => _PopularPlaceCardState();
@@ -25,7 +27,12 @@ class _PopularPlaceCardState extends State<PopularPlaceCard> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: AppImage.asset(assetPath: AppAsset.propertyTwo, size: 80),
+            child: widget.propertyData!.image.isNotEmpty
+                ? AppImage.network(
+                    imageUrl: widget.propertyData!.image,
+                    size: 80,
+                  )
+                : AppImage.asset(assetPath: AppAsset.propertyTwo, size: 80),
           ),
           Expanded(
             child: Column(
@@ -38,7 +45,7 @@ class _PopularPlaceCardState extends State<PopularPlaceCard> {
                     Flexible(
                       fit: FlexFit.loose,
                       child: Content(
-                        data: 'Takatea Homestay',
+                        data: widget.propertyData?.name ?? 'Takatea Homestay',
                         textStyle: context.bodyText.copyWith(
                           color: AppColor.primaryText,
                           fontWeight: AppFontWeight.semiBold,
@@ -64,7 +71,9 @@ class _PopularPlaceCardState extends State<PopularPlaceCard> {
                   ],
                 ),
                 IconList(
-                  data: 'Jl. Tentara Pelajar No.47, RW.001',
+                  data:
+                      widget.propertyData?.address?.addressline ??
+                      'Jl. Tentara Pelajar No.47, RW.001',
                   icon: AppImage.svg(
                     svgPath: AppAsset.locationIcon,
                     svgColor: AppColor.baseText,
@@ -76,7 +85,8 @@ class _PopularPlaceCardState extends State<PopularPlaceCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Content(
-                      data: '\$320/month',
+                      data:
+                          '\$${widget.propertyData?.price}/${widget.propertyData?.pricePeriod}',
                       textStyle: context.bodyText.copyWith(
                         color: AppColor.primaryText,
                         fontWeight: AppFontWeight.semiBold,

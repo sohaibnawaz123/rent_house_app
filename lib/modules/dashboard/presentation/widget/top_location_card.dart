@@ -5,12 +5,19 @@ import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entities/top_location_entity.dart';
 
 class TopLocationCard extends StatefulWidget {
   final void Function()? onTap;
   final bool isSelected;
+  final TopLocationEntity? data;
 
-  const TopLocationCard({super.key, this.onTap, required this.isSelected});
+  const TopLocationCard({
+    super.key,
+    this.onTap,
+    required this.isSelected,
+    this.data,
+  });
 
   @override
   State<TopLocationCard> createState() => _TopLocationCardState();
@@ -39,12 +46,14 @@ class _TopLocationCardState extends State<TopLocationCard> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(5),
-              child: AppImage.asset(assetPath: AppAsset.propertyTwo),
+              child: widget.data!.image.isNotEmpty
+                  ? AppImage.network(imageUrl: widget.data!.image)
+                  : AppImage.asset(assetPath: AppAsset.propertyTwo),
             ),
             Flexible(
               fit: FlexFit.loose,
               child: Content(
-                data: 'Malang',
+                data: widget.data?.city ?? 'Malang',
                 textStyle: context.bodyText.copyWith(
                   color: widget.isSelected ? AppColor.white : AppColor.baseText,
                   fontWeight: widget.isSelected

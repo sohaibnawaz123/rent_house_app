@@ -148,7 +148,7 @@ class _BottomNavigationBar extends StatelessWidget {
                 color: AppColor.black.withValues(alpha: 0.15),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
+                    color: Colors.white.withOpacity(0.15),
                     blurRadius: 10,
                     spreadRadius: 1,
                     offset: const Offset(0, 5),

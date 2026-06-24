@@ -32,9 +32,14 @@ class LocationselectionView extends StatefulWidget {
 class _LocationselectionViewState extends State<LocationselectionView> {
   bool _isPickingCurrentLocation = false;
 
-  @override
-  void initState() {
-    super.initState();
+  void _handlePickedLocation(LocationpickModel? location) {
+    if (!mounted ||
+        location == null ||
+        !widget.bloc.initialParams.isPop) {
+      return;
+    }
+
+    context.popPage(location);
   }
 
   Future<void> _useCurrentLocation() async {
@@ -47,15 +52,17 @@ class _LocationselectionViewState extends State<LocationselectionView> {
 
       if (!mounted) return;
 
-      context.pushPage(
+      context.pushPage<LocationpickModel>(
         LocationpickView(
           bloc: getIt<LocationpickBloc>(
             param1: LocationpickViewInitialParams(
               latitude: position.latitude,
               longitude: position.longitude,
+              isPop: widget.bloc.initialParams.isPop,
             ),
           ),
         ),
+        then: _handlePickedLocation,
       );
     } on CurrentLocationException catch (error) {
       if (!mounted) return;
@@ -71,12 +78,15 @@ class _LocationselectionViewState extends State<LocationselectionView> {
   }
 
   void _selectManually() {
-    context.pushPage(
+    context.pushPage<LocationpickModel>(
       LocationpickView(
         bloc: getIt<LocationpickBloc>(
-          param1: const LocationpickViewInitialParams(),
+          param1: LocationpickViewInitialParams(
+            isPop: widget.bloc.initialParams.isPop,
+          ),
         ),
       ),
+      then: _handlePickedLocation,
     );
   }
 
@@ -98,6 +108,11 @@ class _LocationselectionViewState extends State<LocationselectionView> {
               showactions: true,
               actions: AppButton(
                 onTap: () {
+                  if (widget.bloc.initialParams.isPop) {
+                    context.popPage();
+                    return;
+                  }
+
                   context.pushReplacementPage(
                     DashboardrootView(
                       bloc: getIt<DashboardrootBloc>(

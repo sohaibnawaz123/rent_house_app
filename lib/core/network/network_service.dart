@@ -47,26 +47,12 @@ class NetworkService extends Network {
     if (body != null) Utils.logInfo(body.toString(), name: "$method Body");
 
     try {
-      final response = switch (method) {
-        'GET' => await _client.get(uri, headers: headers),
-        'POST' => await _client.post(
-          uri,
-          headers: headers,
-          body: jsonEncode(body),
-        ),
-        'PATCH' => await _client.patch(
-          uri,
-          headers: headers,
-          body: jsonEncode(body),
-        ),
-        'PUT' => await _client.put(
-          uri,
-          headers: headers,
-          body: jsonEncode(body),
-        ),
-        'DELETE' => await _client.delete(uri, headers: headers),
-        _ => throw UnimplementedError('HTTP method $method not supported'),
-      };
+      final response = await _sendRequest(
+        method: method,
+        uri: uri,
+        headers: headers,
+        body: body,
+      );
 
       final failure = _handleError(response);
       if (failure != null) return left(failure);
@@ -77,6 +63,30 @@ class NetworkService extends Network {
     } catch (e, st) {
       Utils.logError('$e\n$st', name: 'Network Failure');
       return left(NetworkFailure('Network Failure', e.toString()));
+    }
+  }
+
+  Future<http.Response> _sendRequest({
+    required String method,
+    required Uri uri,
+    required Map<String, String> headers,
+    Map<String, dynamic>? body,
+  }) async {
+    Future<http.Response> send() => switch (method) {
+      'GET' => _client.get(uri, headers: headers),
+      'POST' => _client.post(uri, headers: headers, body: jsonEncode(body)),
+      'PATCH' => _client.patch(uri, headers: headers, body: jsonEncode(body)),
+      'PUT' => _client.put(uri, headers: headers, body: jsonEncode(body)),
+      'DELETE' => _client.delete(uri, headers: headers),
+      _ => throw UnimplementedError('HTTP method $method not supported'),
+    };
+
+    try {
+      return await send().timeout(const Duration(seconds: 30));
+    } on http.ClientException {
+      if (method != 'GET') rethrow;
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+      return send().timeout(const Duration(seconds: 30));
     }
   }
 

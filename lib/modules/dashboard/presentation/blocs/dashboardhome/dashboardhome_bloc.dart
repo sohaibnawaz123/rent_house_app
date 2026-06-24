@@ -3,10 +3,11 @@ import 'package:equatable/equatable.dart';
 import 'package:taxi_app/core/network/api_response.dart';
 import 'package:taxi_app/core/utils/utils.dart';
 import 'package:taxi_app/modules/app/domain/entitties/base_entity.dart';
-import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entity.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entities/dashboardhome_entity.dart';
 import 'package:taxi_app/modules/dashboard/domain/params/dashboardhome_param.dart';
 import 'package:taxi_app/modules/dashboard/domain/usecase/dashboardhome_use_case.dart';
 import 'package:taxi_app/modules/dashboard/presentation/routes/dashboardhome_view_initial_params.dart';
+import 'package:taxi_app/modules/googlemap/domain/entities/locationpick_entity.dart';
 
 part 'dashboardhome_event.dart';
 part 'dashboardhome_state.dart';
@@ -18,6 +19,7 @@ class DashboardhomeBloc extends Bloc<DashboardhomeEvent, DashboardhomeState> {
   DashboardhomeBloc(this.initialParams, this._useCase)
       : super(DashboardhomeState(initialParams: initialParams)) {
     on<LoadDashboardhomeEvent>(_loadDashboardhomeAction);
+    on<LoadDashboardhomeAddressEvent>(_loadDashboardhomeAddressAction);
   }
 
   Future<void> _loadDashboardhomeAction(
@@ -32,5 +34,31 @@ class DashboardhomeBloc extends Bloc<DashboardhomeEvent, DashboardhomeState> {
         emit(state.copyWith(dashboardhomeResponse: ApiResponse.completed(r)));
       },
     ));
+  }
+
+  Future<void> _loadDashboardhomeAddressAction(
+    LoadDashboardhomeAddressEvent event,
+    Emitter<DashboardhomeState> emit,
+  ) async {
+    emit(state.copyWith(dashboardhomeadressResponse: ApiResponse.loading()));
+
+    await _useCase.executeAddress(event.param).then(
+      (value) => value.fold(
+        (l) {
+          emit(
+            state.copyWith(
+              dashboardhomeadressResponse: ApiResponse.error(l.error),
+            ),
+          );
+        },
+        (r) {
+          emit(
+            state.copyWith(
+              dashboardhomeadressResponse: ApiResponse.completed(r),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
