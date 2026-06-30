@@ -193,6 +193,15 @@ import 'package:taxi_app/modules/activity/domain/usecase/bookingreviews_use_case
 import 'package:taxi_app/modules/activity/presentation/blocs/bookingreviews/bookingreviews_bloc.dart';
 import 'package:taxi_app/modules/activity/presentation/routes/bookingreviews_view_initial_params.dart';
 import 'package:taxi_app/modules/activity/presentation/validator/bookingreviews_validator.dart';
+import 'package:taxi_app/modules/auth/data/datasource/refreshtoken_remote_data_source.dart';
+import 'package:taxi_app/modules/auth/data/datasource/refreshtoken_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/auth/data/rest_api/refreshtoken_rest_api_repo.dart';
+import 'package:taxi_app/modules/auth/domain/repository/refreshtoken_repo.dart';
+import 'package:taxi_app/modules/auth/domain/usecase/refreshtoken_use_case.dart';
+import 'package:taxi_app/modules/auth/presentation/blocs/refreshtoken/refreshtoken_bloc.dart';
+import 'package:taxi_app/modules/auth/presentation/routes/refreshtoken_view_initial_params.dart';
+import 'package:taxi_app/modules/auth/presentation/validator/refreshtoken_validator.dart';
+
 void getInstance(BuildContext context) {
   getIt = GetIt.instance;
 
@@ -368,6 +377,35 @@ void getInstance(BuildContext context) {
         .registerFactoryParam<RegisterBloc, RegisterViewInitialParams, dynamic>(
           (params, _) => RegisterBloc(params, getIt()),
         );
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<  Refreshtoken  >>>>>>>>>>>>>>>>>>>>>>>
+  if (!getIt.isRegistered<RefreshtokenRemoteDataSource>()) {
+    getIt.registerSingleton<RefreshtokenRemoteDataSource>(
+      RefreshtokenRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<RefreshtokenValidator>()) {
+    getIt.registerSingleton<RefreshtokenValidator>(RefreshtokenValidator());
+  }
+
+  if (!getIt.isRegistered<RefreshtokenRepo>()) {
+    getIt.registerSingleton<RefreshtokenRepo>(RefreshtokenRestApiRepo(getIt()));
+  }
+
+  if (!getIt.isRegistered<RefreshtokenUseCase>()) {
+    getIt.registerSingleton<RefreshtokenUseCase>(
+      RefreshtokenUseCase(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<RefreshtokenBloc>()) {
+    getIt.registerFactoryParam<
+      RefreshtokenBloc,
+      RefreshtokenViewInitialParams,
+      dynamic
+    >((params, _) => RefreshtokenBloc(params, getIt()));
   }
   // <<<<<<<<<<<<<<<<<<<<<<<  Locationpick  >>>>>>>>>>>>>>>>>>>>>>>
   if (!getIt.isRegistered<LocationpickRemoteDataSource>()) {
@@ -799,5 +837,4 @@ void getInstance(BuildContext context) {
       dynamic
     >((params, _) => BookingreviewsBloc(params, getIt()));
   }
-
 }
