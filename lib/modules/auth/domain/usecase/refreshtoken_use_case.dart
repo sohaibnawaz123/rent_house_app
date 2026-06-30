@@ -5,7 +5,6 @@ import 'package:taxi_app/modules/auth/domain/failures/refreshtoken_failure.dart'
 import 'package:taxi_app/modules/auth/domain/params/refreshtoken_param.dart';
 import 'package:taxi_app/modules/auth/domain/repository/refreshtoken_repo.dart';
 import 'package:taxi_app/modules/auth/presentation/validator/refreshtoken_validator.dart';
-import 'package:taxi_app/modules/auth/domain/failures/refreshtoken_failure.dart';
 
 class RefreshtokenUseCase {
   final RefreshtokenValidator validator;
