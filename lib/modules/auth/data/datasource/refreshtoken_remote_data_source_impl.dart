@@ -19,15 +19,14 @@ class RefreshtokenRemoteDataSourceImpl
   );
 
   @override
-  Future<Either<RepoFailure, BaseJson<RefreshtokenModel>>> 
+  Future<Either<RepoFailure, BaseJson<RefreshtokenModel>>>
       refreshtoken(RefreshtokenParam data) =>
       network
           .post(
             AppUrl.refreshtokenUrl,
-             data.toModel().toJson(),
+            data.toModel().toJson(),
             ApiHeader.json(),
-        // authType: AuthType.cookie,
-
+            // authType: AuthType.cookie,
           )
           .then(
             (value) => value.fold(
@@ -36,8 +35,8 @@ class RefreshtokenRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<RefreshtokenModel>.fromJson(
-                      response.data,
-                          RefreshtokenModel.fromJson,
+                      response as Map<String, dynamic>,
+                      RefreshtokenModel.fromJson,
                     ),
                   );
                 } catch (e) {

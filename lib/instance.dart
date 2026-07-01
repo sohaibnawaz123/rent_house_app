@@ -12,12 +12,18 @@ import 'package:taxi_app/modules/onboarding/presentation/blocs/onboarding/onboar
 import 'package:taxi_app/modules/onboarding/presentation/routes/onboarding_view_initial_params.dart';
 import 'package:taxi_app/modules/auth/data/datasource/login_remote_data_source.dart';
 import 'package:taxi_app/modules/auth/data/datasource/login_remote_data_source_impl.dart';
+import 'package:taxi_app/modules/auth/data/datasource/logout_remote_data_source.dart';
+import 'package:taxi_app/modules/auth/data/datasource/logout_remote_data_source_impl.dart';
 import 'package:taxi_app/modules/auth/data/rest_api/login_rest_api_repo.dart';
+import 'package:taxi_app/modules/auth/data/rest_api/logout_rest_api_repo.dart';
 import 'package:taxi_app/modules/auth/domain/repository/login_repo.dart';
+import 'package:taxi_app/modules/auth/domain/repository/logout_repo.dart';
 import 'package:taxi_app/modules/auth/domain/usecase/login_use_case.dart';
+import 'package:taxi_app/modules/auth/domain/usecase/logout_use_case.dart';
 import 'package:taxi_app/modules/auth/presentation/blocs/login/login_bloc.dart';
 import 'package:taxi_app/modules/auth/presentation/routes/login_view_initial_params.dart';
 import 'package:taxi_app/modules/auth/presentation/validator/login_validator.dart';
+import 'package:taxi_app/modules/auth/presentation/validator/logout_validator.dart';
 
 import 'package:taxi_app/modules/auth/data/datasource/forgetpassword_remote_data_source.dart';
 import 'package:taxi_app/modules/auth/data/datasource/forgetpassword_remote_data_source_impl.dart';
@@ -246,17 +252,35 @@ void getInstance(BuildContext context) {
     getIt.registerSingleton<LoginValidator>(LoginValidator());
   }
 
+  if (!getIt.isRegistered<LogoutRemoteDataSource>()) {
+    getIt.registerSingleton<LogoutRemoteDataSource>(
+      LogoutRemoteDataSourceImpl(getIt(), getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<LogoutValidator>()) {
+    getIt.registerSingleton<LogoutValidator>(LogoutValidator());
+  }
+
   if (!getIt.isRegistered<LoginRepo>()) {
     getIt.registerSingleton<LoginRepo>(LoginRestApiRepo(getIt()));
+  }
+
+  if (!getIt.isRegistered<LogoutRepo>()) {
+    getIt.registerSingleton<LogoutRepo>(LogoutRestApiRepo(getIt()));
   }
 
   if (!getIt.isRegistered<LoginUseCase>()) {
     getIt.registerSingleton<LoginUseCase>(LoginUseCase(getIt(), getIt()));
   }
 
+  if (!getIt.isRegistered<LogoutUseCase>()) {
+    getIt.registerSingleton<LogoutUseCase>(LogoutUseCase(getIt(), getIt()));
+  }
+
   if (!getIt.isRegistered<LoginBloc>()) {
     getIt.registerFactoryParam<LoginBloc, LoginViewInitialParams, dynamic>(
-      (params, _) => LoginBloc(params, getIt()),
+      (params, _) => LoginBloc(params, getIt(), getIt()),
     );
   }
   // <<<<<<<<<<<<<<<<<<<<<<<  Forgetpassword  >>>>>>>>>>>>>>>>>>>>>>>
@@ -407,6 +431,7 @@ void getInstance(BuildContext context) {
       dynamic
     >((params, _) => RefreshtokenBloc(params, getIt()));
   }
+
   // <<<<<<<<<<<<<<<<<<<<<<<  Locationpick  >>>>>>>>>>>>>>>>>>>>>>>
   if (!getIt.isRegistered<LocationpickRemoteDataSource>()) {
     getIt.registerSingleton<LocationpickRemoteDataSource>(

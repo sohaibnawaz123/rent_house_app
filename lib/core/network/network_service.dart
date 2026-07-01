@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
@@ -5,10 +6,35 @@ import 'package:taxi_app/core/failures/network_failure.dart';
 import 'package:taxi_app/core/utils/utils.dart';
 import 'network.dart';
 
+typedef AccessTokenReader = String Function();
+typedef RefreshAccessToken = Future<String?> Function();
+typedef ClearSession = Future<void> Function();
+
 class NetworkService extends Network {
   final http.Client _client;
+  AccessTokenReader? _currentAccessTokenReader;
+  RefreshAccessToken? _refreshAccessTokenCallback;
+  ClearSession? _clearSession;
+  Future<String?>? _refreshInFlight;
 
   NetworkService({http.Client? client}) : _client = client ?? http.Client();
+
+  void configureAuthRefresh({
+    required AccessTokenReader getAccessToken,
+    required RefreshAccessToken refreshAccessToken,
+    required ClearSession clearSession,
+  }) {
+    _currentAccessTokenReader = getAccessToken;
+    _refreshAccessTokenCallback = refreshAccessToken;
+    _clearSession = clearSession;
+  }
+
+  void clearAuthRefreshConfig() {
+    _currentAccessTokenReader = null;
+    _refreshAccessTokenCallback = null;
+    _clearSession = null;
+    _refreshInFlight = null;
+  }
 
   // -------------------------------------------------------------------------
   // Helper: build final Uri
@@ -38,9 +64,10 @@ class NetworkService extends Network {
     Map<String, String>? header,
     Map<String, dynamic>? query,
     String? pathVariable,
+    bool canRetryAuth = true,
   }) async {
     final uri = _buildUri(url, pathVariable: pathVariable, query: query);
-    final headers = header ?? {};
+    final headers = _normalizeHeaders(header);
 
     Utils.logInfo(uri.toString(), name: "$method URI");
     Utils.logInfo(headers.toString(), name: "$method Headers");
@@ -55,7 +82,23 @@ class NetworkService extends Network {
       );
 
       final failure = _handleError(response);
-      if (failure != null) return left(failure);
+      if (failure != null) {
+        if (canRetryAuth && await _shouldAttemptRefresh(failure, headers)) {
+          final newAccessToken = await _runRefreshFlow();
+          if (newAccessToken != null && newAccessToken.isNotEmpty) {
+            return _request(
+              method: method,
+              url: url,
+              body: body,
+              header: _withUpdatedAuthorization(headers, newAccessToken),
+              query: query,
+              pathVariable: pathVariable,
+              canRetryAuth: false,
+            );
+          }
+        }
+        return left(failure);
+      }
 
       final decoded = _decodeBody(response);
       Utils.logInfo(decoded.toString(), name: "$method Response");
@@ -74,9 +117,15 @@ class NetworkService extends Network {
   }) async {
     Future<http.Response> send() => switch (method) {
       'GET' => _client.get(uri, headers: headers),
-      'POST' => _client.post(uri, headers: headers, body: jsonEncode(body)),
-      'PATCH' => _client.patch(uri, headers: headers, body: jsonEncode(body)),
-      'PUT' => _client.put(uri, headers: headers, body: jsonEncode(body)),
+      'POST' => body == null
+          ? _client.post(uri, headers: headers)
+          : _client.post(uri, headers: headers, body: jsonEncode(body)),
+      'PATCH' => body == null
+          ? _client.patch(uri, headers: headers)
+          : _client.patch(uri, headers: headers, body: jsonEncode(body)),
+      'PUT' => body == null
+          ? _client.put(uri, headers: headers)
+          : _client.put(uri, headers: headers, body: jsonEncode(body)),
       'DELETE' => _client.delete(uri, headers: headers),
       _ => throw UnimplementedError('HTTP method $method not supported'),
     };
@@ -100,9 +149,10 @@ class NetworkService extends Network {
     required Map<String, dynamic> file,
     Map<String, String>? header,
     String? pathVariable,
+    bool canRetryAuth = true,
   }) async {
     final uri = _buildUri(url, pathVariable: pathVariable);
-    final headers = header ?? {};
+    final headers = _normalizeHeaders(header);
 
     Utils.logInfo(uri.toString(), name: "$method Multipart URI");
     Utils.logInfo(headers.toString(), name: "$method Headers");
@@ -142,7 +192,23 @@ class NetworkService extends Network {
       final response = await http.Response.fromStream(streamed);
 
       final failure = _handleError(response);
-      if (failure != null) return left(failure);
+      if (failure != null) {
+        if (canRetryAuth && await _shouldAttemptRefresh(failure, headers)) {
+          final newAccessToken = await _runRefreshFlow();
+          if (newAccessToken != null && newAccessToken.isNotEmpty) {
+            return _multipartRequest(
+              method: method,
+              url: url,
+              data: data,
+              file: file,
+              header: _withUpdatedAuthorization(headers, newAccessToken),
+              pathVariable: pathVariable,
+              canRetryAuth: false,
+            );
+          }
+        }
+        return left(failure);
+      }
 
       final decoded = _decodeBody(response);
       Utils.logInfo(decoded.toString(), name: "$method Multipart Response");
@@ -194,6 +260,17 @@ class NetworkService extends Network {
     method: 'POST',
     url: url,
     body: data,
+    header: header,
+    pathVariable: pathVariable,
+  );
+
+  Future<Either<NetworkFailure, dynamic>> postWithoutBody(
+    String url,
+    Map<String, String>? header, {
+    String? pathVariable,
+  }) => _request(
+    method: 'POST',
+    url: url,
     header: header,
     pathVariable: pathVariable,
   );
@@ -303,13 +380,26 @@ class NetworkService extends Network {
 
   NetworkFailure? _handleError(http.Response response) {
     final status = response.statusCode;
-    final body = response.body.isNotEmpty ? jsonDecode(response.body) : {};
+    final body = _decodeBody(response);
     if (status != 200 && status != 201 && status != 202) {
       Utils.logError(body.toString(), name: 'Network HandleError');
     }
 
-    String? message() =>
-        (body is Map && body.containsKey('message')) ? body['message'] : null;
+    String? message() {
+      if (body is Map && body.containsKey('message')) {
+        return body['message']?.toString();
+      }
+
+      if (body is String && body.trim().isNotEmpty) {
+        final normalized = body.trim();
+        if (normalized.startsWith('<!DOCTYPE html') || normalized.startsWith('<html')) {
+          return 'Server returned HTML instead of JSON';
+        }
+        return normalized;
+      }
+
+      return null;
+    }
 
     return switch (status) {
       200 || 201 || 202 => null,
@@ -337,5 +427,71 @@ class NetworkService extends Network {
     } catch (_) {
       return response.body; // fallback for plain text
     }
+  }
+
+  Map<String, String> _normalizeHeaders(Map<String, String>? header) {
+    final headers = Map<String, String>.from(header ?? {});
+    final hasAuthorization = headers.containsKey('Authorization');
+    final latestAccessToken = _currentAccessTokenReader?.call() ?? '';
+
+    if (hasAuthorization && latestAccessToken.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $latestAccessToken';
+    }
+
+    return headers;
+  }
+
+  Future<bool> _shouldAttemptRefresh(
+    NetworkFailure failure,
+    Map<String, String> headers,
+  ) async {
+    if (_refreshAccessTokenCallback == null) return false;
+
+    final authHeader = headers['Authorization'];
+    if (authHeader == null || authHeader.isEmpty) return false;
+
+    return failure is UnAuthorizedFailure;
+  }
+
+  Future<String?> _runRefreshFlow() async {
+    if (_refreshAccessTokenCallback == null) return null;
+
+    if (_refreshInFlight != null) {
+      return _refreshInFlight;
+    }
+
+    final completer = Completer<String?>();
+    _refreshInFlight = completer.future;
+
+    try {
+      Utils.logInfo('Refreshing access token', name: 'NetworkService');
+      final newAccessToken = await _refreshAccessTokenCallback!.call();
+
+      if (newAccessToken == null || newAccessToken.isEmpty) {
+        await _clearSession?.call();
+        completer.complete(null);
+        return null;
+      }
+
+      completer.complete(newAccessToken);
+      return newAccessToken;
+    } catch (e, st) {
+      Utils.logError('$e\n$st', name: 'Token Refresh Failure');
+      await _clearSession?.call();
+      completer.complete(null);
+      return null;
+    } finally {
+      _refreshInFlight = null;
+    }
+  }
+
+  Map<String, String> _withUpdatedAuthorization(
+    Map<String, String> headers,
+    String accessToken,
+  ) {
+    return {
+      ...headers,
+      'Authorization': 'Bearer $accessToken',
+    };
   }
 }

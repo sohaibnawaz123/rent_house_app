@@ -66,7 +66,7 @@ class _LocationpickViewState extends State<LocationpickView> {
                 return;
               }
 
-              context.pushFadeReplacementPage(
+              context.pushReplacementPage(
                 DashboardrootView(
                   bloc: getIt<DashboardrootBloc>(
                     param1: DashboardrootViewInitialParams(

@@ -1,19 +1,30 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:taxi_app/core/network/network_service.dart';
 import 'package:taxi_app/core/store/store_preference.dart';
 import 'package:taxi_app/core/store/user_store_key.dart';
 import 'package:taxi_app/core/utils/utils.dart';
 import 'package:taxi_app/modules/app/domain/entitties/user_entity.dart';
 import 'package:taxi_app/modules/auth/domain/entities/login_entity.dart';
+import 'package:taxi_app/modules/auth/domain/params/refreshtoken_param.dart';
+import 'package:taxi_app/modules/auth/domain/usecase/refreshtoken_use_case.dart';
 
 part 'app_event.dart';
 part 'app_state.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
   final StorePreference _store;
+  final NetworkService _networkService;
+  final RefreshtokenUseCase _refreshtokenUseCase;
 
-  AppBloc({StorePreference? store})
+  AppBloc({
+    StorePreference? store,
+    required NetworkService networkService,
+    required RefreshtokenUseCase refreshtokenUseCase,
+  })
     : _store = store ?? StorePreference(),
+      _networkService = networkService,
+      _refreshtokenUseCase = refreshtokenUseCase,
       super(const AppState.initial()) {
     on<ReadLocalUserEvent>(_readLocalUser);
     on<WriteLocalUserEvent>(_writeLocalUser);
@@ -22,6 +33,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     on<WriteCredentialsEvent>(_writeCredentials);
     on<ReadCredentialsEvent>(_readCredentials);
     on<DeleteCredentialsEvent>(_deleteCredentials);
+    _setupAuthRefresh();
   }
 
   Future<void> _readLocalUser(
@@ -100,10 +112,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     DeleteUserEvent event,
     Emitter<AppState> emit,
   ) async {
-    _store.delete(UserStoreKey.isLogin);
-    _store.delete(UserStoreKey.accessToken);
-    _store.delete(UserStoreKey.refreshToken);
-    _store.delete(UserStoreKey.userData);
+    _clearSessionStore();
 
     emit(
       state.copyWith(
@@ -148,5 +157,56 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         .read<Map<String, dynamic>>(UserStoreKey.rememberMe)
         .map(CredentialsEntity.fromJson)
         .getOrElse((_) => const CredentialsEntity.empty());
+  }
+
+  void _setupAuthRefresh() {
+    _networkService.configureAuthRefresh(
+      getAccessToken: () {
+        return _store.read<String>(UserStoreKey.accessToken).getOrElse((_) => '');
+      },
+      refreshAccessToken: () async {
+        final refreshToken = _store
+            .read<String>(UserStoreKey.refreshToken)
+            .getOrElse((_) => '');
+
+        if (refreshToken.isEmpty) {
+          return null;
+        }
+
+        final result = await _refreshtokenUseCase.execute(
+          RefreshtokenParam(token: refreshToken),
+        );
+
+        return result.fold(
+          (_) => null,
+          (response) {
+            final data = response.data;
+            if (data.accessToken.isEmpty) {
+              return null;
+            }
+
+            final latestRefreshToken = data.refreshToken.isNotEmpty
+                ? data.refreshToken
+                : refreshToken;
+
+            _store.write<String>(UserStoreKey.accessToken, data.accessToken);
+            _store.write<String>(UserStoreKey.refreshToken, latestRefreshToken);
+            _store.write<bool>(UserStoreKey.isLogin, true);
+
+            return data.accessToken;
+          },
+        );
+      },
+      clearSession: () async {
+        _clearSessionStore();
+      },
+    );
+  }
+
+  void _clearSessionStore() {
+    _store.delete(UserStoreKey.isLogin);
+    _store.delete(UserStoreKey.accessToken);
+    _store.delete(UserStoreKey.refreshToken);
+    _store.delete(UserStoreKey.userData);
   }
 }

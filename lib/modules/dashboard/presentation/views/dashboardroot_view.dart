@@ -8,6 +8,8 @@ import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/main.dart';
+import 'package:taxi_app/modules/auth/presentation/blocs/login/login_bloc.dart';
+import 'package:taxi_app/modules/auth/presentation/routes/login_view_initial_params.dart';
 import 'package:taxi_app/modules/dashboard/domain/entities/dashboardroot_entity.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardbooking/dashboardbooking_bloc.dart';
 import 'package:taxi_app/modules/dashboard/presentation/blocs/dashboardexplore/dashboardexplore_bloc.dart';
@@ -28,7 +30,13 @@ import 'package:taxi_app/modules/dashboard/presentation/views/dashboardprofile_v
 
 class DashboardrootView extends StatefulWidget {
   final DashboardrootBloc bloc;
-  const DashboardrootView({super.key, required this.bloc});
+  final LoginBloc? loginBloc;
+
+  const DashboardrootView({
+    super.key,
+    required this.bloc,
+    this.loginBloc,
+  });
 
   @override
   State<DashboardrootView> createState() => _DashboardrootViewState();
@@ -36,9 +44,16 @@ class DashboardrootView extends StatefulWidget {
 
 class _DashboardrootViewState extends State<DashboardrootView> {
   late final DashboardhomeBloc _userHomeBloc;
+  late final LoginBloc _loginBloc;
+  late final bool _ownsLoginBloc;
+
   @override
   void initState() {
     super.initState();
+    _ownsLoginBloc = widget.loginBloc == null;
+    _loginBloc =
+        widget.loginBloc ??
+        getIt<LoginBloc>(param1: LoginViewInitialParams());
     _userHomeBloc = getIt(
       param1: DashboardhomeViewInitialParams(
         address: widget.bloc.initialParams.address,
@@ -52,6 +67,9 @@ class _DashboardrootViewState extends State<DashboardrootView> {
   @override
   void dispose() {
     _userHomeBloc.close();
+    if (_ownsLoginBloc) {
+      _loginBloc.close();
+    }
     super.dispose();
   }
 
@@ -65,7 +83,10 @@ class _DashboardrootViewState extends State<DashboardrootView> {
         backgroundColor: AppColor.white,
         body: Stack(
           children: [
-            _BodyContent(userHomeBloc: _userHomeBloc),
+            _BodyContent(
+              userHomeBloc: _userHomeBloc,
+              loginBloc: _loginBloc,
+            ),
             Positioned(
               bottom: MediaQuery.of(context).viewPadding.bottom + 20,
               left: 20,
@@ -74,13 +95,6 @@ class _DashboardrootViewState extends State<DashboardrootView> {
             ),
           ],
         ),
-        // bottomNavigationBar: Padding(
-        //   padding: EdgeInsets.only(
-        //     bottom: MediaQuery.of(context).viewInsets.bottom,
-        //   ),
-
-        //   child: const _BottomNavigationBar(),
-        // ),
       ),
     );
   }
@@ -88,7 +102,9 @@ class _DashboardrootViewState extends State<DashboardrootView> {
 
 class _BodyContent extends StatelessWidget {
   final DashboardhomeBloc userHomeBloc;
-  const _BodyContent({required this.userHomeBloc});
+  final LoginBloc loginBloc;
+
+  const _BodyContent({required this.userHomeBloc, required this.loginBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +134,7 @@ class _BodyContent extends StatelessWidget {
               bloc: getIt<DashboardprofileBloc>(
                 param1: DashboardprofileViewInitialParams(),
               ),
+              loginBloc: loginBloc,
             ),
           ],
         );
@@ -133,7 +150,6 @@ class _BottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardrootBloc, DashboardrootState>(
       builder: (context, state) {
-        // final bottomInset = MediaQuery.of(context).viewPadding.bottom;
         return ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: BackdropFilter(
@@ -155,7 +171,6 @@ class _BottomNavigationBar extends StatelessWidget {
                   ),
                 ],
               ),
-              // padding: EdgeInsets.only(bottom: bottomInset),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -210,10 +225,6 @@ class _NavBarItem extends StatelessWidget {
                         navItem.activeIconPath,
                         width: 20.w,
                         height: 20.h,
-                        // colorFilter: ColorFilter.mode(
-                        //   isSelected ? AppColor.primary : AppColor.black,
-                        //   BlendMode.srcIn,
-                        // ),
                       ),
                     )
                   : SvgPicture.asset(
@@ -221,10 +232,6 @@ class _NavBarItem extends StatelessWidget {
                       width: 24.w,
                       height: 24.h,
                       color: AppColor.black,
-                      // colorFilter: ColorFilter.mode(
-                      //   isSelected ? AppColor.primary : AppColor.black,
-                      //   BlendMode.srcIn,
-                      // ),
                     ),
               SizedBox(height: 4.h),
               Content(

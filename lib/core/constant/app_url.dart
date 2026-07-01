@@ -4,7 +4,8 @@ class AppUrl {
   static String loginUrl = '$baseUrl/auth/login';
   static String registerUrl = '$baseUrl/auth/signup';
   static String forgetpasswordUrl = '';
-  static String refreshtokenUrl = '';
+  static String refreshtokenUrl = '$baseUrl/auth/refresh-token';
+  static String logoutUrl = '$baseUrl/auth/logout';
   static String otpverificationUrl = '';
   static String resetpasswordUrl = '';
   static String locationselectionUrl = '';

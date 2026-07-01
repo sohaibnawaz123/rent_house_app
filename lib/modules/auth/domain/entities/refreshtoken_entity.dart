@@ -1,19 +1,23 @@
 class RefreshtokenEntity {
-  final String userMessage;
-  final bool status;
+  final String message;
+  final String accessToken;
+  final String refreshToken;
 
   RefreshtokenEntity({
-    required this.userMessage,
-    required this.status,
+    required this.message,
+    required this.accessToken,
+    required this.refreshToken,
   });
 
   RefreshtokenEntity copyWith({
-    String? userMessage,
-    bool? status,
+    String? message,
+    String? accessToken,
+    String? refreshToken,
   }) {
     return RefreshtokenEntity(
-      userMessage: userMessage ?? this.userMessage,
-      status: status ?? this.status,
+      message: message ?? this.message,
+      accessToken: accessToken ?? this.accessToken,
+      refreshToken: refreshToken ?? this.refreshToken,
     );
   }
 }

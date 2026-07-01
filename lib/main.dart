@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:taxi_app/core/network/network_service.dart';
 import 'package:taxi_app/core/store/store_preference.dart';
 import 'package:taxi_app/core/store/user_store_key.dart';
 import 'package:taxi_app/instance.dart';
 import 'package:taxi_app/modules/app/presentation/bloc/app_bloc.dart';
+import 'package:taxi_app/modules/auth/domain/usecase/refreshtoken_use_case.dart';
 import 'package:taxi_app/modules/auth/presentation/blocs/login/login_bloc.dart';
 import 'package:taxi_app/modules/auth/presentation/routes/login_view_initial_params.dart';
 import 'package:taxi_app/modules/auth/presentation/views/login_view.dart';
@@ -34,7 +36,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late final AppBloc _appBloc;
+  AppBloc? _appBloc;
   OnboardingBloc? _onboardingBloc;
   LoginBloc? _loginBloc;
   DashboardrootBloc? _dashboardrootBloc;
@@ -42,7 +44,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _appBloc = AppBloc()..add(const ReadLocalUserEvent());
   }
 
   LocationpickModel get _defaultLocation => const LocationpickModel(
@@ -68,6 +69,11 @@ class _MyAppState extends State<MyApp> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     getInstance(context);
+    _appBloc ??=
+        AppBloc(
+            networkService: getIt<NetworkService>(),
+            refreshtokenUseCase: getIt<RefreshtokenUseCase>())
+          ..add(const ReadLocalUserEvent());
     _onboardingBloc ??= getIt<OnboardingBloc>(
       param1: OnboardingViewInitialParams(),
     );
@@ -79,7 +85,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    _appBloc.close();
+    _appBloc?.close();
     _onboardingBloc?.close();
     _loginBloc?.close();
     _dashboardrootBloc?.close();
@@ -94,7 +100,7 @@ class _MyAppState extends State<MyApp> {
         .getOrElse((_) => false);
 
     return BlocProvider.value(
-      value: _appBloc,
+      value: _appBloc!,
       child: BlocBuilder<AppBloc, AppState>(
         builder: (context, appState) {
           return MaterialApp(
@@ -123,6 +129,6 @@ class _MyAppState extends State<MyApp> {
       return LoginView(bloc: _loginBloc!);
     }
 
-    return DashboardrootView(bloc: _dashboardrootBloc!);
+    return DashboardrootView(bloc: _dashboardrootBloc!, loginBloc: _loginBloc!);
   }
 }
