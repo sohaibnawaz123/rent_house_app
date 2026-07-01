@@ -1,19 +1,15 @@
-class DashboardexploreEntity {
-  final String userMessage;
-  final bool status;
+import 'package:equatable/equatable.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entities/property_entity.dart';
 
-  DashboardexploreEntity({
-    required this.userMessage,
-    required this.status,
-  });
+class DashboardexploreEntity extends Equatable {
+  final List<PropertyEntity> data;
 
-  DashboardexploreEntity copyWith({
-    String? userMessage,
-    bool? status,
-  }) {
-    return DashboardexploreEntity(
-      userMessage: userMessage ?? this.userMessage,
-      status: status ?? this.status,
-    );
+  const DashboardexploreEntity({required this.data});
+
+  DashboardexploreEntity copyWith({List<PropertyEntity>? data}) {
+    return DashboardexploreEntity(data: data ?? this.data);
   }
+
+  @override
+  List<Object?> get props => [data];
 }

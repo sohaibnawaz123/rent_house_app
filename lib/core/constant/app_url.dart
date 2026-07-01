@@ -13,7 +13,7 @@ class AppUrl {
   static String locationgetUrl = '$baseUrl/address/get';
   static String dashboardrootUrl = '';
   static String dashboardhomeUrl = '$baseUrl/propertymanagement/home';
-  static String dashboardexploreUrl = '';
+  static String dashboardexploreUrl = '$baseUrl/propertymanagement/home/explore';
   static String dashboardfavouriteUrl = '';
   static String dashboardbookingUrl = '';
   static String dashboardprofileUrl = '';

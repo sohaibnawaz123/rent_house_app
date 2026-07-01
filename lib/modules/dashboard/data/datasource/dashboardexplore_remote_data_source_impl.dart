@@ -25,7 +25,7 @@ class DashboardexploreRemoteDataSourceImpl
       network
           .get(
             AppUrl.dashboardexploreUrl,
-            ApiHeader.json(),
+            ApiHeader.bearerHeaderOnly(data.token),
             query: data.toModel().toJson(),
         // authType: AuthType.cookie,
           )
@@ -34,10 +34,34 @@ class DashboardexploreRemoteDataSourceImpl
               (l) => left(RepoFailure(error: l.error)),
               (response) {
                 try {
+                  if (response is List) {
+                    return right(
+                      BaseJson<DashboardexploreModel>(
+                        data: DashboardexploreModel.fromList(response),
+                      ),
+                    );
+                  }
+
+                  if (response is! Map<String, dynamic>) {
+                    return left(
+                      RepoFailure(error: 'Unexpected explore response format'),
+                    );
+                  }
+
+                  final responseData = response['data'];
+                  if (responseData is List) {
+                    return right(
+                      BaseJson<DashboardexploreModel>(
+                        message: response['message'] as String?,
+                        data: DashboardexploreModel.fromList(responseData),
+                      ),
+                    );
+                  }
+
                   return right(
                     BaseJson<DashboardexploreModel>.fromJson(
-                      response.data,
-                          DashboardexploreModel.fromJson,
+                      response,
+                      DashboardexploreModel.fromJson,
                     ),
                   );
                 } catch (e) {

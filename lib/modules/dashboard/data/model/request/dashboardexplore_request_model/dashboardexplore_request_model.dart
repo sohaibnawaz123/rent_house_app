@@ -4,11 +4,10 @@ import 'package:taxi_app/modules/dashboard/domain/params/dashboardexplore_param.
 class DashboardexploreRequestModel extends DashboardexploreParam {
   const DashboardexploreRequestModel({
     required super.token,
-    required super.email,
+    required super.type,
   });
 
   Map<String, dynamic> toJson() => {
-        'token': token,
-        'email': email,
+        'type': type,
       };
 }

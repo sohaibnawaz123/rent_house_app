@@ -2,15 +2,15 @@ import 'package:taxi_app/modules/dashboard/data/model/request/dashboardexplore_r
 
 class DashboardexploreParam {
   final String token;
-  final String email;
+  final String type;
 
   const DashboardexploreParam({
     required this.token,
-    required this.email,
+    required this.type,
   });
 
   DashboardexploreRequestModel toModel() => DashboardexploreRequestModel(
         token: token,
-        email: email,
+        type: type,
       );
 }
