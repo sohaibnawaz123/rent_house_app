@@ -18,8 +18,18 @@ class PopularPlaceCard extends StatefulWidget {
 
 class _PopularPlaceCardState extends State<PopularPlaceCard> {
   bool isFavourite = false;
+
   @override
   Widget build(BuildContext context) {
+    final property = widget.propertyData;
+    final imageUrl = property?.image ?? '';
+    final propertyName = property?.name ?? 'Takatea Homestay';
+    final address =
+        property?.address?.addressline ?? 'Jl. Tentara Pelajar No.47, RW.001';
+    final priceText = property == null
+        ? '\$0/month'
+        : '\$${property.price}/${property.pricePeriod}';
+
     return SizedBox(
       width: double.infinity,
       child: Row(
@@ -27,9 +37,9 @@ class _PopularPlaceCardState extends State<PopularPlaceCard> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: widget.propertyData!.image.isNotEmpty
+            child: imageUrl.isNotEmpty
                 ? AppImage.network(
-                    imageUrl: widget.propertyData!.image,
+                    imageUrl: imageUrl,
                     size: 80,
                   )
                 : AppImage.asset(assetPath: AppAsset.propertyTwo, size: 80),
@@ -45,7 +55,7 @@ class _PopularPlaceCardState extends State<PopularPlaceCard> {
                     Flexible(
                       fit: FlexFit.loose,
                       child: Content(
-                        data: widget.propertyData?.name ?? 'Takatea Homestay',
+                        data: propertyName,
                         textStyle: context.bodyText.copyWith(
                           color: AppColor.primaryText,
                           fontWeight: AppFontWeight.semiBold,
@@ -71,9 +81,7 @@ class _PopularPlaceCardState extends State<PopularPlaceCard> {
                   ],
                 ),
                 IconList(
-                  data:
-                      widget.propertyData?.address?.addressline ??
-                      'Jl. Tentara Pelajar No.47, RW.001',
+                  data: address,
                   icon: AppImage.svg(
                     svgPath: AppAsset.locationIcon,
                     svgColor: AppColor.baseText,
@@ -85,8 +93,7 @@ class _PopularPlaceCardState extends State<PopularPlaceCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Content(
-                      data:
-                          '\$${widget.propertyData?.price}/${widget.propertyData?.pricePeriod}',
+                      data: priceText,
                       textStyle: context.bodyText.copyWith(
                         color: AppColor.primaryText,
                         fontWeight: AppFontWeight.semiBold,
