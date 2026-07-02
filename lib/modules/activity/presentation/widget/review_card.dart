@@ -2,22 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:taxi_app/component/text/content.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
+import 'package:taxi_app/modules/activity/domain/entities/bookingreviews_entity.dart';
 import 'package:taxi_app/modules/activity/presentation/widget/rating_stare.dart';
 
-class PropertyReviewEntity {
-  final String name;
-  final String review;
-  final double rateing;
-
-  PropertyReviewEntity({
-    required this.name,
-    required this.review,
-    required this.rateing,
-  });
-}
 
 class ReviewCard extends StatelessWidget {
-  final PropertyReviewEntity reviews;
+  final BookingreviewsEntity reviews;
   const ReviewCard({super.key, required this.reviews});
 
   @override
@@ -40,7 +30,7 @@ class ReviewCard extends StatelessWidget {
               radius: 24,
               backgroundColor: AppColor.highlight,
               child: Content(
-                data: reviews.name[0],
+                data: reviews.reviewer?.username[0]??"",
                 size: 16,
                 textStyle: context.headingText.copyWith(),
               ),
@@ -52,12 +42,12 @@ class ReviewCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Expanded(child: Content(data: reviews.name)),
-                      RatingStars(rating: reviews.rateing),
+                      Expanded(child: Content(data: reviews.reviewer?.username ?? "username")),
+                      RatingStars(rating: reviews.rating ),
                     ],
                   ),
                   Content(
-                    data: reviews.review,
+                    data: reviews.comment,
                     textStyle: context.bodyText.copyWith(),
                     size: 14,
                     maxLines: 3,

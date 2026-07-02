@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taxi_app/component/app_bar/custome_header.dart';
 import 'package:taxi_app/component/bottom_sheet/app_bottom_sheet.dart';
 import 'package:taxi_app/component/button/app_button.dart';
 import 'package:taxi_app/component/image/app_network_image.dart';
 import 'package:taxi_app/component/text/content.dart';
+import 'package:taxi_app/core/network/api_status.dart';
 import 'package:taxi_app/core/resource/app_asset.dart';
 import 'package:taxi_app/core/resource/app_color.dart';
+import 'package:taxi_app/core/store/store_preference.dart';
+import 'package:taxi_app/core/store/user_store_key.dart';
 import 'package:taxi_app/core/utils/extension/app_edge_insets.dart';
 import 'package:taxi_app/core/utils/extension/app_font_weight.dart';
 import 'package:taxi_app/core/utils/extension/app_navigation.dart';
 import 'package:taxi_app/core/utils/extension/app_sized_box.dart';
+import 'package:taxi_app/core/utils/extension/app_snackBar.dart';
 import 'package:taxi_app/core/utils/extension/app_text_style.dart';
 import 'package:taxi_app/main.dart';
+import 'package:taxi_app/modules/activity/domain/entities/bookingreviews_entity.dart';
+import 'package:taxi_app/modules/activity/domain/params/propertydetail_param.dart';
 import 'package:taxi_app/modules/activity/presentation/blocs/propertydetail/propertydetail_bloc.dart';
 import 'package:taxi_app/modules/activity/presentation/blocs/reserve/reserve_bloc.dart';
 import 'package:taxi_app/modules/activity/presentation/routes/reserve_view_initial_params.dart';
@@ -21,6 +28,10 @@ import 'package:taxi_app/modules/activity/presentation/widget/location_card.dart
 import 'package:taxi_app/modules/activity/presentation/widget/propert_detail_card.dart';
 import 'package:taxi_app/modules/activity/presentation/widget/review_card.dart';
 import 'package:taxi_app/modules/activity/presentation/widget/share_bottom_sheet.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entities/property_address_entity.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entities/property_agent_entity.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entities/property_detail_entity.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entities/property_entity.dart';
 import 'package:taxi_app/modules/dashboard/presentation/widget/icon_list.dart';
 import 'package:taxi_app/modules/onboarding/presentation/widget/pagination.dart';
 
@@ -33,19 +44,22 @@ class PropertydetailView extends StatefulWidget {
 }
 
 class _PropertydetailViewState extends State<PropertydetailView> {
+  final token = StorePreference()
+      .read<String>(UserStoreKey.accessToken)
+      .getOrElse((_) => '');
   @override
   void initState() {
     super.initState();
+    widget.bloc.add(
+      LoadPropertydetailEvent(
+        PropertydetailParam(
+          token: token,
+          propertyId: widget.bloc.initialParams.propertyId ?? 0,
+        ),
+      ),
+    );
   }
 
-  final List<String> gallary = [
-    AppAsset.propertyOne,
-    AppAsset.propertyTwo,
-    AppAsset.propertyOne,
-    AppAsset.propertyTwo,
-    AppAsset.propertyOne,
-    AppAsset.propertyTwo,
-  ];
   void _openBottomSheet() {
     appBottomSheet(context, ShareBottomSheet(), title: 'Share to');
   }
@@ -66,53 +80,73 @@ class _PropertydetailViewState extends State<PropertydetailView> {
           // context.pagePadding.bottom,
           0,
         ),
-        child: ListView(
-          children: [
-            HeaderWidget(
-              title: "Details",
-              showactions: true,
-              actions: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                spacing: 10,
-                children: [
-                  AppButton.iconButton(
-                    onTap: () => _openBottomSheet(),
-                    buttonColor: AppColor.transparent,
-                    padding: EdgeInsets.all(0),
-                    iconPath: AppAsset.share,
-                    isResponsiveHeight: true,
-                    isResponsiveWidth: true,
-                    fontColor: AppColor.black,
+        child: BlocConsumer<PropertydetailBloc, PropertydetailState>(
+          bloc: widget.bloc,
+          buildWhen: (previous, current) =>
+              previous.propertydetailResponse != current.propertydetailResponse,
+          listenWhen: (previous, current) =>
+              previous.propertydetailResponse != current.propertydetailResponse,
+          listener: (context, state) {
+            if (state.propertydetailResponse.status == ApiStatus.error) {
+              context.showSnackbar(
+                message:
+                    state.propertydetailResponse.message ??
+                    "Something went wrong",
+              );
+            }
+            // TODO: implement listener
+          },
+          builder: (context, state) {
+            final data = state.propertydetailResponse.data;
+            return ListView(
+              children: [
+                HeaderWidget(
+                  title: "Details",
+                  showactions: true,
+                  actions: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    spacing: 10,
+                    children: [
+                      AppButton.iconButton(
+                        onTap: () => _openBottomSheet(),
+                        buttonColor: AppColor.transparent,
+                        padding: EdgeInsets.all(0),
+                        iconPath: AppAsset.share,
+                        isResponsiveHeight: true,
+                        isResponsiveWidth: true,
+                        fontColor: AppColor.black,
+                      ),
+                      AppButton.iconButton(
+                        buttonColor: AppColor.transparent,
+                        padding: EdgeInsets.all(0),
+                        iconPath: AppAsset.favourite,
+                        isResponsiveHeight: true,
+                        isResponsiveWidth: true,
+                        fontColor: AppColor.black,
+                      ),
+                    ],
                   ),
-                  AppButton.iconButton(
-                    buttonColor: AppColor.transparent,
-                    padding: EdgeInsets.all(0),
-                    iconPath: AppAsset.favourite,
-                    isResponsiveHeight: true,
-                    isResponsiveWidth: true,
-                    fontColor: AppColor.black,
-                  ),
-                ],
-              ),
-            ),
-            20.heightBox,
-            PropertyGallary(gallary: gallary),
-            20.heightBox,
-            PropertyTitle(),
-            20.heightBox,
-            PropertyDetails(),
-            20.heightBox,
-            Description(),
-            20.heightBox,
-            AgentCard(),
-            20.heightBox,
-            LocationFasilities(),
-            20.heightBox,
-            ReviewSection(),
+                ),
+                20.heightBox,
+                PropertyGallary(gallary: data?.data.property?.images ?? []),
+                20.heightBox,
+                PropertyTitle(entity: data?.data.property),
+                20.heightBox,
+                PropertyDetails(details: data?.data.property?.details),
+                20.heightBox,
+                Description(entity: data?.data.property),
+                20.heightBox,
+                AgentCard(agent: data?.data.host),
+                20.heightBox,
+                LocationFasilities(address: data?.data.property?.address),
+                20.heightBox,
+                ReviewSection(reviews: data?.data.reviews),
 
-            // bottomSpacing.heightBox,
-          ],
+                // bottomSpacing.heightBox,
+              ],
+            );
+          },
         ),
       ),
       bottomNavigationBar: Padding(
@@ -139,7 +173,8 @@ class _PropertydetailViewState extends State<PropertydetailView> {
 }
 
 class PropertyTitle extends StatelessWidget {
-  const PropertyTitle({super.key});
+  final PropertyEntity? entity;
+  const PropertyTitle({super.key, this.entity});
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +187,7 @@ class PropertyTitle extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Content(
-                data: 'House of Mormon',
+                data: entity?.name ?? 'House of Mormon',
                 textStyle: context.headingText.copyWith(
                   fontWeight: AppFontWeight.semiBold,
                 ),
@@ -161,7 +196,7 @@ class PropertyTitle extends StatelessWidget {
               IconList(
                 weight: AppFontWeight.medium,
                 color: AppColor.baseText,
-                data: 'Denpasar, Bali',
+                data: entity?.address?.addressline ?? 'Denpasar, Bali',
                 icon: AppImage.svg(
                   svgPath: AppAsset.locationIcon,
                   size: 20,
@@ -173,14 +208,14 @@ class PropertyTitle extends StatelessWidget {
         ),
         RichText(
           text: TextSpan(
-            text: '\$ 30',
+            text: '${entity?.currency} ${entity?.pricePerMonth}',
             style: context.bodyText.copyWith(
               color: AppColor.primary,
               fontWeight: AppFontWeight.semiBold,
             ),
             children: [
               TextSpan(
-                text: '/ Monthly',
+                text: '/ ${entity?.pricePeriod}',
                 style: TextStyle(fontSize: 12, color: AppColor.baseText),
               ),
             ],
@@ -192,22 +227,40 @@ class PropertyTitle extends StatelessWidget {
 }
 
 class PropertyDetails extends StatelessWidget {
-  const PropertyDetails({super.key});
+  final PropertyDetailEntity? details;
+
+  const PropertyDetails({super.key, this.details});
 
   @override
   Widget build(BuildContext context) {
-    final List<PropertyDetailEntity> detailList = [
-      PropertyDetailEntity(title: 'Bedrooms', value: '3', icon: AppAsset.bed),
-      PropertyDetailEntity(title: 'Bathub', value: '2', icon: AppAsset.bath),
-      PropertyDetailEntity(
-        title: 'Area',
-        value: '1,880 sqft',
-        icon: AppAsset.area,
+    final detailItems = [
+      (
+        title: 'Bedrooms',
+        value: '${details?.bedrooms ?? 0}',
+        iconPath: AppAsset.bed,
       ),
-      PropertyDetailEntity(title: 'Build', value: '2020', icon: ""),
-      PropertyDetailEntity(title: 'Parking', value: '1 Indoor', icon: ""),
-      PropertyDetailEntity(title: 'Status', value: 'Rent', icon: ""),
+      (
+        title: 'Bathrooms',
+        value: '${details?.bathrooms ?? 0}',
+        iconPath: AppAsset.bath,
+      ),
+      (
+        title: 'Area',
+        value: '${details?.areaSqft ?? 0} sqft',
+        iconPath: AppAsset.area,
+      ),
+      (
+        title: 'Parking',
+        value: (details?.parking ?? false) ? 'Available' : 'Not Available',
+        iconPath: '',
+      ),
+      (
+        title: 'Furnished',
+        value: (details?.furnished ?? false) ? 'Yes' : 'No',
+        iconPath: '',
+      ),
     ];
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,9 +282,14 @@ class PropertyDetails extends StatelessWidget {
             crossAxisCount: 3,
           ),
           itemBuilder: (context, index) {
-            return PropertDetailCard(entity: detailList[index]);
+            final item = detailItems[index];
+            return PropertDetailCard(
+              title: item.title,
+              value: item.value,
+              iconPath: item.iconPath,
+            );
           },
-          itemCount: detailList.length,
+          itemCount: detailItems.length,
         ),
       ],
     );
@@ -239,17 +297,17 @@ class PropertyDetails extends StatelessWidget {
 }
 
 class Description extends StatefulWidget {
-  const Description({super.key});
+  final PropertyEntity? entity;
+  const Description({super.key, this.entity});
 
   @override
   State<Description> createState() => _DescriptionState();
 }
 
 class _DescriptionState extends State<Description> {
-  static const String _description =
-      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s, when an unknown printer took when an unknown printer took a type.Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s, when an unknown printer took when an unknown printer took a type.';
   @override
   Widget build(BuildContext context) {
+    //  final String _description =
     final descriptionStyle = context.bodyText.copyWith(
       color: AppColor.baseText,
       fontWeight: AppFontWeight.medium,
@@ -270,7 +328,7 @@ class _DescriptionState extends State<Description> {
           size: 18,
         ),
         ReadMoreText(
-          text: _description,
+          text: widget.entity?.description ?? "",
           style: descriptionStyle,
           actionStyle: descriptionStyle.copyWith(color: AppColor.primary),
         ),
@@ -280,7 +338,8 @@ class _DescriptionState extends State<Description> {
 }
 
 class AgentCard extends StatelessWidget {
-  const AgentCard({super.key});
+  final AgentEntity? agent;
+  const AgentCard({super.key, this.agent});
 
   @override
   Widget build(BuildContext context) {
@@ -300,30 +359,40 @@ class AgentCard extends StatelessWidget {
         Row(
           spacing: 10,
           children: [
-            CircleAvatar(radius: 24, backgroundColor: AppColor.highlight),
-            Expanded(
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: AppColor.highlight.withValues(alpha: 0.25),
+              child: Icon(Icons.person_4_rounded),
+            ),
+            Flexible(
+              fit: FlexFit.loose,
               child: Column(
                 spacing: 5,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Content(
-                    data: 'Esther Howard',
+                    data: agent?.username ?? 'Esther Howard',
                     textStyle: context.headingText.copyWith(
                       fontWeight: AppFontWeight.semiBold,
                     ),
-                    size: 16,
+                    size: 14,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Content(
-                    data: 'Real Estate Agent',
+                    data: agent?.email ?? 'Real Estate Agent',
                     textStyle: context.bodyText.copyWith(
                       fontWeight: AppFontWeight.medium,
                     ),
                     size: 12,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
-            Expanded(
+            Flexible(
+              fit: FlexFit.loose,
               child: Row(
                 spacing: 10,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -356,7 +425,10 @@ class AgentCard extends StatelessWidget {
 }
 
 class LocationFasilities extends StatelessWidget {
-  const LocationFasilities({super.key});
+  final AddressEntity? address;
+  final PropertyDetailEntity? details;
+
+  const LocationFasilities({super.key, this.address, this.details});
 
   @override
   Widget build(BuildContext context) {
@@ -423,7 +495,7 @@ class LocationFasilities extends StatelessWidget {
               ),
             ],
           ),
-          child: MapCard(),
+          child: MapCard(address: address),
         ),
       ],
     );
@@ -431,30 +503,31 @@ class LocationFasilities extends StatelessWidget {
 }
 
 class ReviewSection extends StatelessWidget {
-  const ReviewSection({super.key});
+  final List<BookingreviewsEntity>? reviews;
+  const ReviewSection({super.key, this.reviews});
 
   @override
   Widget build(BuildContext context) {
-    final List<PropertyReviewEntity> reviews = [
-      PropertyReviewEntity(
-        name: 'Sohaib Nawaz',
-        review:
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s,  ',
-        rateing: 4.5,
-      ),
-      PropertyReviewEntity(
-        name: 'Hassan',
-        review:
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s,  ',
-        rateing: 4,
-      ),
-      PropertyReviewEntity(
-        name: 'Syed Ebad',
-        review:
-            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s,  ',
-        rateing: 3,
-      ),
-    ];
+    // final List<PropertyReviewEntity> reviews = [
+    //   PropertyReviewEntity(
+    //     name: 'Sohaib Nawaz',
+    //     review:
+    //         'Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s,  ',
+    //     rateing: 4.5,
+    //   ),
+    //   PropertyReviewEntity(
+    //     name: 'Hassan',
+    //     review:
+    //         'Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s,  ',
+    //     rateing: 4,
+    //   ),
+    //   PropertyReviewEntity(
+    //     name: 'Syed Ebad',
+    //     review:
+    //         'Lorem Ipsum is simply dummy text of the printing and typesetting industry. 1500s,  ',
+    //     rateing: 3,
+    //   ),
+    // ];
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -467,7 +540,7 @@ class ReviewSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Content(
-              data: 'Location & Public Fasilities',
+              data: 'Reviews',
               textStyle: context.headingText.copyWith(
                 fontWeight: AppFontWeight.semiBold,
               ),
@@ -488,12 +561,12 @@ class ReviewSection extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemBuilder: (content, index) {
-              return ReviewCard(reviews: reviews[index]);
+              return ReviewCard(reviews: reviews![index]);
             },
             separatorBuilder: (ctx, index) {
               return 5.widthBox;
             },
-            itemCount: reviews.length,
+            itemCount: reviews?.length ?? 0,
           ),
         ),
       ],
@@ -530,6 +603,28 @@ class _PropertyGallaryState extends State<PropertyGallary> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.gallary.isEmpty) {
+      return Container(
+        width: double.infinity,
+        height: 250,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: AppColor.highlight,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Content(
+          data: 'No image available',
+          textStyle: context.bodyText.copyWith(
+            color: AppColor.baseText,
+            fontWeight: AppFontWeight.medium,
+          ),
+          size: 14,
+        ),
+      );
+    }
+
+    final safeSelectedIndex = selectedIndex.clamp(0, widget.gallary.length - 1);
+
     return Column(
       children: [
         SizedBox(
@@ -543,12 +638,12 @@ class _PropertyGallaryState extends State<PropertyGallary> {
                 SizedBox(
                   width: double.infinity,
                   height: 250,
-                  child: AppImage.asset(
-                    assetPath: widget.gallary[selectedIndex],
+                  child: AppImage.network(
+                    imageUrl: widget.gallary[safeSelectedIndex],
                   ),
                 ),
 
-                if (selectedIndex > 0) ...[
+                if (safeSelectedIndex > 0) ...[
                   Positioned(
                     left: 5,
 
@@ -562,7 +657,7 @@ class _PropertyGallaryState extends State<PropertyGallary> {
                     ),
                   ),
                 ],
-                if (selectedIndex != widget.gallary.length - 1) ...[
+                if (safeSelectedIndex != widget.gallary.length - 1) ...[
                   Positioned(
                     right: 5,
                     // bottom: 10,
@@ -584,7 +679,7 @@ class _PropertyGallaryState extends State<PropertyGallary> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Pagination(
-                      currentPage: selectedIndex,
+                      currentPage: safeSelectedIndex,
                       totalPages: widget.gallary.length,
                     ),
                   ),
@@ -599,7 +694,7 @@ class _PropertyGallaryState extends State<PropertyGallary> {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              final isSelected = selectedIndex == index;
+              final isSelected = safeSelectedIndex == index;
               return GestureDetector(
                 onTap: () {
                   setState(() {
@@ -615,9 +710,9 @@ class _PropertyGallaryState extends State<PropertyGallary> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: AppImage.asset(
+                    child: AppImage.network(
                       size: 72,
-                      assetPath: widget.gallary[index],
+                      imageUrl: widget.gallary[index],
                     ),
                   ),
                 ),

@@ -22,7 +22,7 @@ class AppUrl {
   static String recentUrl = '';
   static String notificationUrl = '';
   static String aboutUrl = '';
-  static String propertydetailUrl = '';
+  static String propertydetailUrl = '$baseUrl/propertymanagement/property-detail';
   static String paymentcardUrl = '';
   static String reserveUrl = '';
   static String bookingreviewsUrl = '';

@@ -22,6 +22,7 @@ class PropertyEntity extends Equatable {
   final double distanceKm;
   final String image;
   final List<String> images;
+  final List<String> publicFacilities;
   final AddressEntity? address;
   final PropertyDetailEntity? details;
   final AgentEntity? agent;
@@ -45,6 +46,7 @@ class PropertyEntity extends Equatable {
     required this.distanceKm,
     required this.image,
     required this.images,
+    required this.publicFacilities,
     this.address,
     this.details,
     this.agent,
@@ -70,6 +72,7 @@ class PropertyEntity extends Equatable {
     distanceKm,
     image,
     images,
+    publicFacilities,
     address,
     details,
     agent,

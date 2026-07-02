@@ -10,6 +10,7 @@ class PropertyDetailEntity extends Equatable {
   final bool furnished;
   final String createdAt;
   final String updatedAt;
+  final List<String> publicFacilities;
 
   const PropertyDetailEntity({
     required this.id,
@@ -21,6 +22,7 @@ class PropertyDetailEntity extends Equatable {
     required this.furnished,
     required this.createdAt,
     required this.updatedAt,
+    required this.publicFacilities,
   });
 
   @override
@@ -34,5 +36,6 @@ class PropertyDetailEntity extends Equatable {
     furnished,
     createdAt,
     updatedAt,
+    publicFacilities
   ];
 }

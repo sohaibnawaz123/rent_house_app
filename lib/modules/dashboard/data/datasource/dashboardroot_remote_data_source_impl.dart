@@ -36,8 +36,8 @@ class DashboardrootRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<DashboardrootModel>.fromJson(
-                      response.data,
-                          DashboardrootModel.fromJson,
+                      response as Map<String, dynamic>,
+                      DashboardrootModel.fromJson,
                     ),
                   );
                 } catch (e) {

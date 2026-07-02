@@ -2,15 +2,15 @@ import 'package:taxi_app/modules/activity/data/model/request/propertydetail_requ
 
 class PropertydetailParam {
   final String token;
-  final String email;
+  final int propertyId;
 
   const PropertydetailParam({
     required this.token,
-    required this.email,
+    required this.propertyId,
   });
 
   PropertydetailRequestModel toModel() => PropertydetailRequestModel(
         token: token,
-        email: email,
+        propertyId: propertyId,
       );
 }

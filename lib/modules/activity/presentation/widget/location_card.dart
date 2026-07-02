@@ -1,25 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:taxi_app/modules/dashboard/domain/entities/dashboardhome_entities/property_address_entity.dart';
 
 class MapCard extends StatefulWidget {
-  const MapCard({super.key});
+  final AddressEntity? address;
+  const MapCard({super.key, this.address});
 
   @override
   State<MapCard> createState() => _MapCardState();
 }
 
 class _MapCardState extends State<MapCard> {
-  final LatLng _center = const LatLng(24.8607, 67.0011);
+  late LatLng _center;
   late Set<Marker> _markers;
+
   @override
   void initState() {
     super.initState();
 
+    _center = LatLng(
+      widget.address?.lat ?? 24.8607,
+      widget.address?.lon ?? 67.0011,
+    );
+
     _markers = {
       Marker(
-        markerId: const MarkerId("karachi"),
+        markerId: const MarkerId("location"),
         position: _center,
-        infoWindow: const InfoWindow(title: "Karachi", snippet: "My Location"),
+        infoWindow: InfoWindow(
+          title: widget.address?.addressline ?? "Location",
+          snippet:
+              "${widget.address?.addressline}, ${widget.address?.city}, ${widget.address?.country}",
+        ),
       ),
     };
   }
@@ -28,47 +40,13 @@ class _MapCardState extends State<MapCard> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 200,
-
-      // margin: const EdgeInsets.all(2),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: Stack(
-          children: [
-            GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: _center, // Karachi
-                zoom: 14,
-              ),
-              markers: _markers,
-              zoomControlsEnabled: false,
-              myLocationButtonEnabled: false,
-            ),
-
-            // // Overlay Card Content
-            // Positioned(
-            //   bottom: 10,
-            //   left: 10,
-            //   right: 10,
-            //   child: Container(
-            //     padding: const EdgeInsets.all(10),
-            //     decoration: BoxDecoration(
-            //       color: Colors.white,
-            //       borderRadius: BorderRadius.circular(12),
-            //     ),
-            //     child: const Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       mainAxisSize: MainAxisSize.min,
-            //       children: [
-            //         Text(
-            //           "Karachi Location",
-            //           style: TextStyle(fontWeight: FontWeight.bold),
-            //         ),
-            //         Text("Tap to view details"),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-          ],
+        child: GoogleMap(
+          initialCameraPosition: CameraPosition(target: _center, zoom: 14),
+          markers: _markers,
+          zoomControlsEnabled: false,
+          myLocationButtonEnabled: false,
         ),
       ),
     );

@@ -36,8 +36,8 @@ class NotificationRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<NotificationModel>.fromJson(
-                      response.data,
-                          NotificationModel.fromJson,
+                      response as Map<String, dynamic>,
+                      NotificationModel.fromJson,
                     ),
                   );
                 } catch (e) {

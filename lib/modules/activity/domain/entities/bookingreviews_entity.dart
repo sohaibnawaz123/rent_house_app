@@ -1,19 +1,32 @@
-class BookingreviewsEntity {
-  final String userMessage;
-  final bool status;
 
-  BookingreviewsEntity({
-    required this.userMessage,
-    required this.status,
+
+import 'package:equatable/equatable.dart';
+import 'package:taxi_app/modules/activity/domain/entities/reviewer_entity.dart';
+
+class BookingreviewsEntity extends Equatable {
+  final int id;
+  final double rating;
+  final String comment;
+  final String createdAt;
+  final String updatedAt;
+  final ReviewerEntity? reviewer;
+
+  const BookingreviewsEntity({
+    required this.id,
+    required this.rating,
+    required this.comment,
+    required this.createdAt,
+    required this.updatedAt,
+    this.reviewer,
   });
 
-  BookingreviewsEntity copyWith({
-    String? userMessage,
-    bool? status,
-  }) {
-    return BookingreviewsEntity(
-      userMessage: userMessage ?? this.userMessage,
-      status: status ?? this.status,
-    );
-  }
+  @override
+  List<Object?> get props => [
+    id,
+    rating,
+    comment,
+    createdAt,
+    updatedAt,
+    reviewer,
+  ];
 }

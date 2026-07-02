@@ -36,8 +36,8 @@ class BookingreviewsRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<BookingreviewsModel>.fromJson(
-                      response.data,
-                          BookingreviewsModel.fromJson,
+                      response as Map<String, dynamic>,
+                      BookingreviewsModel.fromJson,
                     ),
                   );
                 } catch (e) {

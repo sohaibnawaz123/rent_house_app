@@ -14,36 +14,31 @@ class PropertydetailRemoteDataSourceImpl
   final NetworkService network;
   final AppUrl appUrl;
 
-  PropertydetailRemoteDataSourceImpl(
-    this.network,
-    this.appUrl,
-  );
+  PropertydetailRemoteDataSourceImpl(this.network, this.appUrl);
 
   @override
-  Future<Either<RepoFailure, BaseJson<PropertydetailModel>>> 
-      propertydetail(PropertydetailParam data) =>
-      network
-          .get(
-            AppUrl.propertydetailUrl,
-            ApiHeader.json(),
-            query: data.toModel().toJson(),
+  Future<Either<RepoFailure, BaseJson<PropertydetailModel>>> propertydetail(
+    PropertydetailParam data,
+  ) => network
+      .get(
+        AppUrl.propertydetailUrl,
+        ApiHeader.bearerHeaderOnly(data.token),
+        query: {"propertyId":data.propertyId},
         // authType: AuthType.cookie,
-          )
-          .then(
-            (value) => value.fold(
-              (l) => left(RepoFailure(error: l.error)),
-              (response) {
-                try {
+      )
+      .then(
+        (value) =>
+            value.fold((l) => left(RepoFailure(error: l.error)), (response) {
+              try {
                   return right(
                     BaseJson<PropertydetailModel>.fromJson(
-                      response.data,
-                          PropertydetailModel.fromJson,
-                    ),
-                  );
-                } catch (e) {
-                  return left(RepoFailure(error: e.toString()));
-                }
-              },
-            ),
-          );
+                    response as Map<String, dynamic>,
+                    PropertydetailModel.fromJson,
+                  ),
+                );
+              } catch (e) {
+                return left(RepoFailure(error: e.toString()));
+              }
+            }),
+      );
 }

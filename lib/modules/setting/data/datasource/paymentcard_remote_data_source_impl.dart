@@ -36,8 +36,8 @@ class PaymentcardRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<PaymentcardModel>.fromJson(
-                      response.data,
-                          PaymentcardModel.fromJson,
+                      response as Map<String, dynamic>,
+                      PaymentcardModel.fromJson,
                     ),
                   );
                 } catch (e) {

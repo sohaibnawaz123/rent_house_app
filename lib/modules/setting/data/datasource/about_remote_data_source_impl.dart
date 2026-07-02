@@ -36,8 +36,8 @@ class AboutRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<AboutModel>.fromJson(
-                      response.data,
-                          AboutModel.fromJson,
+                      response as Map<String, dynamic>,
+                      AboutModel.fromJson,
                     ),
                   );
                 } catch (e) {

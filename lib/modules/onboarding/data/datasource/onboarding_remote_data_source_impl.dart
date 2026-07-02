@@ -35,7 +35,7 @@ class OnboardingRemoteDataSourceImpl implements OnboardingRemoteDataSource {
                 try {
                   return right(
                     BaseJson<OnboardingModel>.fromJson(
-                      response.data,
+                      response as Map<String, dynamic>,
                       OnboardingModel.fromJson,
                     ),
                   );

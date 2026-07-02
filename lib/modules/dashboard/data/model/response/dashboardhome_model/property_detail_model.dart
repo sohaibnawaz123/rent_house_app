@@ -11,6 +11,7 @@ class PropertyDetailModel extends Equatable {
   final bool? furnished;
   final String? createdAt;
   final String? updatedAt;
+  final List<String>? publicFacilities;
 
   const PropertyDetailModel({
     this.id,
@@ -22,6 +23,7 @@ class PropertyDetailModel extends Equatable {
     this.furnished,
     this.createdAt,
     this.updatedAt,
+    this.publicFacilities,
   });
 
   factory PropertyDetailModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,9 @@ class PropertyDetailModel extends Equatable {
       furnished: json['furnished'] as bool?,
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
+      publicFacilities: (json['public_facilities'] as List?)
+          ?.map((e) => e.toString())
+          .toList(),
     );
   }
 
@@ -49,6 +54,7 @@ class PropertyDetailModel extends Equatable {
       'furnished': furnished,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      'public_facilities': publicFacilities,
     };
   }
 
@@ -62,6 +68,7 @@ class PropertyDetailModel extends Equatable {
     bool? furnished,
     String? createdAt,
     String? updatedAt,
+    List<String>? publicFacilities,
   }) {
     return PropertyDetailModel(
       id: id ?? this.id,
@@ -73,6 +80,7 @@ class PropertyDetailModel extends Equatable {
       furnished: furnished ?? this.furnished,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      publicFacilities: publicFacilities ?? this.publicFacilities,
     );
   }
 
@@ -87,6 +95,7 @@ class PropertyDetailModel extends Equatable {
       furnished: furnished ?? false,
       createdAt: createdAt ?? '',
       updatedAt: updatedAt ?? '',
+      publicFacilities: publicFacilities ?? [],
     );
   }
 
@@ -101,5 +110,6 @@ class PropertyDetailModel extends Equatable {
     furnished,
     createdAt,
     updatedAt,
+    publicFacilities,
   ];
 }

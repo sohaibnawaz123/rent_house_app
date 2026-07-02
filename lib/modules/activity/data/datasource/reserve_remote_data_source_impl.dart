@@ -36,8 +36,8 @@ class ReserveRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<ReserveModel>.fromJson(
-                      response.data,
-                          ReserveModel.fromJson,
+                      response as Map<String, dynamic>,
+                      ReserveModel.fromJson,
                     ),
                   );
                 } catch (e) {

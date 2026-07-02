@@ -36,8 +36,8 @@ class DashboardfavouriteRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<DashboardfavouriteModel>.fromJson(
-                      response.data,
-                          DashboardfavouriteModel.fromJson,
+                      response as Map<String, dynamic>,
+                      DashboardfavouriteModel.fromJson,
                     ),
                   );
                 } catch (e) {

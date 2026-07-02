@@ -36,8 +36,8 @@ class DashboardbookingRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<DashboardbookingModel>.fromJson(
-                      response.data,
-                          DashboardbookingModel.fromJson,
+                      response as Map<String, dynamic>,
+                      DashboardbookingModel.fromJson,
                     ),
                   );
                 } catch (e) {

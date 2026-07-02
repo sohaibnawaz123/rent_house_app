@@ -465,7 +465,9 @@ class _RecommendedLocationsState extends State<RecommendedLocations> {
                       onTap: () => context.pushPage(
                         PropertydetailView(
                           bloc: getIt<PropertydetailBloc>(
-                            param1: PropertydetailViewInitialParams(),
+                            param1: PropertydetailViewInitialParams(
+                              propertyId: widget.recommendedProperty[index].id,
+                            ),
                           ),
                         ),
                       ),

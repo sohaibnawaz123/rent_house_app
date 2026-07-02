@@ -36,8 +36,8 @@ class RecentRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<RecentModel>.fromJson(
-                      response.data,
-                          RecentModel.fromJson,
+                      response as Map<String, dynamic>,
+                      RecentModel.fromJson,
                     ),
                   );
                 } catch (e) {

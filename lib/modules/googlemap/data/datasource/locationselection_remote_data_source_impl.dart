@@ -36,8 +36,8 @@ class LocationselectionRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<LocationselectionModel>.fromJson(
-                      response.data,
-                          LocationselectionModel.fromJson,
+                      response as Map<String, dynamic>,
+                      LocationselectionModel.fromJson,
                     ),
                   );
                 } catch (e) {

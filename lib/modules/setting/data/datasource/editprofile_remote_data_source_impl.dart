@@ -36,8 +36,8 @@ class EditprofileRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<EditprofileModel>.fromJson(
-                      response.data,
-                          EditprofileModel.fromJson,
+                      response as Map<String, dynamic>,
+                      EditprofileModel.fromJson,
                     ),
                   );
                 } catch (e) {

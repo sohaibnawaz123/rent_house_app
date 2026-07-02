@@ -23,6 +23,7 @@ class PropertyModel extends Equatable {
   final double? distanceKm;
   final String? image;
   final List<String>? images;
+  final List<String>? publicFacilities;
   final AddressModel? address;
   final PropertyDetailModel? details;
   final AgentModel? agent;
@@ -46,6 +47,7 @@ class PropertyModel extends Equatable {
     this.distanceKm,
     this.image,
     this.images,
+    this.publicFacilities,
     this.address,
     this.details,
     this.agent,
@@ -71,6 +73,9 @@ class PropertyModel extends Equatable {
       distanceKm: (json['distance_km'] as num?)?.toDouble(),
       image: json['image'],
       images: (json['images'] as List?)?.map((e) => e.toString()).toList(),
+      publicFacilities: (json['public_facilities'] as List?)
+          ?.map((e) => e.toString())
+          .toList(),
       address: json['address'] != null
           ? AddressModel.fromJson(json['address'])
           : null,
@@ -101,6 +106,7 @@ class PropertyModel extends Equatable {
       'distance_km': distanceKm,
       'image': image,
       'images': images,
+      'public_facilities': publicFacilities,
       'address': address?.toJson(),
       'details': details?.toJson(),
       'agent': agent?.toJson(),
@@ -126,6 +132,7 @@ class PropertyModel extends Equatable {
     double? distanceKm,
     String? image,
     List<String>? images,
+    List<String>? publicFacilities,
     AddressModel? address,
     PropertyDetailModel? details,
     AgentModel? agent,
@@ -149,6 +156,7 @@ class PropertyModel extends Equatable {
       distanceKm: distanceKm ?? this.distanceKm,
       image: image ?? this.image,
       images: images ?? this.images,
+      publicFacilities: publicFacilities ?? this.publicFacilities,
       address: address ?? this.address,
       details: details ?? this.details,
       agent: agent ?? this.agent,
@@ -175,6 +183,7 @@ class PropertyModel extends Equatable {
       distanceKm: distanceKm ?? 0,
       image: image ?? '',
       images: images ?? [],
+      publicFacilities: publicFacilities ?? [],
       address: address?.toEntity(),
       details: details?.toEntity(),
       agent: agent?.toEntity(),
@@ -201,6 +210,7 @@ class PropertyModel extends Equatable {
     distanceKm,
     image,
     images,
+    publicFacilities,
     address,
     details,
     agent,

@@ -36,8 +36,8 @@ class DashboardprofileRemoteDataSourceImpl
                 try {
                   return right(
                     BaseJson<DashboardprofileModel>.fromJson(
-                      response.data,
-                          DashboardprofileModel.fromJson,
+                      response as Map<String, dynamic>,
+                      DashboardprofileModel.fromJson,
                     ),
                   );
                 } catch (e) {

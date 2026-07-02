@@ -50,8 +50,31 @@ class NetworkService extends Network {
     }
     final uri = Uri.parse(url);
     return query != null && query.isNotEmpty
-        ? uri.replace(queryParameters: query)
+        ? uri.replace(queryParameters: _normalizeQueryParameters(query))
         : uri;
+  }
+
+  Map<String, String> _normalizeQueryParameters(Map<String, dynamic> query) {
+    final normalized = <String, String>{};
+
+    query.forEach((key, value) {
+      if (value == null) return;
+
+      if (value is Iterable) {
+        final items = value
+            .where((item) => item != null)
+            .map((item) => item.toString())
+            .toList();
+        if (items.isNotEmpty) {
+          normalized[key] = items.join(',');
+        }
+        return;
+      }
+
+      normalized[key] = value.toString();
+    });
+
+    return normalized;
   }
 
   // -------------------------------------------------------------------------
